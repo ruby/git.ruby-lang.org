@@ -1,6 +1,7 @@
 #!/bin/sh
 
-export PATH=/opt/csw/bin:/usr/sfw/bin:/usr/bin
+PATH=/opt/csw/bin:/usr/sfw/bin:/usr/bin
+export PATH
 
 REPOS="$1"
 REV="$2"
