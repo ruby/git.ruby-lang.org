@@ -336,7 +336,7 @@ def main
   
   require "svn/info"
   info = Svn::Info.new(repos, revision)
-  from = options.from || info.author
+  from = options.from || info.author + "@ruby-lang.org"
   to = [to, *options.to]
   params = {
     :repository_uri => options.repository_uri,
