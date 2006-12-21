@@ -14,4 +14,4 @@ REV="$2"
 #   --rss-path ~/ruby.rdf \
 #   --rss-uri http://svn.ruby-lang.org/rss/ruby.rdf \
 
-~svn/scripts/cia/ciabot_svn.py "$REPOS" "$REV" ruby
+~svn/scripts/cia/ciabot_svn.py "$REPOS" "$REV" ruby &
