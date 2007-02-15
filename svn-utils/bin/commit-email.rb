@@ -197,7 +197,7 @@ def diff_info(info, uri)
           raise "unknown diff type: #{value[:type]}"
         end
 
-        link = [uri, key].compact.join("/") + rev
+        link = [uri, key.sub(/ .+/,"")||""].join("/") + rev
 
 =begin without_diff
         desc = <<-HEADER
