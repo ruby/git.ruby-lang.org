@@ -192,7 +192,7 @@ def diff_info(info, uri)
           rev = "?r1=#{info.revision}&r2=#{info.revision - 1}"
         when :deleted, :copied
           command = "cat"
-          rev = "?revision=#{info.revision - 1}&view=markup"
+          rev = ""
         else
           raise "unknown diff type: #{value[:type]}"
         end
