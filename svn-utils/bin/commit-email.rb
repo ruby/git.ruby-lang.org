@@ -16,6 +16,7 @@ def parse(args)
   options.rss_path = nil
   options.rss_uri = nil
   options.name = nil
+  options.viewvc_uri = nil
 
   opts = OptionParser.new do |opts|
     opts.separator ""
@@ -24,42 +25,47 @@ def parse(args)
             "Add [PATH] to load path") do |path|
       $LOAD_PATH.unshift(path)
     end
-    
+
     opts.on("-t", "--to [TO]",
             "Add [TO] to to address") do |to|
       options.to << to unless to.nil?
     end
-    
+
     opts.on("-e", "--error-to [TO]",
             "Add [TO] to to address when error is occurred") do |to|
       options.error_to << to unless to.nil?
     end
-    
+
     opts.on("-f", "--from [FROM]",
             "Use [FROM] as from address") do |from|
       options.from = from
     end
-    
+
+    opts.on("--viewvc-uri [URI]",
+            "Use [URI] as URI of viewvc") do |uri|
+      options.viewvc_uri = uri
+    end
+
     opts.on("-r", "--repository-uri [URI]",
             "Use [URI] as URI of repository") do |uri|
       options.repository_uri = uri
     end
-    
+
     opts.on("--rss-path [PATH]",
             "Use [PATH] as output RSS path") do |path|
       options.rss_path = path
     end
-    
+
     opts.on("--rss-uri [URI]",
             "Use [URI] as output RSS URI") do |uri|
       options.rss_uri = uri
     end
-    
+
     opts.on("--name [NAME]",
             "Use [NAME] as repository name") do |name|
       options.name = name
     end
-    
+
     opts.on_tail("--help", "Show this message") do
       puts opts
       exit
@@ -89,7 +95,7 @@ def make_body(info, params)
     body << "    #{line}"
   end
   body << "\n"
-  body << change_info(info, params[:repository_uri])
+  body << change_info(info, params[:viewvc_uri])
   body
 end
 
@@ -150,11 +156,11 @@ CHANGED_TYPE = {
 def change_info(info, uri)
   result = ""
   result << "#{changed_dirs_info(info, uri)}\n"
-#  diff_info(info, uri).each do |key, infos|
-#    infos.each do |desc, link|
-#      result << "#{desc}\n"
-#    end
-#  end
+  diff_info(info, uri).each do |key, infos|
+    infos.each do |desc, link|
+      result << "  #{link}\n"
+    end
+  end
   result
 end
 
@@ -180,22 +186,20 @@ def diff_info(info, uri)
         case type
         when :added
           command = "cat"
-          rev = info.revision.to_s
+          rev = "?revision=#{info.revision}&view=markup"
         when :modified, :property_changed
           command = "diff"
-          rev = "#{info.revision - 1}:#{info.revision}"
-        when :deleted
+          rev = "?r1=#{info.revision}&r2=#{info.revision - 1}"
+        when :deleted, :copied
           command = "cat"
-          rev = (info.revision - 1).to_s
-        when :copied
-          command = "cat"
-          rev = (info.revision - 1).to_s
+          rev = "?revision=#{info.revision - 1}&view=markup"
         else
           raise "unknown diff type: #{value[:type]}"
         end
 
-        link = [uri, key].compact.join("/")
-        
+        link = [uri, key].compact.join("/") + rev
+
+=begin without_diff
         desc = <<-HEADER
   #{CHANGED_TYPE[value[:type]]}: #{key} (+#{value[:added]} -#{value[:deleted]})
 HEADER
@@ -203,9 +207,11 @@ HEADER
 #       result << <<-CONTENT
 #     % svn #{command} -r #{rev} #{link}
 # CONTENT
-        
+
         desc << value[:body]
-      
+=end
+        desc = ''
+
         [desc, link]
       end
     ]
@@ -293,10 +299,10 @@ def make_rss(base_rss, name, rss_uri, repos_uri, info)
 
     if base_rss
       base_rss.items.each do |item|
-        item.setup_maker(maker) 
+        item.setup_maker(maker)
       end
     end
-    
+
     diff_info(info, repos_uri).each do |name, infos|
       infos.each do |desc, link|
         item = maker.items.new_item
@@ -324,7 +330,7 @@ def rss_items(items, info, repos_uri)
       items << [link, name, desc, info.date]
     end
   end
-  
+
   items.sort_by do |uri, title, desc, date|
     date
   end.reverse
@@ -333,13 +339,14 @@ end
 def main
   repos, revision, to, *rest = ARGV
   options = parse(rest)
-  
+
   require "svn/info"
   info = Svn::Info.new(repos, revision)
   from = options.from || info.author + "@ruby-lang.org"
   to = [to, *options.to]
   params = {
     :repository_uri => options.repository_uri,
+    :viewvc_uri => options.viewvc_uri,
     :name => options.name
   }
   sendmail(to, from, make_mail(to, from, info, params))
