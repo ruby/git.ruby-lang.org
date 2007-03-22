@@ -238,7 +238,7 @@ def make_subject(name, info)
   subject = ""
   subject << "#{name}:" if name
   subject << "r#{info.revision}: "
-  subject << info.log.to_a.first.to_s.chomp
+  subject << info.log.to_a.first.to_s.strip
   subject
 end
 
