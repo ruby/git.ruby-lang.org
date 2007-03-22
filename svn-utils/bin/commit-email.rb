@@ -92,7 +92,7 @@ def make_body(info, params)
   body << "\n"
   body << "  Log:\n"
   info.log.each_line do |line|
-    body << "    #{line}"
+    body << "    #{line.sub(/^\t/,'')}"
   end
   body << "\n"
   body << change_info(info, params[:viewvc_uri])
