@@ -235,9 +235,11 @@ def make_header(to, from, info, params)
 end
 
 def make_subject(name, info)
+  branches = info.sha256.map{|x,| x[/(?:branches\/|tags\/)?(.+?)\//, 1]}.uniq
   subject = ""
   subject << "#{name}:" if name
-  subject << "r#{info.revision}: "
+  subject << "r#{info.revision} "
+  subject << "(#{branches.join(', ')}): "
   subject << info.log.to_a.first.to_s.strip
   subject
 end
