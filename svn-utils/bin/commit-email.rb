@@ -238,8 +238,9 @@ def make_subject(name, info)
   branches = info.sha256.map{|x,| x[/(?:branches\/|tags\/)?(.+?)\//, 1]}.uniq
   subject = ""
   subject << "#{name}:" if name
-  subject << "r#{info.revision} "
-  subject << "(#{branches.join(', ')}): "
+  subject << "r#{info.revision}"
+  subject << " (#{branches.join(', ')})" unless branches.empty?
+  subject << ": "
   subject << info.log.to_a.first.to_s.strip
   subject
 end
