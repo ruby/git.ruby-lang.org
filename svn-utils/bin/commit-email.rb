@@ -222,6 +222,7 @@ def make_header(to, from, info, params)
   headers = []
   headers << x_author(info)
   headers << x_repository(info)
+  headers << x_revision(info)
   headers << x_id(info)
   headers << x_sha256(info)
   headers << "Content-Type: text/plain; charset=us-ascii"
@@ -256,6 +257,10 @@ end
 
 def x_id(info)
   "X-SVN-Commit-Id: #{info.entire_sha256}"
+end
+
+def x_revision(info)
+  "X-SVN-Revision: #{info.revision}"
 end
 
 def x_sha256(info)
