@@ -224,7 +224,7 @@ def make_header(to, from, info, params)
   headers << x_repository(info)
   headers << x_revision(info)
   headers << x_id(info)
-  headers << x_sha256(info)
+#  headers << x_sha256(info)
   headers << "Content-Type: text/plain; charset=us-ascii"
   headers << "Content-Transfer-Encoding: 7bit"
   headers << "From: #{from}"
