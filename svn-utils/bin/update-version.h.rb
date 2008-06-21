@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 #
 #$:.unshift File.join(File.dirname(__FILE__), "lib")
-$:.unshift "/export/home/svn/scripts/svn-util/lib"
+home = "/export/home/svn"
+$:.unshift home + "/scripts/svn-util/lib"
 require "fileutils"
 require "svn/info"
 
@@ -11,7 +12,7 @@ info = Svn::Info.new repos, revision
 branches = info.sha256.map{|x,| x[/(?:branches\/|tags\/)?(.+?)\//, 1]}.uniq
 branches.each do |b|
   if info.diffs.map{|f,|f}.grep(/version\.h/).empty?
-    Dir.chdir File.expand_path("~")
+    Dir.chdir home
     FileUtils.rm_rf "work/version"
     FileUtils.mkdir_p "work/version/.svn/tmp"
     File.open("work/version/.svn/entries", "w") do |fh|
