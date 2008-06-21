@@ -8,12 +8,15 @@ REV="$2"
 
 svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/ruby/$REV.bz2
 
+
 /export/home/svn/scripts/svn-utils/bin/commit-email.rb \
    "$REPOS" "$REV" ruby-cvs@ruby-lang.org \
    -I /export/home/svn/scripts/svn-utils/lib \
    --name Ruby \
    --viewvc-uri http://svn.ruby-lang.org/cgi-bin/viewvc.cgi \
    --error-to cvs-admin@ruby-lang.org
+
+/export/home/svn/scripts/svn-utils/bin/update-version.h.rb "$REPOS" "$REV"
 
 #/export/home/svn/scripts/svn-utils/bin/commit-email-test.rb \
 #   "$REPOS" "$REV" eban@ruby-lang.org \
