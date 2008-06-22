@@ -9,9 +9,9 @@ require "svn/info"
 repos, revision = ARGV
 
 info = Svn::Info.new repos, revision
-branches = info.sha256.map{|x,| x[/((?:branches\/|tags\/)?.+?)\//, 1]}.uniq
+branches = info.sha256.map{|x,| x[/((?:branches\/)?.+?)\//, 1]}.uniq
 branches.each do |b|
-  if info.diffs.map{|f,|f}.grep(/version\.h/).empty?
+  if info.diffs.map{|f,|f}.grep(/#{b}\/version\.h/).empty?
     Dir.chdir home
     FileUtils.rm_rf "work/version"
     FileUtils.mkdir_p "work/version/.svn/tmp"
