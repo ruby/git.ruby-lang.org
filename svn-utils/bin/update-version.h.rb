@@ -9,7 +9,7 @@ require "svn/info"
 repos, revision = ARGV
 
 info = Svn::Info.new repos, revision
-branches = info.sha256.map{|x,| x[/(?:branches\/|tags\/)?(.+?)\//, 1]}.uniq
+branches = info.sha256.map{|x,| x[/((?:branches\/|tags\/)?.+?)\//, 1]}.uniq
 branches.each do |b|
   if info.diffs.map{|f,|f}.grep(/version\.h/).empty?
     Dir.chdir home
@@ -31,20 +31,20 @@ branches.each do |b|
 
     now = Time.now
 
-    ARGV.replace ["version.h"]
-    $-i = '~'
-
-    while line = gets
-      if /RUBY_RELEASE_(#{formats.keys.join('|')})/o =~ line
-        format = formats[$1]
-        line.sub!(format[0]) do
-          now.strftime(format[1]).sub(/^0/, '')
+    File.rename "version.h", "version.h~"
+    open("version.h~") do |fold|
+      open("version.h", "w") do |fnew|
+        while line = fold.gets
+          if /RUBY_RELEASE_(#{formats.keys.join('|')})/o =~ line
+            format = formats[$1]
+            line.sub!(format[0]) do
+              now.strftime(format[1]).sub(/^0/, '')
+            end
+          end
+          fnew.print line
         end
       end
-      print line
     end
     system "svn commit -m #{now.strftime '%Y-%m-%d'} version.h"
-    Dir.chdir ".."
-    FileUtils.rm_rf "version"
   end
 end
