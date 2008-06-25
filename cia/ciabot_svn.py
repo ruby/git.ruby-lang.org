@@ -118,7 +118,8 @@ class config:
     # default here should work for most people. If you need to use e-mail
     # instead, you can replace this with "cia@cia.navi.cx"
 #    server = "http://cia.navi.cx"
-    server = "http://cia.vc"
+#    server = "http://cia.vc"
+    server = "cia@cia.vc"
 
     # The SMTP server to use, only used if the CIA server above is an
     # email address.
@@ -126,7 +127,8 @@ class config:
 
     # The 'from' address to use. If you're delivering commits via email, set
     # this to the address you would normally send email from on this host.
-    fromAddress = "cia-user@localhost"
+#    fromAddress = "cia-user@localhost"
+    fromAddress = "cvs-admin@ruby-lang.org"
 
     # When nonzero, print the message to stdout instead of delivering it to CIA.
     debug = 0
