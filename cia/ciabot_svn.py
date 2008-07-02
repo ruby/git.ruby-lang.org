@@ -117,8 +117,8 @@ class config:
     # XML-RPC, or it can be an email address to deliver using SMTP. The
     # default here should work for most people. If you need to use e-mail
     # instead, you can replace this with "cia@cia.navi.cx"
-    server = "http://cia.navi.cx"
-#    server = "http://cia.vc"
+#    server = "http://cia.navi.cx"
+    server = "http://cia.vc"
 #    server = "cia@cia.vc"
 
     # The SMTP server to use, only used if the CIA server above is an
