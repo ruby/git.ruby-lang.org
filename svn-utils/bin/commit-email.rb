@@ -158,12 +158,14 @@ def change_info(info, uri)
   result << "#{changed_dirs_info(info, uri)}\n"
   result << "\n"
   result << "  #{uri}?view=rev&revision=#{info.revision}\n"
+=begin removed
   result << "\n"
   diff_info(info, uri).each do |key, infos|
     infos.each do |desc, link|
       result << "  #{link}\n"
     end
   end
+=end
   result
 end
 
