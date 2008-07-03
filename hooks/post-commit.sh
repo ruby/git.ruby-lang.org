@@ -16,7 +16,7 @@ svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/rub
    --viewvc-uri http://svn.ruby-lang.org/cgi-bin/viewvc.cgi \
    --error-to cvs-admin@ruby-lang.org
 
-/export/home/svn/scripts/svn-utils/bin/update-version.h.rb "$REPOS" "$REV"
+/export/home/svn/scripts/svn-utils/bin/update-version.h.rb "$REPOS" "$REV" &
 
 #/export/home/svn/scripts/svn-utils/bin/commit-email-test.rb \
 #   "$REPOS" "$REV" eban@ruby-lang.org \
@@ -30,4 +30,4 @@ svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/rub
 #   --rss-path ~/ruby.rdf \
 #   --rss-uri http://svn.ruby-lang.org/rss/ruby.rdf \
 
-#/export/home/svn/scripts/cia/ciabot_svn.py "$REPOS" "$REV" ruby &
+/export/home/svn/scripts/cia/ciabot_svn.py "$REPOS" "$REV" ruby &
