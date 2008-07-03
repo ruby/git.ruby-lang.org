@@ -94,7 +94,6 @@ def make_body(info, params)
   info.log.each_line do |line|
     body << "    #{line.sub(/^\t/,'')}"
   end
-  body << "\n"
   body << change_info(info, params[:viewvc_uri])
   body
 end
