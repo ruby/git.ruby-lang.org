@@ -2,7 +2,6 @@
 
 require "optparse"
 require "ostruct"
-require "stringio"
 
 SENDMAIL = "/usr/sbin/sendmail"
 
