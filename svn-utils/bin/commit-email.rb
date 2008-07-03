@@ -174,10 +174,7 @@ def changed_dirs_info(info, uri)
   (info.added_dirs.collect do |dir|
      "  Added: #{dir}\n"
    end + info.deleted_dirs.collect do |dir|
-     <<-INFO
-  Deleted: #{dir}
-    % svn ls -r #{rev} #{[uri, dir].compact.join("/")}
-INFO
+     "  Deleted: #{dir}\n"
    end + info.updated_dirs.collect do |dir|
      "  Modified: #{dir}\n"
    end).join("\n")
