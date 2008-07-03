@@ -3,7 +3,6 @@
 require "optparse"
 require "ostruct"
 require "stringio"
-require "tempfile"
 
 SENDMAIL = "/usr/sbin/sendmail"
 
