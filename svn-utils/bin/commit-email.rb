@@ -79,14 +79,14 @@ def make_body(info, params)
   body = ""
   body << "#{info.author}\t#{format_time(info.date)}\n"
   body << "\n"
+  body << "  New Revision: #{info.revision}\n"
+  body << "\n"
   body << change_info(info, params[:viewvc_uri])
   body << "\n"
   body << "  Log:\n"
   info.log.each_line do |line|
     body << "    #{line.sub(/^\t/,'')}"
   end
-  body << "\n"
-  body << "  New Revision: #{info.revision}\n"
   body << "\n"
   body << added_dirs(info)
   body << added_files(info)
