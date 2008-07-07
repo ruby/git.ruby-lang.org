@@ -79,6 +79,13 @@ def make_body(info, params)
   body = ""
   body << "#{info.author}\t#{format_time(info.date)}\n"
   body << "\n"
+  body << change_info(info, params[:viewvc_uri])
+  body << "\n"
+  body << "  Log:\n"
+  info.log.each_line do |line|
+    body << "    #{line.sub(/^\t/,'')}"
+  end
+  body << "\n"
   body << "  New Revision: #{info.revision}\n"
   body << "\n"
   body << added_dirs(info)
@@ -87,12 +94,6 @@ def make_body(info, params)
   body << deleted_files(info)
   body << modified_dirs(info)
   body << modified_files(info)
-  body << "\n"
-  body << "  Log:\n"
-  info.log.each_line do |line|
-    body << "    #{line.sub(/^\t/,'')}"
-  end
-  body << change_info(info, params[:viewvc_uri])
   body
 end
 
@@ -151,19 +152,7 @@ CHANGED_TYPE = {
 }
 
 def change_info(info, uri)
-  result = ""
-  result << "#{changed_dirs_info(info, uri)}\n"
-  result << "\n"
-  result << "  #{uri}?view=rev&revision=#{info.revision}\n"
-=begin removed
-  result << "\n"
-  diff_info(info, uri).each do |key, infos|
-    infos.each do |desc, link|
-      result << "  #{link}\n"
-    end
-  end
-=end
-  result
+  "  #{uri}?view=rev&revision=#{info.revision}\n"
 end
 
 def changed_dirs_info(info, uri)
