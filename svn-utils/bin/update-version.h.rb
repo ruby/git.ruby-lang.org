@@ -45,6 +45,6 @@ branches.each do |b|
         end
       end
     end
-    system "svn commit -m #{now.strftime '* %Y-%m-%d'} version.h"
+    system "svn commit -m '#{now.strftime %(* %Y-%m-%d)}' version.h"
   end
 end
