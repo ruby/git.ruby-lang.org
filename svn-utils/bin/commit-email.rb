@@ -85,7 +85,7 @@ def make_body(info, params)
   body << "\n"
   body << "  Log:\n"
   info.log.each_line do |line|
-    body << "    #{line.sub(/^\t/,'')}".chomp + "\n"
+    body << "    #{line.sub(/^\t/,'')}".rstrip + "\n"
   end
   body << "\n"
   body << added_dirs(info)
@@ -94,7 +94,7 @@ def make_body(info, params)
   body << deleted_files(info)
   body << modified_dirs(info)
   body << modified_files(info)
-  body
+  body.rstrip + "\n"
 end
 
 def format_time(time)
