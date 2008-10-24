@@ -228,7 +228,7 @@ def make_subject(name, info)
   subject << "r#{info.revision}"
   subject << " (#{branches.join(', ')})" unless branches.empty?
   subject << ": "
-  subject << info.log.to_a.first.to_s.strip
+  subject << info.log.lstrip.to_a.first.to_s.strip
   subject
 end
 
