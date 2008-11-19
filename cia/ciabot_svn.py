@@ -109,7 +109,8 @@ class config:
     # The resulting URI is added to the data sent to CIA. After this, in CIA's
     # online message viewer, the commit will link directly to the corresponding
     # revision page.
-    revisionURI = None
+    # revisionURI = None
+    revisionURI = "http://svn.ruby-lang.org/cgi-bin/viewvc.cgi?view=rev&revision=%(revision)s"
     # Example (works for ViewVC as used by SourceForge.net):
     #revisionURI = "https://svn.sourceforge.net/viewcvs.cgi/%(project)s?view=rev&rev=%(revision)s"
 
