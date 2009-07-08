@@ -1,18 +1,18 @@
 #!/bin/sh
 
-PATH=/opt/csw/bin:/usr/sfw/bin:/usr/bin
+{ date; echo '### start ###'; uptime; } >> /tmp/post-commit.log
+
+PATH=/opt/csw/bin:/usr/sfw/bin:/usr/bin:/bin
 export PATH
 
 REPOS="$1"
 REV="$2"
 
-date >> /tmp/post-commit.log
-echo svnadmin >> /tmp/post-commit.log
+{ date; echo svnadmin; uptime; } >> /tmp/post-commit.log
 
 svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/ruby/$REV.bz2
 
-date >> /tmp/post-commit.log
-echo commit-email >> /tmp/post-commit.log
+{ date; echo commit-email.rb; uptime; } >> /tmp/post-commit.log
 
 /export/home/svn/scripts/svn-utils/bin/commit-email.rb \
    "$REPOS" "$REV" ruby-cvs@ruby-lang.org \
@@ -21,8 +21,7 @@ echo commit-email >> /tmp/post-commit.log
    --viewvc-uri http://svn.ruby-lang.org/cgi-bin/viewvc.cgi \
    --error-to cvs-admin@ruby-lang.org
 
-date >> /tmp/post-commit.log
-echo update-version.h >> /tmp/post-commit.log
+{ date; echo update-version.h.rb; uptime; } >> /tmp/post-commit.log
 
 /export/home/svn/scripts/svn-utils/bin/update-version.h.rb "$REPOS" "$REV" &
 
@@ -38,10 +37,8 @@ echo update-version.h >> /tmp/post-commit.log
 #   --rss-path ~/ruby.rdf \
 #   --rss-uri http://svn.ruby-lang.org/rss/ruby.rdf \
 
-date >> /tmp/post-commit.log
-echo ciabot_svn.py >> /tmp/post-commit.log
+{ date; echo ciabot_svn.py; uptime; } >> /tmp/post-commit.log
 
 /export/home/svn/scripts/cia/ciabot_svn.py "$REPOS" "$REV" ruby &
 
-date >> /tmp/post-commit.log
-echo end >> /tmp/post-commit.log
+{ date; echo '### end ###'; uptime; } >> /tmp/post-commit.log
