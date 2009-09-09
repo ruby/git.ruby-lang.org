@@ -84,7 +84,7 @@ def make_body(info, params)
   body << change_info(info, params[:viewvc_uri])
   body << "\n"
   body << "  Log:\n"
-  body << info.log.sub(/\A\n+/).gsub(/^\t*/, "    ").rstrip
+  body << info.log.lstrip.gsub(/^\t*/, "    ").rstrip
   body << "\n\n"
   body << added_dirs(info)
   body << added_files(info)
