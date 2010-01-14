@@ -41,7 +41,7 @@ branches.each do |b|
               now.strftime(format[1]).sub(/^0/, '')
             end
           end
-          fnew.print line
+          fnew.puts line.rstrip
         end
       end
     end
