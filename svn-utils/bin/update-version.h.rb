@@ -4,22 +4,18 @@
 home = "/export/home/svn"
 $:.unshift home + "/scripts/svn-util/lib"
 require "fileutils"
+require "tmpdir"
 require "svn/info"
 
 repos, revision = ARGV
 
 info = Svn::Info.new repos, revision
 branches = info.sha256.map{|x,| x[/((?:branches\/)?.+?)\//, 1]}.uniq
-branches.each do |b|
-#  if info.diffs.map{|f,|f}.grep(/#{b}\/version\.h/).empty?
-    Dir.chdir home
-    FileUtils.rm_rf "work/version"
-    FileUtils.mkdir_p "work/version/.svn/tmp"
-    File.open("work/version/.svn/entries", "w") do |fh|
-      fh.print "8\n\ndir\n1\nfile:///#{repos}/#{b}\nfile:///#{repos}\n\f\n"
-    end
-    Dir.chdir "work/version"
-    system "svn cleanup; cp -rp .svn/tmp/* .svn; svn up version.h"
+branches.each do |branch|
+  Dir.mktmpdir do |work|
+    Dir.chdir work
+    system "svn co --depth empty file:///#{repos}/#{branch} v; svn up v/version.h"
+    Dir.chdir "v"
     formats = {
       'DATE' => [/"\d{4}-\d\d-\d\d"/, '"%Y-%m-%d"'],
       'TIME' => [/".+"/, '"%H:%M:%S"'],
@@ -46,5 +42,5 @@ branches.each do |b|
       end
     end
     system "svn commit -m '#{now.strftime %(* %Y-%m-%d)}' version.h"
-#  end
+  end
 end
