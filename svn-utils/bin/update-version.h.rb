@@ -42,5 +42,6 @@ branches.each do |branch|
       end
     end
     system "svn commit -m '#{now.strftime %(* %Y-%m-%d)}' version.h"
+    Dir.chdir "/"
   end
 end
