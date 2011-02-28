@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 #
 #$:.unshift File.join(File.dirname(__FILE__), "lib")
-home = File.expand_path "~"
+home = File.expand_path "~svn"
 $:.unshift home + "/scripts/svn-util/lib"
 require "fileutils"
 require "tmpdir"
