@@ -41,4 +41,8 @@ svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/rub
 
 ~svn/scripts/cia/ciabot_svn.py "$REPOS" "$REV" ruby &
 
+{ date; echo redmine fetch changesets; uptime; } >> /tmp/post-commit.log
+
+curl 'http://redmine.ruby-lang.org/sys/fetch_changesets?key=98P5ZY3tkZzuBNQrms02' &
+
 { date; echo '### end ###'; uptime; } >> /tmp/post-commit.log
