@@ -4,6 +4,8 @@
 
 PATH=/opt/csw/bin:/usr/sfw/bin:/usr/bin:/bin
 export PATH
+HOME=/home/svn
+export HOME
 
 REPOS="$1"
 REV="$2"
