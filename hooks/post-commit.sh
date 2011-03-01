@@ -43,6 +43,6 @@ svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/rub
 
 { date; echo redmine fetch changesets; uptime; } >> /tmp/post-commit.log
 
-curl 'http://redmine.ruby-lang.org/sys/fetch_changesets?key=98P5ZY3tkZzuBNQrms02' &
+curl "http://redmine.ruby-lang.org/sys/fetch_changesets?key=`cat ~svn/config/redmine.key`" &
 
 { date; echo '### end ###'; uptime; } >> /tmp/post-commit.log
