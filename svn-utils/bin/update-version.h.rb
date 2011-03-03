@@ -1,8 +1,5 @@
 #!/usr/bin/env ruby
-#
-#$:.unshift File.join(File.dirname(__FILE__), "lib")
-home = File.expand_path "~svn"
-$:.unshift home + "/scripts/svn-util/lib"
+
 require "fileutils"
 require "tmpdir"
 require "svn/info"
@@ -13,9 +10,11 @@ info = Svn::Info.new repos, revision
 branches = info.sha256.map{|x,| x[/((?:branches\/)?.+?)\//, 1]}.uniq
 branches.each do |branch|
   Dir.mktmpdir do |work|
-    Dir.chdir work
-    system "svn co --depth empty file:///#{repos}/#{branch} v; svn up v/version.h"
-    Dir.chdir "v"
+    v = File.join(work, "v")
+    version_h = "#{v}/version.h"
+    version_h_orig = version_h + "~"
+
+    system "pwd;echo 1;svn co --depth empty file:///#{repos}/#{branch} #{v}; svn up #{version_h}"
     formats = {
       'DATE' => [/"\d{4}-\d\d-\d\d"/, '"%Y-%m-%d"'],
       'TIME' => [/".+"/, '"%H:%M:%S"'],
@@ -27,9 +26,9 @@ branches.each do |branch|
 
     now = Time.now
 
-    File.rename "version.h", "version.h~"
-    open("version.h~") do |fold|
-      open("version.h", "w") do |fnew|
+    File.rename version_h, version_h_orig
+    open(version_h_orig) do |fold|
+      open(version_h, "w") do |fnew|
         while line = fold.gets
           if /RUBY_RELEASE_(#{formats.keys.join('|')})/o =~ line
             format = formats[$1]
@@ -41,7 +40,6 @@ branches.each do |branch|
         end
       end
     end
-    system "svn commit -m '#{now.strftime %(* %Y-%m-%d)}' version.h"
-    Dir.chdir "/"
+    system "svn commit -m '#{now.strftime %(* %Y-%m-%d)}' #{version_h}"
   end
 end
