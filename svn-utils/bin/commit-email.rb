@@ -336,6 +336,7 @@ def main
 
   require "svn/info"
   info = Svn::Info.new(repos, revision)
+  info.log.sub!(/^([A-Z][a-z]{2} ){2}.*>\n/,"")
   from = options.from || info.author + "@ruby-lang.org"
   to = [to, *options.to]
   params = {
