@@ -10,7 +10,7 @@ export HOME
 REPOS="$1"
 REV="$2"
 
-{ date; echo svnadmin; uptime; } >> /tmp/post-commit.log
+{ date; echo $REPOS; echo $REV; echo svnadmin; uptime; } >> /tmp/post-commit.log
 
 svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/ruby/$REV.bz2
 
@@ -45,6 +45,6 @@ svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/rub
 
 { date; echo redmine fetch changesets; uptime; } >> /tmp/post-commit.log
 
-curl "http://redmine.ruby-lang.org/sys/fetch_changesets?key=`cat ~svn/config/redmine.key`" &
+curl "http://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~svn/config/redmine.key`" &
 
 { date; echo '### end ###'; uptime; } >> /tmp/post-commit.log
