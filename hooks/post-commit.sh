@@ -42,7 +42,7 @@ svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/rub
 #   --rss-path ~/ruby.rdf \
 #   --rss-uri http://svn.ruby-lang.org/rss/ruby.rdf \
 
-{ date; echo ciabot_svn.py; uptime; } >> /tmp/post-commit.log
+#{ date; echo ciabot_svn.py; uptime; } >> /tmp/post-commit.log
 
 ~svn/scripts/cia/ciabot_svn.py "$REPOS" "$REV" ruby &
 
