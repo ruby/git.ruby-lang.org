@@ -42,10 +42,12 @@ svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/rub
 #   --rss-path ~/ruby.rdf \
 #   --rss-uri http://svn.ruby-lang.org/rss/ruby.rdf \
 
-#{ date; echo ciabot_svn.py; uptime; } >> /tmp/post-commit.log
-
 { date; echo redmine fetch changesets; uptime; } >> /tmp/post-commit.log
 
 curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~svn/config/redmine.key`" &
+
+{ date; echo auto-style; uptime; } >> /tmp/post-commit.log
+
+~svn/scripts/svn-utils/bin/auto-style.rb ~svn/ruby/trunk &
 
 { date; echo '### end ###'; uptime; } >> /tmp/post-commit.log
