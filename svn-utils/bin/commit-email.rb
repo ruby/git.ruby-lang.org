@@ -150,7 +150,7 @@ CHANGED_TYPE = {
 }
 
 def change_info(info, uri)
-  "  #{uri}?view=rev&revision=#{info.revision}\n"
+  "  #{uri}?revision=#{info.revision}&view=revision\n"
 end
 
 def changed_dirs_info(info, uri)
