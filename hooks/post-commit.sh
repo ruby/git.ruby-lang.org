@@ -50,4 +50,10 @@ curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~svn/config/redmi
 
 ~svn/scripts/svn-utils/bin/auto-style.rb ~svn/ruby/trunk &
 
+{ date; echo github sync; uptime; } >> /tmp/post-commit.log
+
+cd /var/git-svn/ruby
+sudo -u git git svn rebase --all
+sudo -u git git push
+
 { date; echo '### end ###'; uptime; } >> /tmp/post-commit.log
