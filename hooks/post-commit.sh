@@ -53,7 +53,10 @@ curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~svn/config/redmi
 { date; echo github sync; uptime; } >> /tmp/post-commit.log
 
 cd /var/git-svn/ruby
-sudo -u git git svn rebase --all
+for branch in trunk ruby_2_2 ruby_2_1 ruby_2_0_0 ruby_1_9_3; do
+  sudo -u git git checkout $branch
+  sudo -u git git svn rebase
+done
 sudo -u git git push
 
 { date; echo '### end ###'; uptime; } >> /tmp/post-commit.log
