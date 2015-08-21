@@ -56,7 +56,7 @@ cd /var/git-svn/ruby
 for branch in trunk ruby_2_2 ruby_2_1 ruby_2_0_0; do
   sudo -u git git checkout $branch
   sudo -u git git svn rebase
-  sudo -u git git push --tags
+  sudo -u git git push
 done
 
 { date; echo '### end ###'; uptime; } >> /tmp/post-commit.log
