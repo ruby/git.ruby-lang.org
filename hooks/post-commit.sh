@@ -53,10 +53,20 @@ curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~svn/config/redmi
 { date; echo github sync; uptime; } >> /tmp/post-commit.log
 
 cd /var/git-svn/ruby
-for branch in trunk ruby_2_2 ruby_2_1 ruby_2_0_0; do
-  sudo -u git git checkout $branch
-  sudo -u git git svn rebase
-  sudo -u git git push
+sudo -u git git svn fetch --all
+
+# Push branch or tag
+for ref in `svnlook changed -r $REV $REPOS | grep '^[AU ]' |                                            sed 's!^..  \(\(trunk\)/.*\|\(tags\|branches\)/\([^/]*\)/.*\)!\2\4!' | sort -u`; do
+  case $ref in
+  trunk) sudo -u git git push origin svn/trunk:trunk ;;
+  ruby_*) sudo -u git git push origin svn/$ref:$ref ;;
+  v*) echo git tag -f $ref svn/tags/$ref && git push origin $ref ;;
+  esac
+done
+
+# Delete tags or branches
+for ref in `svnlook changed -r $REV $REPOS |                                                            grep '^D   \(tags\|branches\)/[^/]*/$' | sed 's!^D   \(tags\|branches\)/\([^/]*\)/$!\2!'`; do
+  sudo -u git git push origin :$ref
 done
 
 { date; echo '### end ###'; uptime; } >> /tmp/post-commit.log
