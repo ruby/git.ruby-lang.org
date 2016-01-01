@@ -23,7 +23,7 @@ svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/rub
    --viewvc-uri https://svn.ruby-lang.org/cgi-bin/viewvc.cgi \
    -r https://svn.ruby-lang.org/repos/ruby \
    --rss-path /tmp/ruby.rdf \
-   --rss-uri http://svn.ruby-lang.org/rss/ruby.rdf \
+   --rss-uri https://svn.ruby-lang.org/rss/ruby.rdf \
    --error-to cvs-admin@ruby-lang.org
 
 { date; echo update-version.h.rb; uptime; } >> /tmp/post-commit.log
