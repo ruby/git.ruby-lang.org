@@ -109,13 +109,13 @@ module Svn
             end
           end
         end
-        
+
         if in_content or in_header
           last_target[:body] << line
         end
 
         in_header = true if in_header.nil?
-        
+
       end
 
       @diffs.each do |key, values|
@@ -148,12 +148,12 @@ module Svn
       }
       @diffs[target][type]
     end
-    
+
     def get_sha256
       sha = Digest::SHA256.new
       @sha256 = {}
       [
-        @added_files, 
+        @added_files,
 #        @deleted_files,
         @updated_files,
       ].each do |files|
@@ -169,7 +169,7 @@ module Svn
       end
       @entire_sha256 = sha.hexdigest
     end
-    
+
     def svnlook(command, *others)
       `svnlook #{command} #{@path} -r #{@revision} #{others.join(' ')}`
     end
@@ -197,6 +197,6 @@ module Svn
         ENV["LANG"] = orig
       end
     end
-    
+
   end
 end
