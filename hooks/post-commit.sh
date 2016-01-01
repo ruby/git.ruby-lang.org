@@ -2,7 +2,7 @@
 
 { date; echo '### start ###'; uptime; } >> /tmp/post-commit.log
 
-PATH=/opt/csw/bin:/usr/sfw/bin:/usr/bin:/bin
+PATH=/usr/bin:/bin
 export PATH
 HOME=/home/svn
 export HOME
