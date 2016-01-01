@@ -20,8 +20,8 @@ svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/rub
    "$REPOS" "$REV" ruby-cvs@ruby-lang.org \
    -I ~svn/scripts/svn-utils/lib \
    --name Ruby \
-   --viewvc-uri http://svn.ruby-lang.org/cgi-bin/viewvc.cgi \
-   -r http://svn.ruby-lang.org/repos/ruby \
+   --viewvc-uri https://svn.ruby-lang.org/cgi-bin/viewvc.cgi \
+   -r https://svn.ruby-lang.org/repos/ruby \
    --rss-path /tmp/ruby.rdf \
    --rss-uri http://svn.ruby-lang.org/rss/ruby.rdf \
    --error-to cvs-admin@ruby-lang.org
