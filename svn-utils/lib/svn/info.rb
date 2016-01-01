@@ -90,7 +90,7 @@ module Svn
       @diffs = {}
       last_target = nil
       in_content = in_header = false
-      @diff.each do |line|
+      @diff.each_line do |line|
         case line
         when /^(Modified|Added|Deleted|Copied|Property changes on):\s+(.+)/
           in_content = false
