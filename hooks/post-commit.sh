@@ -30,18 +30,6 @@ svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/rub
 
 ~svn/scripts/svn-utils/bin/update-version.h.rb "$REPOS" "$REV" &
 
-#~svn/scripts/svn-utils/bin/commit-email-test.rb \
-#   "$REPOS" "$REV" eban@ruby-lang.org \
-#   -I ~svn/scripts/svn-utils/lib \
-#   --name Ruby \
-#   --viewvc-uri http://svn.ruby-lang.org/cgi-bin/viewvc.cgi \
-#   --error-to eban@ruby-lang.org
-
-#   --from admin@ruby-lang.org
-#   -r http://svn.ruby-lang.org/repos/ruby \
-#   --rss-path ~/ruby.rdf \
-#   --rss-uri http://svn.ruby-lang.org/rss/ruby.rdf \
-
 { date; echo redmine fetch changesets; uptime; } >> /tmp/post-commit.log
 
 curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~svn/config/redmine.key`" &
