@@ -171,7 +171,7 @@ module Svn
     end
 
     def svnlook(command, *others)
-      `svnlook #{command} #{@path} -r #{@revision} #{others.join(' ')}`
+      `svnlook #{command} #{@path} -r #{@revision} #{others.join(' ')}`.force_encoding("ASCII-8BIT")
     end
 
     def directory_path?(path)
