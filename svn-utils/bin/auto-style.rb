@@ -56,7 +56,7 @@ end
 
 log = svn.update
 log.select! {|l|
-  /^\d/ !~ l and
+  /^\d/ !~ l and /\.bat\z/ !~ l and
   (/\A(?:config|[Mm]akefile|GNUmakefile|README)/ =~ File.basename(l) or
    /\A\z|\.(?:[chsy]|\d+|e?rb|tmpl|bas[eh]|z?sh|in|ma?k|def|src|trans|rdoc|ja|en|el|sed|awk|p[ly]|scm|mspec|html|)\z/ =~ File.extname(l))
 }
