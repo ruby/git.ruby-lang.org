@@ -41,7 +41,7 @@ curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~svn/config/redmi
 { date; echo github sync; uptime; } >> /tmp/post-commit.log
 
 cd /var/git-svn/ruby
-sudo -u git git svn fetch --all --use-log-author
+sudo -u git git svn fetch --all
 
 # Push branch or tag
 for ref in `svnlook changed -r $REV $REPOS | grep '^[AU ]' |                                            sed 's!^..  \(\(trunk\)/.*\|\(tags\|branches\)/\([^/]*\)/.*\)!\2\4!' | sort -u`; do
