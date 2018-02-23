@@ -7,6 +7,8 @@ export PATH
 HOME=/home/svn
 export HOME
 
+[ "${FLOCKER}" != "$0" ] && exec env FLOCKER="$0" flock -en "$0" "$0" "$@" || :
+
 REPOS="$1"
 REV="$2"
 
