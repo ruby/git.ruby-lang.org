@@ -55,6 +55,9 @@ for ref in `svnlook changed -r $REV $REPOS | grep '^[AU ]' |                    
   esac
 done
 
+# Push cgit
+sudo -u git git push cgit
+
 # Delete tags or branches
 for ref in `svnlook changed -r $REV $REPOS |                                                            grep '^D   \(tags\|branches\)/[^/]*/$' | sed 's!^D   \(tags\|branches\)/\([^/]*\)/$!\2!'`; do
   sudo -u git git push origin :$ref
