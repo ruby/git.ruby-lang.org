@@ -49,18 +49,16 @@ sudo -u git git svn rebase
 # Push branch or tag
 for ref in `svnlook changed -r $REV $REPOS | grep '^[AU ]' |                                            sed 's!^..  \(\(trunk\)/.*\|\(tags\|branches\)/\([^/]*\)/.*\)!\2\4!' | sort -u`; do
   case $ref in
-  trunk) sudo -u git git push origin svn/trunk:trunk ;;
-  ruby_*) sudo -u git git push origin svn/$ref:$ref ;;
-  v*) sudo -u git git tag -f $ref svn/tags/$ref && sudo -u git git push origin $ref ;;
+  trunk) sudo -u git git push origin svn/trunk:trunk && sudo -u git git push cgit svn/trunk:trunk ;;
+  ruby_*) sudo -u git git push origin svn/$ref:$ref && sudo -u git git push cgit svn/$ref:$ref ;;
+  v*) sudo -u git git tag -f $ref svn/tags/$ref && sudo -u git git push origin $ref && sudo -u git git push cgit $ref;;
   esac
 done
-
-# Push cgit
-sudo -u git git push cgit
 
 # Delete tags or branches
 for ref in `svnlook changed -r $REV $REPOS |                                                            grep '^D   \(tags\|branches\)/[^/]*/$' | sed 's!^D   \(tags\|branches\)/\([^/]*\)/$!\2!'`; do
   sudo -u git git push origin :$ref
+  sudo -u git git push cgit :$ref
 done
 
 { date; echo '### end ###'; uptime; } >> /tmp/post-commit.log
