@@ -36,6 +36,10 @@ class SVN
     exec("ci", "-m", log, *args)
   end
 
+  def last_rev
+    svnread('log', '-r', 'HEAD', '-q')[1].match(/\Ar(?<rev>\d+) /)[:rev]
+  end
+
   module Debugging
     def commit(*args)
       p args
@@ -62,7 +66,7 @@ log.select! {|l|
 }
 files = log.select {|n| File.file?(n)}
 unless files.empty?
-  translit = trailing = eofnewline = false
+  translit = trailing = eofnewline = expandtab = false
 
   files.grep(/\/ChangeLog\z/) do |changelog|
     if IO.foreach(changelog, "rb").any? {|line| !line.ascii_only?}
@@ -77,11 +81,29 @@ unless files.empty?
     end
   end
 
+  last_rev = svn.last_rev
   edit = files.select do |f|
     src = File.binread(f) rescue next
     trailing = trailing0 = true if src.gsub!(/[ \t]+$/, '')
     eofnewline = eofnewline0 = true if src.sub!(/(?<!\n)\z/, "\n")
-    if trailing0 or eofnewline0
+
+    expandtab0 = false
+    if last_rev && (f.end_with?('.c') || f.end_with?('.h') || f == 'insns.def')
+      line_i = 0
+      blames = svn.svnread('blame', f)
+      src.gsub!(/^.*$/) do |line|
+        blame = blames[line_i]
+        line_i += 1
+        if blame.match(/\A\s*#{last_rev}\s/) && line.start_with?("\t") # last-committed line with hard tabs
+          expandtab = expandtab0 = true
+          line.sub(/\A\t+/) { |tabs| ' ' * (8 * tabs.length) }
+        else
+          line
+        end
+      end
+    end
+
+    if trailing0 or eofnewline0 or expandtab0
       File.binwrite(f, src)
       true
     end
@@ -90,6 +112,7 @@ unless files.empty?
     msg = [("remove trailing spaces" if trailing),
            ("append newline at EOF" if eofnewline),
            ("translit ChangeLog" if translit),
+           ("expand tabs" if expandtab),
           ].compact
     svn.commit("* #{msg.join(', ')}.", *edit)
   end
