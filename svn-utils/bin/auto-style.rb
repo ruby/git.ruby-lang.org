@@ -59,9 +59,9 @@ unless ARGV.empty?
 end
 
 EXPANDTAB_IGNORED_DIRS = [
-  'ccan',
-  'ext/json',
-  'ext/psych',
+  'ccan/',
+  'ext/json/',
+  'ext/psych/',
 ]
 
 log = svn.update
