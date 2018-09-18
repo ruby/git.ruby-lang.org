@@ -58,6 +58,12 @@ unless ARGV.empty?
   Dir.chdir(ARGV.shift)
 end
 
+EXPANDTAB_IGNORED_DIRS = [
+  'ccan',
+  'ext/json',
+  'ext/psych',
+]
+
 log = svn.update
 log.select! {|l|
   /^\d/ !~ l and /\.bat\z/ !~ l and
@@ -88,7 +94,7 @@ unless files.empty?
     eofnewline = eofnewline0 = true if src.sub!(/(?<!\n)\z/, "\n")
 
     expandtab0 = false
-    if last_rev && (f.end_with?('.c') || f.end_with?('.h') || f == 'insns.def')
+    if last_rev && (f.end_with?('.c') || f.end_with?('.h') || f == 'insns.def') && EXPANDTAB_IGNORED_DIRS.all? { |d| !f.start_with?(d) }
       line_i = 0
       blames = svn.svnread('blame', f)
       src.gsub!(/^.*$/) do |line|
