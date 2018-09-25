@@ -65,7 +65,7 @@ EXPANDTAB_IGNORED_FILES = [
   %r{\Amissing/},
   %r{\Astrftime\.c\z},
   %r{\Avsnprintf\.c\z},
-  %r{\Areg.+\.c\z},
+  %r{\Areg.+\.(c|h)\z},
 ]
 
 log = svn.update
