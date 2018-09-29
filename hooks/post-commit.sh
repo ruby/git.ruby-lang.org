@@ -1,4 +1,5 @@
 #!/bin/sh
+# This hook is used by Ruby's SVN repository on svn.ruby-lang.org.
 
 { date; echo '### start ###'; uptime; } >> /tmp/post-commit.log
 
