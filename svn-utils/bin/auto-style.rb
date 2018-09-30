@@ -9,21 +9,43 @@
 ENV["LC_ALL"] = "C"
 
 class SVN
-  def exec(*args)
-    system("svn", *args)
-  end
-
   def svnread(*args)
     IO.popen(["svn", *args], &:readlines).each(&:chomp!)
-  end
-
-  def svnwrite(*args, &block)
-    IO.popen(["svn", *args], "w", &block)
   end
 
   def update(*args)
     log = svnread("update", "--accept=postpone", *args)
     log[1...-1].grep(/^[AMU]/) {|l| l[5..-1]}
+  end
+
+  def commit(log, *args)
+    exec("ci", "-m", log, *args)
+  end
+
+  def commit_properties(*files)
+    propset("svn:eol-style", "LF", *files)
+    files.grep(/\/extconf\.rb$/) do
+      dir = $`
+      prop = propget("svn:ignore", dir)
+      if prop.size < (prop |= %w[Makefile extconf.h mkmf.log]).size
+        propset("svn:ignore", dir) {|f| f.puts *prop}
+      end
+    end
+    vcs.commit("* properties.", *files)
+  end
+
+  def last_rev
+    svnread('log', '-r', 'HEAD', '-q')[1].match(/\Ar(?<rev>\d+) /)[:rev]
+  end
+
+  private
+
+  def exec(*args)
+    system("svn", *args)
+  end
+
+  def svnwrite(*args, &block)
+    IO.popen(["svn", *args], "w", &block)
   end
 
   def propget(prop, *args)
@@ -36,14 +58,6 @@ class SVN
     else
       exec("propset", prop, *args)
     end
-  end
-
-  def commit(log, *args)
-    exec("ci", "-m", log, *args)
-  end
-
-  def last_rev
-    svnread('log', '-r', 'HEAD', '-q')[1].match(/\Ar(?<rev>\d+) /)[:rev]
   end
 
   module Debugging
@@ -143,14 +157,5 @@ unless edit.empty?
         ].compact
   vcs.commit("* #{msg.join(', ')}.", *edit)
 end
-vcs.propset("svn:eol-style", "LF", *files)
-exts = []
-files.grep(/\/extconf\.rb$/) do
-  dir = $`
-  prop = vcs.propget("svn:ignore", dir)
-  if prop.size < (prop |= %w[Makefile extconf.h mkmf.log]).size
-    vcs.propset("svn:ignore", dir) {|f| f.puts *prop}
-    exts << dir
-  end
-end
-vcs.commit("* properties.", *files)
+
+vcs.commit_properties(*files)
