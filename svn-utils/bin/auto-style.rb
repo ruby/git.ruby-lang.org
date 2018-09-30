@@ -1,4 +1,10 @@
 #!/usr/bin/env ruby
+#
+# Usage:
+#   auto-style.rb [directory] # svn mode
+#   RUBY_GIT_HOOK=0 auto-style.rb [directory] # svn mode
+#   RUBY_GIT_HOOK=1 auto-style.rb [directory] # git mode
+#
 
 ENV["LC_ALL"] = "C"
 
@@ -47,11 +53,18 @@ class SVN
   end
 end
 
-svn = SVN.new
+class Git
+end
 
-if ARGV[0] == "--debug"
-  ARGV.shift
-  svn.extend(SVN::Debugging)
+if ENV['RUBY_GIT_HOOK'] == '1'
+  vcs = Git.new
+else
+  vcs = SVN.new
+
+  if ARGV[0] == "--debug"
+    ARGV.shift
+    vcs.extend(SVN::Debugging)
+  end
 end
 
 unless ARGV.empty?
@@ -70,7 +83,7 @@ EXPANDTAB_IGNORED_FILES = [
   %r{\Areg.+\.(c|h)\z},
 ]
 
-log = svn.update
+log = vcs.update
 log.select! {|l|
   /^\d/ !~ l and /\.bat\z/ !~ l and
   (/\A(?:config|[Mm]akefile|GNUmakefile|README)/ =~ File.basename(l) or
@@ -93,7 +106,7 @@ unless files.empty?
     end
   end
 
-  last_rev = svn.last_rev
+  last_rev = vcs.last_rev
   edit = files.select do |f|
     src = File.binread(f) rescue next
     trailing = trailing0 = true if src.gsub!(/[ \t]+$/, '')
@@ -102,7 +115,7 @@ unless files.empty?
     expandtab0 = false
     if last_rev && (f.end_with?('.c') || f.end_with?('.h') || f == 'insns.def') && EXPANDTAB_IGNORED_FILES.all? { |re| !f.match(re) }
       line_i = 0
-      blames = svn.svnread('blame', f)
+      blames = vcs.svnread('blame', f)
       src.gsub!(/^.*$/) do |line|
         blame = blames[line_i]
         line_i += 1
@@ -126,17 +139,17 @@ unless files.empty?
            ("translit ChangeLog" if translit),
            ("expand tabs" if expandtab),
           ].compact
-    svn.commit("* #{msg.join(', ')}.", *edit)
+    vcs.commit("* #{msg.join(', ')}.", *edit)
   end
-  svn.propset("svn:eol-style", "LF", *files)
+  vcs.propset("svn:eol-style", "LF", *files)
   exts = []
   files.grep(/\/extconf\.rb$/) do
     dir = $`
-    prop = svn.propget("svn:ignore", dir)
+    prop = vcs.propget("svn:ignore", dir)
     if prop.size < (prop |= %w[Makefile extconf.h mkmf.log]).size
-      svn.propset("svn:ignore", dir) {|f| f.puts *prop}
+      vcs.propset("svn:ignore", dir) {|f| f.puts *prop}
       exts << dir
     end
   end
-  svn.commit("* properties.", *files)
+  vcs.commit("* properties.", *files)
 end
