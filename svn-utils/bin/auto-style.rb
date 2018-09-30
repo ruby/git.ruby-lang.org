@@ -29,8 +29,8 @@ class SVN
     lines
   end
 
-  def commit(log, *args)
-    exec("ci", "-m", log, *args)
+  def commit(log, *files)
+    exec("ci", "-m", log, *files)
   end
 
   def commit_properties(*files)
@@ -84,6 +84,23 @@ class SVN
 end
 
 class Git
+  # ["foo/bar.c", "baz.h", ...]
+  def updated_paths
+    return [] # TODO: implement this
+  end
+
+  # [0, 1, 4, ...]
+  def updated_lines(file)
+    return [] # TODO: implement this
+  end
+
+  def commit(log, *files)
+    # TODO: implement this
+  end
+
+  def commit_properties(*files)
+    # no-op in git
+  end
 end
 
 if ENV['RUBY_GIT_HOOK'] == '1'
