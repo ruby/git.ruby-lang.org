@@ -13,8 +13,8 @@ class SVN
     IO.popen(["svn", *args], &:readlines).each(&:chomp!)
   end
 
-  def updated_paths(*args)
-    log = svnread("update", "--accept=postpone", *args)
+  def updated_paths
+    log = svnread("update", "--accept=postpone")
     log[1...-1].grep(/^[AMU]/) {|l| l[5..-1]}
   end
 
