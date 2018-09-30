@@ -9,13 +9,24 @@
 ENV["LC_ALL"] = "C"
 
 class SVN
-  def svnread(*args)
-    IO.popen(["svn", *args], &:readlines).each(&:chomp!)
-  end
-
+  # ["foo/bar.c", "baz.h", ...]
   def updated_paths
     log = svnread("update", "--accept=postpone")
     log[1...-1].grep(/^[AMU]/) {|l| l[5..-1]}
+  end
+
+  # [0, 1, 4, ...]
+  def updated_lines(file)
+    return [] if last_rev.nil?
+
+    lines = []
+    blames = svnread('blame', file)
+    blames.each_with_index do |blame, lineno|
+      if blame.match(/\A\s*#{last_rev}\s/)
+        lines << lineno
+      end
+    end
+    lines
   end
 
   def commit(log, *args)
@@ -34,14 +45,19 @@ class SVN
     commit("* properties.", *files)
   end
 
-  def last_rev
-    svnread('log', '-r', 'HEAD', '-q')[1].match(/\Ar(?<rev>\d+) /)[:rev]
-  end
-
   private
+
+  def last_rev
+    return @last_rev if defined?(@last_rev)
+    @last_rev = svnread('log', '-r', 'HEAD', '-q')[1].match(/\Ar(?<rev>\d+) /)[:rev]
+  end
 
   def exec(*args)
     system("svn", *args)
+  end
+
+  def svnread(*args)
+    IO.popen(["svn", *args], &:readlines).each(&:chomp!)
   end
 
   def svnwrite(*args, &block)
@@ -122,20 +138,16 @@ files.grep(/\/ChangeLog\z/) do |changelog|
   end
 end
 
-last_rev = vcs.last_rev
-edit = files.select do |f|
+edited_files = files.select do |f|
   src = File.binread(f) rescue next
   trailing = trailing0 = true if src.gsub!(/[ \t]+$/, '')
   eofnewline = eofnewline0 = true if src.sub!(/(?<!\n)\z/, "\n")
 
   expandtab0 = false
-  if last_rev && (f.end_with?('.c') || f.end_with?('.h') || f == 'insns.def') && EXPANDTAB_IGNORED_FILES.all? { |re| !f.match(re) }
-    line_i = 0
-    blames = vcs.svnread('blame', f)
-    src.gsub!(/^.*$/) do |line|
-      blame = blames[line_i]
-      line_i += 1
-      if blame.match(/\A\s*#{last_rev}\s/) && line.start_with?("\t") # last-committed line with hard tabs
+  updated_lines = vcs.updated_lines(f, src)
+  if !updated_lines.empty? && (f.end_with?('.c') || f.end_with?('.h') || f == 'insns.def') && EXPANDTAB_IGNORED_FILES.all? { |re| !f.match(re) }
+    src.gsub!(/^.*$/).with_index do |line, lineno|
+      if updated_lines.include?(lineno) && line.start_with?("\t") # last-committed line with hard tabs
         expandtab = expandtab0 = true
         line.sub(/\A\t+/) { |tabs| ' ' * (8 * tabs.length) }
       else
@@ -149,13 +161,13 @@ edit = files.select do |f|
     true
   end
 end
-unless edit.empty?
+unless edited_files.empty?
   msg = [("remove trailing spaces" if trailing),
          ("append newline at EOF" if eofnewline),
          ("translit ChangeLog" if translit),
          ("expand tabs" if expandtab),
         ].compact
-  vcs.commit("* #{msg.join(', ')}.", *edit)
+  vcs.commit("* #{msg.join(', ')}.", *edited_files)
 end
 
 vcs.commit_properties(*files)
