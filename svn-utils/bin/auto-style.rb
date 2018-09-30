@@ -13,7 +13,7 @@ class SVN
     IO.popen(["svn", *args], &:readlines).each(&:chomp!)
   end
 
-  def update(*args)
+  def updated_paths(*args)
     log = svnread("update", "--accept=postpone", *args)
     log[1...-1].grep(/^[AMU]/) {|l| l[5..-1]}
   end
@@ -97,13 +97,13 @@ EXPANDTAB_IGNORED_FILES = [
   %r{\Areg.+\.(c|h)\z},
 ]
 
-log = vcs.update
-log.select! {|l|
+paths = vcs.updated_paths
+paths.select! {|l|
   /^\d/ !~ l and /\.bat\z/ !~ l and
   (/\A(?:config|[Mm]akefile|GNUmakefile|README)/ =~ File.basename(l) or
    /\A\z|\.(?:[chsy]|\d+|e?rb|tmpl|bas[eh]|z?sh|in|ma?k|def|src|trans|rdoc|ja|en|el|sed|awk|p[ly]|scm|mspec|html|)\z/ =~ File.extname(l))
 }
-files = log.select {|n| File.file?(n)}
+files = paths.select {|n| File.file?(n)}
 if files.empty?
   exit 0
 end
