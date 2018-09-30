@@ -31,7 +31,7 @@ class SVN
         propset("svn:ignore", dir) {|f| f.puts *prop}
       end
     end
-    vcs.commit("* properties.", *files)
+    commit("* properties.", *files)
   end
 
   def last_rev
