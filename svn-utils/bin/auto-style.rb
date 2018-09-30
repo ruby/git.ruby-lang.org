@@ -90,66 +90,67 @@ log.select! {|l|
    /\A\z|\.(?:[chsy]|\d+|e?rb|tmpl|bas[eh]|z?sh|in|ma?k|def|src|trans|rdoc|ja|en|el|sed|awk|p[ly]|scm|mspec|html|)\z/ =~ File.extname(l))
 }
 files = log.select {|n| File.file?(n)}
-unless files.empty?
-  translit = trailing = eofnewline = expandtab = false
-
-  files.grep(/\/ChangeLog\z/) do |changelog|
-    if IO.foreach(changelog, "rb").any? {|line| !line.ascii_only?}
-      tmp = changelog+".ascii"
-      if system("iconv", "-f", "utf-8", "-t", "us-ascii//translit", changelog, out: tmp) and
-          (File.size(tmp) - File.size(changelog)).abs < 10
-        File.rename(tmp, changelog)
-        translit = true
-      else
-        File.unlink(tmp) rescue nil
-      end
-    end
-  end
-
-  last_rev = vcs.last_rev
-  edit = files.select do |f|
-    src = File.binread(f) rescue next
-    trailing = trailing0 = true if src.gsub!(/[ \t]+$/, '')
-    eofnewline = eofnewline0 = true if src.sub!(/(?<!\n)\z/, "\n")
-
-    expandtab0 = false
-    if last_rev && (f.end_with?('.c') || f.end_with?('.h') || f == 'insns.def') && EXPANDTAB_IGNORED_FILES.all? { |re| !f.match(re) }
-      line_i = 0
-      blames = vcs.svnread('blame', f)
-      src.gsub!(/^.*$/) do |line|
-        blame = blames[line_i]
-        line_i += 1
-        if blame.match(/\A\s*#{last_rev}\s/) && line.start_with?("\t") # last-committed line with hard tabs
-          expandtab = expandtab0 = true
-          line.sub(/\A\t+/) { |tabs| ' ' * (8 * tabs.length) }
-        else
-          line
-        end
-      end
-    end
-
-    if trailing0 or eofnewline0 or expandtab0
-      File.binwrite(f, src)
-      true
-    end
-  end
-  unless edit.empty?
-    msg = [("remove trailing spaces" if trailing),
-           ("append newline at EOF" if eofnewline),
-           ("translit ChangeLog" if translit),
-           ("expand tabs" if expandtab),
-          ].compact
-    vcs.commit("* #{msg.join(', ')}.", *edit)
-  end
-  vcs.propset("svn:eol-style", "LF", *files)
-  exts = []
-  files.grep(/\/extconf\.rb$/) do
-    dir = $`
-    prop = vcs.propget("svn:ignore", dir)
-    if prop.size < (prop |= %w[Makefile extconf.h mkmf.log]).size
-      vcs.propset("svn:ignore", dir) {|f| f.puts *prop}
-      exts << dir
-    end
-  end
-  vcs.commit("* properties.", *files)
+if files.empty?
+  exit 0
 end
+translit = trailing = eofnewline = expandtab = false
+
+files.grep(/\/ChangeLog\z/) do |changelog|
+  if IO.foreach(changelog, "rb").any? {|line| !line.ascii_only?}
+    tmp = changelog+".ascii"
+    if system("iconv", "-f", "utf-8", "-t", "us-ascii//translit", changelog, out: tmp) and
+        (File.size(tmp) - File.size(changelog)).abs < 10
+      File.rename(tmp, changelog)
+      translit = true
+    else
+      File.unlink(tmp) rescue nil
+    end
+  end
+end
+
+last_rev = vcs.last_rev
+edit = files.select do |f|
+  src = File.binread(f) rescue next
+  trailing = trailing0 = true if src.gsub!(/[ \t]+$/, '')
+  eofnewline = eofnewline0 = true if src.sub!(/(?<!\n)\z/, "\n")
+
+  expandtab0 = false
+  if last_rev && (f.end_with?('.c') || f.end_with?('.h') || f == 'insns.def') && EXPANDTAB_IGNORED_FILES.all? { |re| !f.match(re) }
+    line_i = 0
+    blames = vcs.svnread('blame', f)
+    src.gsub!(/^.*$/) do |line|
+      blame = blames[line_i]
+      line_i += 1
+      if blame.match(/\A\s*#{last_rev}\s/) && line.start_with?("\t") # last-committed line with hard tabs
+        expandtab = expandtab0 = true
+        line.sub(/\A\t+/) { |tabs| ' ' * (8 * tabs.length) }
+      else
+        line
+      end
+    end
+  end
+
+  if trailing0 or eofnewline0 or expandtab0
+    File.binwrite(f, src)
+    true
+  end
+end
+unless edit.empty?
+  msg = [("remove trailing spaces" if trailing),
+         ("append newline at EOF" if eofnewline),
+         ("translit ChangeLog" if translit),
+         ("expand tabs" if expandtab),
+        ].compact
+  vcs.commit("* #{msg.join(', ')}.", *edit)
+end
+vcs.propset("svn:eol-style", "LF", *files)
+exts = []
+files.grep(/\/extconf\.rb$/) do
+  dir = $`
+  prop = vcs.propget("svn:ignore", dir)
+  if prop.size < (prop |= %w[Makefile extconf.h mkmf.log]).size
+    vcs.propset("svn:ignore", dir) {|f| f.puts *prop}
+    exts << dir
+  end
+end
+vcs.commit("* properties.", *files)
