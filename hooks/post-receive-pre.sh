@@ -5,6 +5,7 @@ set -o pipefail
 #
 # In the future, we'll copy this `hooks/post-receive-pre.sh` to `hooks/post-receive.sh`
 # to activate this hook's functionality on Ruby's official git repository.
+# Make sure this script is executed asynchronously using `&`, since this script is a little slow.
 
 # script parameters
 ruby_git="/var/git/ruby.pre.git"

@@ -5,3 +5,4 @@ set -o pipefail
 #
 # Until migration to git is finished, we should develop `hooks/post-receive-pre.sh` and test it
 # on `git@git.ruby-lang.org:ruby.pre.git`.
+# Make sure this script is executed asynchronously using `&`, since this script is a little slow.
