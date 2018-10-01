@@ -98,7 +98,7 @@ class Git
 
     # Should be done in another method once SVN is deprecated. Now it has only the same methods.
     if Dir.exist?(@workdir)
-      cmd = 'git clean -fdx && git pull'
+      cmd = "git -C #{@workdir.shellescape} clean -fdx && git -C #{@workdir.shellescape} pull"
     else
       cmd = ['git', 'clone', git_dir, @workdir].shelljoin
     end
