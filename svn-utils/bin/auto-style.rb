@@ -109,16 +109,27 @@ class Git
 
   # ["foo/bar.c", "baz.h", ...]
   def updated_paths
-    return [] # TODO: implement this
+    IO.popen(['git', 'diff', '--name-only', 'HEAD^', 'HEAD'], &:readlines).each(&:chomp!)
   end
 
   # [0, 1, 4, ...]
   def updated_lines(file)
-    return [] # TODO: implement this
+    return [] if last_rev.nil?
+
+    lines = []
+    IO.popen(['git', 'blame', file], &:readlines).each_with_index do |line, index|
+      # git 2.1.4 on git@git.ruby-lang.org shows only 8 chars on blame.
+      if line[0..7] == last_rev[0..7]
+        lines << index
+      end
+    end
+    lines
   end
 
   def commit(log, *files)
-    # TODO: implement this
+    git('add', *files)
+    git('commit', '-m', log)
+    git('push', 'origin', current_branch)
   end
 
   def commit_properties(*files)
@@ -126,6 +137,14 @@ class Git
   end
 
   private
+
+  def last_rev
+    @last_rev ||= IO.popen(['git', 'rev-parse', 'HEAD'], &:readlines).first
+  end
+
+  def current_branch
+    @current_branch ||= IO.popen(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], &:readlines).first
+  end
 
   def git(*args)
     git_dir = ENV.delete('GIT_DIR') # this overcomes '-C' or pwd
