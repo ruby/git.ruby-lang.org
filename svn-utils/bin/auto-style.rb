@@ -103,19 +103,27 @@ class Git
   end
 end
 
+options = {}
+if ARGV[0] == "--debug"
+  ARGV.shift
+  options[:debug] = true
+end
+unless ARGV.empty?
+  options[:chdir] = ARGV.shift
+end
+
 if ENV['RUBY_GIT_HOOK'] == '1'
   vcs = Git.new
 else
   vcs = SVN.new
 
-  if ARGV[0] == "--debug"
-    ARGV.shift
+  if options[:debug]
     vcs.extend(SVN::Debugging)
   end
 end
 
-unless ARGV.empty?
-  Dir.chdir(ARGV.shift)
+if options.key?(:chdir)
+  Dir.chdir(options[:chdir])
 end
 
 EXPANDTAB_IGNORED_FILES = [
