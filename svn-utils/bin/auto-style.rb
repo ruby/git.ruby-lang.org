@@ -99,7 +99,7 @@ class Git
     # Should be done in another method once SVN is deprecated. Now it has only the same methods.
     if Dir.exist?(@workdir)
       Dir.chdir(@workdir) do
-        system!('git clean -fdx')
+        system!('git reset --hard HEAD')
         system!('git pull')
       end
     else
