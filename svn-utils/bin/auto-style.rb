@@ -97,11 +97,11 @@ class Git
     @workdir = File.expand_path(File.join('../../repos', File.basename(git_dir)), __dir__)
 
     # Should be done in another method once SVN is deprecated. Now it has only the same methods.
-    require 'pp'
-    pp ENV
     if Dir.exist?(@workdir)
-      git('-C', @workdir, 'clean', '-fdx')
-      git('-C', @workdir, 'pull')
+      Dir.chdir(@workdir) do
+        git('clean', '-fdx')
+        git('pull')
+      end
     else
       git('clone', git_dir, @workdir)
     end
