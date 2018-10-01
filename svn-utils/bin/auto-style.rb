@@ -98,10 +98,10 @@ class Git
 
     # Should be done in another method once SVN is deprecated. Now it has only the same methods.
     if Dir.exist?(@workdir)
-      system!("git --git-dir=#{@workdir.shellescape}/.git clean -fdx")
-      system!("git --git-dir=#{@workdir.shellescape}/.git pull")
+      git('-C', @workdir, 'clean', '-fdx')
+      git('-C', @workdir, 'pull')
     else
-      system!(['git', 'clone', git_dir, @workdir].shelljoin)
+      git('clone', git_dir, @workdir)
     end
   end
 
@@ -124,6 +124,16 @@ class Git
   end
 
   private
+
+  def git(*args)
+    git_dir = ENV.delete('GIT_DIR') # this overcomes '-C' or pwd
+    cmd = ['git', *args].shelljoin
+    unless system(cmd)
+      abort "Failed to run: #{cmd}"
+    end
+  ensure
+    ENV['GIT_DIR'] = git_dir if git_dir
+  end
 
   def system!(cmd)
     unless system(cmd)
