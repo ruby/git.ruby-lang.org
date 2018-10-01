@@ -98,12 +98,12 @@ class Git
 
     # Should be done in another method once SVN is deprecated. Now it has only the same methods.
     if Dir.exist?(@workdir)
-      cmd = "git -C #{@workdir.shellescape} clean -fdx && git -C #{@workdir.shellescape} pull"
+      Dir.chdir(@workdir) do
+        system!('git clean -fdx')
+        system!('git pull')
+      end
     else
-      cmd = ['git', 'clone', git_dir, @workdir].shelljoin
-    end
-    unless system(cmd)
-      abort "Failed to run: #{cmd}"
+      system!(['git', 'clone', git_dir, @workdir].shelljoin)
     end
   end
 
@@ -123,6 +123,14 @@ class Git
 
   def commit_properties(*files)
     # no-op in git
+  end
+
+  private
+
+  def system!(cmd)
+    unless system(cmd)
+      abort "Failed to run: #{cmd}"
+    end
   end
 end
 
