@@ -94,14 +94,12 @@ class Git
   attr_reader :workdir
 
   def initialize(git_dir)
-    @workdir = File.expand_path(File.join('../../repos', 'ruby.pre'), __dir__)
+    @workdir = File.expand_path(File.join('../../repos', File.basename(git_dir)), __dir__)
 
     # Should be done in another method once SVN is deprecated. Now it has only the same methods.
     if Dir.exist?(@workdir)
-      Dir.chdir(@workdir) do
-        system!("git clean -fdx")
-        system!('git pull')
-      end
+      system!("git --git-dir=#{@workdir.shellescape}/.git clean -fdx")
+      system!("git --git-dir=#{@workdir.shellescape}/.git pull")
     else
       system!(['git', 'clone', git_dir, @workdir].shelljoin)
     end
