@@ -6,9 +6,16 @@
 #   RUBY_GIT_HOOK=1 auto-style.rb [directory] # git mode
 #
 
+require 'shellwords'
 ENV["LC_ALL"] = "C"
 
 class SVN
+  attr_reader :workdir
+
+  def initialize(repo_path)
+    @workdir = repo_path
+  end
+
   # ["foo/bar.c", "baz.h", ...]
   def updated_paths
     log = svnread("update", "--accept=postpone")
@@ -84,6 +91,22 @@ class SVN
 end
 
 class Git
+  attr_reader :workdir
+
+  def initialize(git_dir)
+    @workdir = File.expand_path(File.join('../../hooks', File.basename(git_dir)), __dir__)
+
+    # Should be done in another method once SVN is deprecated. Now it has only the same methods.
+    if Dir.exist?(@workdir)
+      cmd = 'git clean -fdx && git pull'
+    else
+      cmd = ['git', 'clone', git_dir, @workdir].shelljoin
+    end
+    unless system(cmd)
+      abort "Failed to run: #{cmd}"
+    end
+  end
+
   # ["foo/bar.c", "baz.h", ...]
   def updated_paths
     return [] # TODO: implement this
@@ -109,21 +132,20 @@ if ARGV[0] == "--debug"
   options[:debug] = true
 end
 unless ARGV.empty?
-  options[:chdir] = ARGV.shift
+  options[:repo_path] = ARGV.shift
 end
 
 if ENV['RUBY_GIT_HOOK'] == '1'
-  vcs = Git.new
+  vcs = Git.new(options.fetch(:repo_path))
 else
-  vcs = SVN.new
-
+  vcs = SVN.new(options[:repo_path])
   if options[:debug]
     vcs.extend(SVN::Debugging)
   end
 end
 
-if options.key?(:chdir)
-  Dir.chdir(options[:chdir])
+if vcs.workdir
+  Dir.chdir(vcs.workdir)
 end
 
 EXPANDTAB_IGNORED_FILES = [
