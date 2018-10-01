@@ -99,6 +99,7 @@ class Git
     # Should be done in another method once SVN is deprecated. Now it has only the same methods.
     if Dir.exist?(@workdir)
       Dir.chdir(@workdir) do
+        ENV['SHELL'] = '/bin/bash'
         system!("cd #{@workdir.shellescape} && git clean -fdx")
         system!('git pull')
       end
