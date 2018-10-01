@@ -228,7 +228,7 @@ edited_files = files.select do |f|
   eofnewline = eofnewline0 = true if src.sub!(/(?<!\n)\z/, "\n")
 
   expandtab0 = false
-  updated_lines = vcs.updated_lines(f, src)
+  updated_lines = vcs.updated_lines(f)
   if !updated_lines.empty? && (f.end_with?('.c') || f.end_with?('.h') || f == 'insns.def') && EXPANDTAB_IGNORED_FILES.all? { |re| !f.match(re) }
     src.gsub!(/^.*$/).with_index do |line, lineno|
       if updated_lines.include?(lineno) && line.start_with?("\t") # last-committed line with hard tabs
