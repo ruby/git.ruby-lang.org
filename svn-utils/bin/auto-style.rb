@@ -109,7 +109,9 @@ class Git
 
   # ["foo/bar.c", "baz.h", ...]
   def updated_paths
-    IO.popen(['git', 'diff', '--name-only', 'HEAD^', 'HEAD'], &:readlines).each(&:chomp!)
+    with_clean_env do
+      IO.popen(['git', 'diff', '--name-only', 'HEAD^', 'HEAD'], &:readlines).each(&:chomp!)
+    end
   end
 
   # [0, 1, 4, ...]
@@ -117,7 +119,7 @@ class Git
     return [] if last_rev.nil?
 
     lines = []
-    IO.popen(['git', 'blame', file], &:readlines).each_with_index do |line, index|
+    with_clean_env { IO.popen(['git', 'blame', file], &:readlines) }.each_with_index do |line, index|
       # git 2.1.4 on git@git.ruby-lang.org shows only 8 chars on blame.
       if line[0..7] == last_rev[0..7]
         lines << index
@@ -139,27 +141,25 @@ class Git
   private
 
   def last_rev
-    @last_rev ||= IO.popen(['git', 'rev-parse', 'HEAD'], &:readlines).first
+    @last_rev ||= with_clean_env { IO.popen(['git', 'rev-parse', 'HEAD'], &:readlines) }.first
   end
 
   def current_branch
-    @current_branch ||= IO.popen(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], &:readlines).first
+    @current_branch ||= with_clean_env { IO.popen(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], &:readlines) }.first
   end
 
   def git(*args)
-    git_dir = ENV.delete('GIT_DIR') # this overcomes '-C' or pwd
     cmd = ['git', *args].shelljoin
-    unless system(cmd)
+    unless with_clean_env { system(cmd) }
       abort "Failed to run: #{cmd}"
     end
-  ensure
-    ENV['GIT_DIR'] = git_dir if git_dir
   end
 
-  def system!(cmd)
-    unless system(cmd)
-      abort "Failed to run: #{cmd}"
-    end
+  def with_clean_env
+    git_dir = ENV.delete('GIT_DIR') # this overcomes '-C' or pwd
+    yield
+  ensure
+    ENV['GIT_DIR'] = git_dir if git_dir
   end
 end
 
