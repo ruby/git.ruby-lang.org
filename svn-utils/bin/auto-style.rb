@@ -141,11 +141,11 @@ class Git
   private
 
   def last_rev
-    @last_rev ||= with_clean_env { IO.popen(['git', 'rev-parse', 'HEAD'], &:readlines) }.first
+    @last_rev ||= with_clean_env { IO.popen(['git', 'rev-parse', 'HEAD'], &:readlines) }.first.chomp!
   end
 
   def current_branch
-    @current_branch ||= with_clean_env { IO.popen(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], &:readlines) }.first
+    @current_branch ||= with_clean_env { IO.popen(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], &:readlines) }.first.chomp!
   end
 
   def git(*args)
