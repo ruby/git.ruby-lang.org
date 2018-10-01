@@ -94,7 +94,7 @@ class Git
   attr_reader :workdir
 
   def initialize(git_dir)
-    @workdir = File.expand_path(File.join('../../hooks', File.basename(git_dir)), __dir__)
+    @workdir = File.expand_path(File.join('../../repos', File.basename(git_dir)), __dir__)
 
     # Should be done in another method once SVN is deprecated. Now it has only the same methods.
     if Dir.exist?(@workdir)
