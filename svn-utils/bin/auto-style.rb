@@ -260,10 +260,10 @@ edited_files = files.select do |f|
   end
 end
 unless edited_files.empty?
-  msg = [("remove trailing space" if trailing),
+  msg = [("remove trailing spaces" if trailing),
          ("append newline at EOF" if eofnewline),
          ("translit ChangeLog" if translit),
-         ("expanded tabs" if expandtab),
+         ("expand tabs" if expandtab),
         ].compact
   vcs.commit("* #{msg.join(', ')}.#{' [ci skip]' if vcs.ci_skip?}", *edited_files)
 end
