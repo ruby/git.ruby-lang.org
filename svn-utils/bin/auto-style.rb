@@ -260,7 +260,7 @@ edited_files = files.select do |f|
   end
 end
 unless edited_files.empty?
-  msg = [("remove trailing spaces" if trailing),
+  msg = [("remove trailing space" if trailing),
          ("append newline at EOF" if eofnewline),
          ("translit ChangeLog" if translit),
          ("expanded tabs" if expandtab),
