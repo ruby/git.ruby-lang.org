@@ -19,7 +19,7 @@ class SVN
   # ["foo/bar.c", "baz.h", ...]
   def updated_paths
     log = svnread("update", "--accept=postpone")
-    log[1...-1].grep(/^[AMU]/) {|l| l[5..-1]}
+    log[1...-1].grep(/^[AMU]/) {|l| l.sub(/^[AMU] +/, '') }
   end
 
   # [0, 1, 4, ...]
