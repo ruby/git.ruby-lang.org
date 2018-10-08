@@ -11,13 +11,15 @@ export HOME
 REPOS="$1"
 REV="$2"
 
+ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
+
 { date; echo $REPOS; echo $REV; echo svnadmin; uptime; } >> /tmp/post-commit.log
 svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/ruby/$REV.bz2
 
 { date; echo commit-email.rb; uptime; } >> /tmp/post-commit.log
-~svn/scripts/svn-utils/bin/commit-email.rb \
+"${ruby_commit_hook}/svn-utils/bin/commit-email.rb" \
    "$REPOS" "$REV" ruby-cvs@ruby-lang.org \
-   -I ~svn/scripts/svn-utils/lib \
+   -I "${ruby_commit_hook}/svn-utils/lib" \
    --name Ruby \
    --viewvc-uri https://svn.ruby-lang.org/cgi-bin/viewvc.cgi \
    -r https://svn.ruby-lang.org/repos/ruby \
@@ -26,10 +28,10 @@ svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/rub
    --error-to cvs-admin@ruby-lang.org
 
 { date; echo auto-style; uptime; } >> /tmp/post-commit.log
-~svn/scripts/svn-utils/bin/auto-style.rb ~svn/ruby/trunk
+"${ruby_commit_hook}/svn-utils/bin/auto-style.rb" ~svn/ruby/trunk
 
 { date; echo update-version.h.rb; uptime; } >> /tmp/post-commit.log
-~svn/scripts/svn-utils/bin/update-version.h.rb "$REPOS" "$REV" &
+"${ruby_commit_hook}/svn-utils/bin/update-version.h.rb" "$REPOS" "$REV" &
 
 { date; echo redmine fetch changesets; uptime; } >> /tmp/post-commit.log
 curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~svn/config/redmine.key`" &
