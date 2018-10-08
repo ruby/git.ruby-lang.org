@@ -192,7 +192,7 @@ EXPANDTAB_IGNORED_FILES = [
   %r{\Aenc/},
   %r{\Amissing/},
   %r{\Ainclude/ruby/onigmo\.h\z},
-  %r{\Astrftime\.c\z},
+  %r{strftime\.c},
   %r{\Avsnprintf\.c\z},
   %r{\Areg.+\.(c|h)\z},
 ]
@@ -249,7 +249,7 @@ unless edited_files.empty?
   msg = [("remove trailing spaces" if trailing),
          ("append newline at EOF" if eofnewline),
          ("translit ChangeLog" if translit),
-         ("expand tabs" if expandtab),
+         ("expanded tabs" if expandtab),
         ].compact
   vcs.commit("* #{msg.join(', ')}.", *edited_files)
 end
