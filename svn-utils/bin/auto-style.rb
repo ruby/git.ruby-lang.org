@@ -52,11 +52,18 @@ class SVN
     commit("* properties.", *files)
   end
 
+  def ci_skip?
+    last_rev unless defined?(@ci_skip)
+    @ci_skip
+  end
+
   private
 
   def last_rev
     return @last_rev if defined?(@last_rev)
-    @last_rev = svnread('log', '-r', 'HEAD', '-q')[1].match(/\Ar(?<rev>\d+) /)[:rev]
+    log = svnread('log', '-r', 'HEAD')
+    @ci_skip = (true if /\[ci skip\]/i =~ log[3])
+    @last_rev = log[1].match(/\Ar(?<rev>\d+) /)[:rev]
   end
 
   def exec(*args)
@@ -136,6 +143,13 @@ class Git
 
   def commit_properties(*files)
     # no-op in git
+  end
+
+  def ci_skip?
+    unless defined?(@ci_skip)
+      @ci_skip = (true if /\[ci skip\]/i =~ with_clean_env {IO.popen(['git', 'log', '-n1' 'HEAD']) {|f| f.gets(""); f.gets}})
+    end
+    @ci_skip
   end
 
   private
@@ -251,7 +265,7 @@ unless edited_files.empty?
          ("translit ChangeLog" if translit),
          ("expanded tabs" if expandtab),
         ].compact
-  vcs.commit("* #{msg.join(', ')}.", *edited_files)
+  vcs.commit("* #{msg.join(', ')}.#{' [ci skip]' if vcs.ci_skip?}", *edited_files)
 end
 
 vcs.commit_properties(*files)
