@@ -206,7 +206,7 @@ EXPANDTAB_IGNORED_FILES = [
   %r{\Aenc/},
   %r{\Amissing/},
   %r{\Ainclude/ruby/onigmo\.h\z},
-  %r{strftime\.c},
+  %r{\Astrftime\.c\z},
   %r{\Avsnprintf\.c\z},
   %r{\Areg.+\.(c|h)\z},
 ]
