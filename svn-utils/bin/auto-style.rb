@@ -200,15 +200,21 @@ if vcs.workdir
 end
 
 EXPANDTAB_IGNORED_FILES = [
+  # vendoring
   %r{\Accan/},
   %r{\Aext/json/},
   %r{\Aext/psych/},
+
+  # vendoring (onigmo)
   %r{\Aenc/},
-  %r{\Amissing/},
   %r{\Ainclude/ruby/onigmo\.h\z},
+  %r{\Areg.+\.(c|h)\z},
+
+  # explicit or implicit `c-file-style: "linux"`
+  %r{\Aaddr2line\.c\z},
+  %r{\Amissing/},
   %r{\Astrftime\.c\z},
   %r{\Avsnprintf\.c\z},
-  %r{\Areg.+\.(c|h)\z},
 ]
 
 paths = vcs.updated_paths
