@@ -202,8 +202,13 @@ end
 EXPANDTAB_IGNORED_FILES = [
   # vendoring
   %r{\Accan/},
+  %r{\Aext/bigdecimal/},
   %r{\Aext/json/},
   %r{\Aext/psych/},
+
+  # vendoring (bundler)
+  %r{\Abin/bundler\z},
+  %r{\Alib/bundler/},
 
   # vendoring (onigmo)
   %r{\Aenc/},
