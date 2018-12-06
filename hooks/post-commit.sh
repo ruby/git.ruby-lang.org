@@ -45,7 +45,7 @@ for ref in `svnlook changed -r $REV $REPOS | grep '^[AU ]' |                    
   case $ref in
   trunk) sudo -u git git push cgit svn/trunk:trunk ;;
   ruby_*) sudo -u git git push cgit svn/$ref:$ref ;;
-  v*) sudo -u git git push origin $ref && sudo -u git git push cgit $ref;;
+  v*) sudo -u git git tag -f $ref svn/tags/$ref && sudo -u git git push cgit $ref;;
   esac
 done
 
