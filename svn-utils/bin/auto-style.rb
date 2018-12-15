@@ -203,6 +203,7 @@ EXPANDTAB_IGNORED_FILES = [
   # vendoring
   %r{\Accan/},
   %r{\Aext/bigdecimal/},
+  %r{\Aext/nkf/},
   %r{\Aext/json/},
   %r{\Aext/psych/},
 
