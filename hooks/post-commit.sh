@@ -44,7 +44,7 @@ flock -w 100 "$0" sudo -u git git svn fetch --all
 for ref in `svnlook changed -r $REV $REPOS | grep '^[AU ]' |                                            sed 's!^..  \(\(trunk\)/.*\|\(tags\|branches\)/\([^/]*\)/.*\)!\2\4!' | sort -u`; do
   case $ref in
   trunk) sudo -u git git push cgit svn/trunk:trunk ;;
-  ruby_*) sudo -u git git push cgit svn/$ref:$ref ;;
+  ruby_*) sudo -u git git push cgit svn/$ref:refs/heads/$ref ;;
   v*) sudo -u git git tag -f $ref svn/tags/$ref && sudo -u git git push cgit $ref;;
   esac
 done
