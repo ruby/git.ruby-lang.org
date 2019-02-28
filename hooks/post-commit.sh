@@ -36,7 +36,7 @@ svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/rub
 { date; echo redmine fetch changesets; uptime; } >> /tmp/post-commit.log
 curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~svn/config/redmine.key`" &
 
-{ date; echo github sync; uptime; } >> /tmp/post-commit.log
+{ date; echo cgit sync; uptime; } >> /tmp/post-commit.log
 cd /var/git-svn/ruby
 flock -w 100 "$0" sudo -u git git svn fetch --all
 
