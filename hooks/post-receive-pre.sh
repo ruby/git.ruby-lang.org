@@ -27,7 +27,7 @@ this_repo="$(cd "$(dirname $0)"; cd ..; pwd)"
 # { date; echo redmine fetch changesets; uptime; } >> "$hook_log"
 # TODO 3: curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~svn/config/redmine.key`" &
 
-# { date; echo github sync; uptime; } >> "$hook_log"
-# TODO 4: push branch or tag to GitHub, delete branch or tag on GitHub
+{ date; echo github sync; uptime; } >> "$hook_log"
+git remote update; git push github
 
 { date; echo '### end ###'; uptime; } >> "$hook_log"
