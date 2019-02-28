@@ -24,8 +24,8 @@ this_repo="$(cd "$(dirname $0)"; cd ..; pwd)"
 # { date; echo update-version.h.rb; uptime; } >> "$hook_log"
 # TODO 2: update revision.h -- "${this_repo}/svn-utils/bin/update-version.h.rb" "$REPOS" "$REV" &
 
-# { date; echo redmine fetch changesets; uptime; } >> "$hook_log"
-# TODO 3: curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~svn/config/redmine.key`" &
+{ date; echo redmine fetch changesets; uptime; } >> "$hook_log"
+curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/redmine.key`" &
 
 { date; echo github sync; uptime; } >> "$hook_log"
 git remote update; git push github

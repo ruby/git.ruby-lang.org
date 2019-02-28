@@ -13,6 +13,9 @@ hook_log="/tmp/post-receive.log"
 
 { date; echo '### start ###'; uptime; } >> "$hook_log"
 
+{ date; echo redmine fetch changesets; uptime; } >> "$hook_log"
+curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/redmine.key`" &
+
 { date; echo github sync; uptime; } >> "$hook_log"
 git remote update; git push github
 
