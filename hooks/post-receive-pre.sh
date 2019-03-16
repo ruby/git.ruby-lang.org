@@ -28,8 +28,9 @@ this_repo="$(cd "$(dirname $0)"; cd ..; pwd)"
 { date; echo redmine fetch changesets; uptime; } >> "$hook_log"
 curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/redmine.key`" &
 
-{ date; echo github sync; uptime; } >> "$hook_log"
-git remote update; git push github
+# Enable the following code when in production
+#{ date; echo github sync; uptime; } >> "$hook_log"
+#git remote update; git push github
 
 { date; echo notify slack; uptime; } >> "$hook_log"
 while read oldrev newrev refname
