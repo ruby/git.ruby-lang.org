@@ -10,6 +10,7 @@ set -o pipefail
 # script parameters
 ruby_git="/var/git/ruby.pre.git"
 hook_log="/tmp/post-receive-pre.log"
+ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 
 { date; echo '### start ###'; uptime; } >> "$hook_log"
 export RUBY_GIT_HOOK=1 # used by auto-style.rb
@@ -29,5 +30,11 @@ curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/redmi
 
 { date; echo github sync; uptime; } >> "$hook_log"
 git remote update; git push github
+
+{ date; echo notify slack; uptime; } >> "$hook_log"
+while read oldrev newrev refname
+do
+	$ruby_commit_hook/notify-slack.rb $oldrev $newrev
+done
 
 { date; echo '### end ###'; uptime; } >> "$hook_log"
