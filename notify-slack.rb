@@ -4,7 +4,7 @@ require "net/https"
 require "open3"
 require "json"
 
-SLACK_WEBHOOK_URL = File.read("~git/config/slack-webhook").chomp
+SLACK_WEBHOOK_URL = File.read("/home/git/config/slack-webhook").chomp
 
 ARGV.each_slice(3) do |oldrev, newrev, refname|
   out, = Open3.capture2("git", "log", "--pretty=format:%H\n%h\n%an\n%at\n%cn\n%ct\n%B", "-z", ARGV[0] + ".." + ARGV[1])
