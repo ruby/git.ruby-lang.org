@@ -33,9 +33,6 @@ curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/redmi
 #git remote update; git push github
 
 { date; echo notify slack; uptime; } >> "$hook_log"
-while read oldrev newrev refname
-do
-	$ruby_commit_hook/notify-slack.rb $oldrev $newrev
-done
+$ruby_commit_hook/notify-slack.rb $*
 
 { date; echo '### end ###'; uptime; } >> "$hook_log"
