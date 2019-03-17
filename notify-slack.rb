@@ -20,6 +20,7 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
   out.split("\0").reverse_each do |s|
     hash, abbr_hash, _author, _authortime, committer, committertime, body = s.split("\n", 7)
     subject, body = body.split("\n", 2)
+    body = body.sub(%r(git-svn-id: svn\+ssh://ci\.ruby-lang\.org/ruby/trunk@\d+ \h+-\h+-\h+-\h+-\h+\z), "").strip
     attachments << {
       title: "#{ abbr_hash } (#{ branch }): #{ escape(subject) }",
       title_link: "https://github.com/ruby/ruby/commit/" + hash,
