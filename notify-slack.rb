@@ -6,6 +6,10 @@ require "json"
 
 SLACK_WEBHOOK_URL = File.read(File.expand_path("~git/config/slack-webhook")).chomp
 
+def escape(s)
+  s.gsub(/[&<>]/, "&" => "&amp;", "<" => "&lt;", ">" => "&gt;")
+end
+
 ARGV.each_slice(3) do |oldrev, newrev, refname|
   out, = Open3.capture2("git", "rev-parse", "--symbolic", "--abbrev-ref", refname)
   branch = out.strip
@@ -17,9 +21,9 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
     hash, abbr_hash, _author, _authortime, committer, committertime, body = s.split("\n", 7)
     subject, body = body.split("\n", 2)
     attachments << {
-      title: "#{ abbr_hash } (#{ branch }): #{ subject }",
+      title: "#{ abbr_hash } (#{ branch }): #{ escape(subject) }",
       title_link: "https://github.com/ruby/ruby/commit/" + hash,
-      text: (body || "").strip,
+      text: escape((body || "").strip),
       footer: committer,
       ts: committertime.to_i,
     }
