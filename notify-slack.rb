@@ -17,7 +17,7 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
     hash, abbr_hash, _author, _authortime, committer, committertime, body = s.split("\n", 7)
     subject, body = body.split("\n", 2)
     attachments << {
-      title: "#{ abbr_hash } (#{ branch }): #{ subject } (#{ oldrev } #{ newrev } #{ refname })",
+      title: "#{ abbr_hash } (#{ branch }): #{ subject }",
       title_link: "https://github.com/ruby/ruby/commit/" + hash,
       text: (body || "").strip,
       footer: committer,
