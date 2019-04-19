@@ -1,6 +1,9 @@
 require "fileutils"
 require "svn/info"
 
+# Usage:
+#   $ ruby -Ilib -rtest/unit test/test_info.rb
+
 class InfoTest < Test::Unit::TestCase
 
   include Svn
