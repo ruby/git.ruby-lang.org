@@ -64,6 +64,11 @@ def parse(args)
       options.name = name
     end
 
+    opts.on("--svnlook-path [PATH]",
+            "Use [PATH] as svnlook path") do |path|
+      options.svnlook_path = path
+    end
+
     opts.on_tail("--help", "Show this message") do
       puts opts
       exit
@@ -330,11 +335,11 @@ def rss_items(items, info, repos_uri)
   end.reverse
 end
 
-def main(repos, revision, to, rest)
+def main(revision, to, rest)
   options = parse(rest)
 
   require "svn/info"
-  info = Svn::Info.new(repos, revision)
+  info = Svn::Info.new(options.svnlook_path, revision)
   info.log.sub!(/^([A-Z][a-z]{2} ){2}.*>\n/,"")
   from = options.from || info.author + "@ruby-lang.org"
   to = [to, *options.to]
@@ -361,9 +366,9 @@ def main(repos, revision, to, rest)
   end
 end
 
-repos, revision, to, *rest = ARGV
+revision, to, *rest = ARGV
 begin
-  main(repos, revision, to, rest)
+  main(revision, to, rest)
 rescue Exception
   to = [to]
   from = ENV["USER"]
