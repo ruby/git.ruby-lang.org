@@ -18,6 +18,6 @@
 ### Script used to update `/home/git/ruby-commit-hook`
 
 ```
-/usr/bin/git --work-tree=/home/git/ruby-commit-hook --git-dir=/home/git/ruby-commit-hook/.git fetch origin
-/usr/bin/git --work-tree=/home/git/ruby-commit-hook --git-dir=/home/git/ruby-commit-hook/.git rebase origin/master
+/usr/bin/git -C /home/git/ruby-commit-hook fetch origin master
+/usr/bin/git -C /home/git/ruby-commit-hook checkout origin/master
 ```
