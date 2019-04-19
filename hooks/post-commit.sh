@@ -19,14 +19,15 @@ svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/rub
 
 { date; echo commit-email.rb; uptime; } >> /tmp/post-commit.log
 "${ruby_commit_hook}/svn-utils/bin/commit-email.rb" \
-   "$REPOS" "$REV" ruby-cvs@ruby-lang.org \
+   "$REV" ruby-cvs@ruby-lang.org \
    -I "${ruby_commit_hook}/svn-utils/lib" \
    --name Ruby \
    --viewvc-uri https://svn.ruby-lang.org/cgi-bin/viewvc.cgi \
    -r https://svn.ruby-lang.org/repos/ruby \
    --rss-path /tmp/ruby.rdf \
    --rss-uri https://svn.ruby-lang.org/rss/ruby.rdf \
-   --error-to cvs-admin@ruby-lang.org
+   --error-to cvs-admin@ruby-lang.org \
+   --svnlook-path "$REPOS"
 
 { date; echo auto-style; uptime; } >> /tmp/post-commit.log
 "${ruby_commit_hook}/svn-utils/bin/auto-style.rb" ~svn/ruby/trunk
