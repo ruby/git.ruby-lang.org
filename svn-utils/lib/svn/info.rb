@@ -22,7 +22,6 @@ module Svn
     attr_reader :added_files, :deleted_files, :updated_files
     attr_reader :added_dirs, :deleted_dirs, :updated_dirs
     attr_reader :diff, :diffs
-    attr_reader :revision
     attr_reader :sha256, :entire_sha256
 
     def initialize(path, rev)
