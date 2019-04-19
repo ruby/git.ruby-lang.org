@@ -27,6 +27,7 @@ svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/rub
    --rss-path /tmp/ruby.rdf \
    --rss-uri https://svn.ruby-lang.org/rss/ruby.rdf \
    --error-to cvs-admin@ruby-lang.org \
+   --vcs svn \
    --svnlook-path "$REPOS"
 
 { date; echo auto-style; uptime; } >> /tmp/post-commit.log

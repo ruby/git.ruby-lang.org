@@ -26,7 +26,8 @@ this_repo="$(cd "$(dirname $0)"; cd ..; pwd)"
 #    -r https://svn.ruby-lang.org/repos/ruby \
 #    --rss-path /tmp/ruby.rdf \
 #    --rss-uri https://svn.ruby-lang.org/rss/ruby.rdf \
-#    --error-to cvs-admin@ruby-lang.org
+#    --error-to cvs-admin@ruby-lang.org \
+#    --vcs git
 
 { date; echo auto-style; uptime; } >> "$hook_log"
 "${this_repo}/svn-utils/bin/auto-style.rb" "$ruby_git"

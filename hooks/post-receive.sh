@@ -24,7 +24,8 @@ ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 #    -r https://svn.ruby-lang.org/repos/ruby \
 #    --rss-path /tmp/ruby.rdf \
 #    --rss-uri https://svn.ruby-lang.org/rss/ruby.rdf \
-#    --error-to cvs-admin@ruby-lang.org
+#    --error-to cvs-admin@ruby-lang.org \
+#    --vcs git
 
 # auto-style (implemented but not enabled yet)
 

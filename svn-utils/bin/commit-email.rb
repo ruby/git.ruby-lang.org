@@ -15,6 +15,7 @@ def parse(args)
   options.rss_uri = nil
   options.name = nil
   options.viewvc_uri = nil
+  options.vcs = "svn"
 
   opts = OptionParser.new do |opts|
     opts.separator ""
@@ -65,8 +66,13 @@ def parse(args)
     end
 
     opts.on("--svnlook-path [PATH]",
-            "Use [PATH] as svnlook path") do |path|
+            "Use [PATH] as svnlook path (--vcs=svn only)") do |path|
       options.svnlook_path = path
+    end
+
+    opts.on("--vcs [VCS]",
+            "Use [VCS] as VCS (git, svn)") do |vcs|
+      options.vcs = vcs
     end
 
     opts.on_tail("--help", "Show this message") do
@@ -338,15 +344,22 @@ end
 def main(revision, to, rest)
   options = parse(rest)
 
-  require "svn/info"
-  info = Svn::Info.new(options.svnlook_path, revision)
-  info.log.sub!(/^([A-Z][a-z]{2} ){2}.*>\n/,"")
-  from = options.from || info.author + "@ruby-lang.org"
+  case options.vcs
+  when "svn"
+    require "svn/info"
+    info = Svn::Info.new(options.svnlook_path, revision)
+    info.log.sub!(/^([A-Z][a-z]{2} ){2}.*>\n/,"")
+    default_from = "#{info.author}@ruby-lang.org"
+  else
+    raise "unsupported vcs #{options.vcs.inspect} is specified"
+  end
+
+  from = options.from || default_from
   to = [to, *options.to]
   params = {
-    :repository_uri => options.repository_uri,
-    :viewvc_uri => options.viewvc_uri,
-    :name => options.name
+    repository_uri: options.repository_uri,
+    viewvc_uri: options.viewvc_uri,
+    name: options.name
   }
   sendmail(to, from, make_mail(to, from, info, params))
 
