@@ -248,7 +248,6 @@ def x_author(info)
 end
 
 def x_repository(info)
-  # "X-SVN-Repository: #{info.path}"
   "X-SVN-Repository: XXX"
 end
 
