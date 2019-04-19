@@ -8,6 +8,7 @@ export PATH
 HOME=/home/svn
 export HOME
 
+# REPOS=/var/svn/repos/ruby
 REPOS="$1"
 REV="$2"
 
