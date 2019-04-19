@@ -330,8 +330,7 @@ def rss_items(items, info, repos_uri)
   end.reverse
 end
 
-def main
-  repos, revision, to, *rest = ARGV
+def main(repos, revision, to, rest)
   options = parse(rest)
 
   require "svn/info"
@@ -362,10 +361,10 @@ def main
   end
 end
 
+repos, revision, to, *rest = ARGV
 begin
-  main
+  main(repos, revision, to, rest)
 rescue Exception
-  _, _, to, *rest = ARGV
   to = [to]
   from = ENV["USER"]
   begin
