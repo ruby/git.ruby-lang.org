@@ -17,13 +17,16 @@ end
 
 module Svn
   class Info
-
+    # Used by: commit-email.rb
     attr_reader :author, :log, :date, :changed_dirs
     attr_reader :added_files, :deleted_files, :updated_files
     attr_reader :added_dirs, :deleted_dirs, :updated_dirs
     attr_reader :diff, :diffs
     attr_reader :path, :revision
-    attr_reader :sha256, :entire_sha256
+    attr_reader :entire_sha256
+
+    # Used by: commit-email.rb, update-version.h.rb
+    attr_reader :sha256
 
     def initialize(svnlook_path, rev)
       @svnlook_path = svnlook_path
@@ -36,6 +39,7 @@ module Svn
     end
 
     private
+
     def get_info
       @log = force_to_utf8(svnlook("log").chomp)
       change_lang("C") do
@@ -197,6 +201,5 @@ module Svn
         ENV["LANG"] = orig
       end
     end
-
   end
 end

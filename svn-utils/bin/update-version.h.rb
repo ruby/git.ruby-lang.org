@@ -4,9 +4,14 @@ require "fileutils"
 require "tmpdir"
 require "svn/info"
 
-repos, revision = ARGV
+vcs, repos, revision = ARGV
+case vcs
+when "svn"
+  sha256 = Svn::Info.new(repos, revision).sha256
+else
+  raise "unknown vcs: #{vcs.inspect}"
+end
 
-sha256 = Svn::Info.new(repos, revision).sha256
 branches = sha256.map{|x,| x[/((?:branches\/)?.+?)\//, 1]}.uniq
 branches.each do |branch|
   Dir.mktmpdir do |work|

@@ -34,7 +34,7 @@ svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/rub
 "${ruby_commit_hook}/svn-utils/bin/auto-style.rb" ~svn/ruby/trunk
 
 { date; echo update-version.h.rb; uptime; } >> /tmp/post-commit.log
-"${ruby_commit_hook}/svn-utils/bin/update-version.h.rb" "$REPOS" "$REV" &
+"${ruby_commit_hook}/svn-utils/bin/update-version.h.rb" svn "$REPOS" "$REV" &
 
 { date; echo cgit sync; uptime; } >> /tmp/post-commit.log
 cd /var/git-svn/ruby
