@@ -335,13 +335,13 @@ def rss_items(items, info, repos_uri)
   end.reverse
 end
 
-def main(repos, revision, to, rest)
+def main(repo_name, revision, to, rest)
   options = parse(rest)
 
   case options.vcs
   when "svn"
     require "svn/info"
-    info = Svn::Info.new(repos, revision)
+    info = Svn::Info.new(repo_name, revision)
     info.log.sub!(/^([A-Z][a-z]{2} ){2}.*>\n/,"")
     default_from = "#{info.author}@ruby-lang.org"
   else
@@ -373,9 +373,9 @@ def main(repos, revision, to, rest)
   end
 end
 
-repos, revision, to, *rest = ARGV
+repo_name, revision, to, *rest = ARGV
 begin
-  main(repos, revision, to, rest)
+  main(repo_name, revision, to, rest)
 rescue Exception
   to = [to]
   from = ENV["USER"]
