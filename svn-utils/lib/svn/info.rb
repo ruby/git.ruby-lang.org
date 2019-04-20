@@ -23,10 +23,7 @@ module Svn
     attr_reader :added_dirs, :deleted_dirs, :updated_dirs
     attr_reader :diff, :diffs
     attr_reader :revision
-    attr_reader :entire_sha256
-
-    # Used by: commit-email.rb, update-version.h.rb
-    attr_reader :sha256
+    attr_reader :sha256, :entire_sha256
 
     def initialize(repo_path, rev)
       @repo_path = repo_path
@@ -36,6 +33,11 @@ module Svn
       get_changed
       get_diff
       get_sha256
+    end
+
+    # Used by: update-version.h.rb
+    def branches
+      sha256.map{|x,| x[/((?:branches\/)?.+?)\//, 1]}.uniq
     end
 
     private

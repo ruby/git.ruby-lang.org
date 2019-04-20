@@ -33,7 +33,7 @@ export RUBY_GIT_HOOK=1 # used by auto-style.rb
 
 # { date; echo update-version.h.rb; uptime; } >> "$hook_log"
 # TODO 2: update revision.h
-# "${ruby_commit_hook}/svn-utils/bin/update-version.h.rb" git "$REPOS" "$REV" &
+# "${ruby_commit_hook}/svn-utils/bin/update-version.h.rb" git "$REPOS" "$REV" $* &
 
 { date; echo redmine fetch changesets; uptime; } >> "$hook_log"
 curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/redmine.key`" &

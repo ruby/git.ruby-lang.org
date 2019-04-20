@@ -2,17 +2,22 @@
 
 require "fileutils"
 require "tmpdir"
-require "svn/info"
 
-vcs, repo_path, revision = ARGV
+vcs, repo_path, *rest = ARGV
 case vcs
 when "svn"
-  sha256 = Svn::Info.new(repo_path, revision).sha256
+  require "svn/info"
+  branches = Svn::Info.new(repo_path, rest.first).branches
+when "git"
+  require "open3"
+  branches = rest.each_slice(3).map do |_oldrev, _newrev, refname|
+    out, _ = Open3.capture2("git", "rev-parse", "--symbolic", "--abbrev-ref", refname)
+    out.strip
+  end.uniq
 else
   raise "unknown vcs: #{vcs.inspect}"
 end
 
-branches = sha256.map{|x,| x[/((?:branches\/)?.+?)\//, 1]}.uniq
 branches.each do |branch|
   Dir.mktmpdir do |work|
     v = File.join(work, "v")
