@@ -3,7 +3,6 @@
 require "fileutils"
 require "tmpdir"
 require "svn/info"
-require "pp"
 
 vcs, repo_path, revision = ARGV
 case vcs
@@ -12,9 +11,6 @@ when "svn"
 else
   raise "unknown vcs: #{vcs.inspect}"
 end
-
-puts "sha256:"
-pp sha256
 
 branches = sha256.map{|x,| x[/((?:branches\/)?.+?)\//, 1]}.uniq
 branches.each do |branch|
