@@ -1,0 +1,10 @@
+language: ruby
+rvm:
+  - 2.6
+branches:
+  only:
+    - master
+before_install:
+  - gem install test-unit
+script:
+  - "cd svn-utils; ruby -Ilib -rtest/unit test/test_*.rb"
