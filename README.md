@@ -5,7 +5,9 @@
 * `/data/svn/repos/ruby`: SVN repository of Ruby
   * `hooks/post-commit`: Run `/home/git/ruby-commit-hook/hooks/post-commit.sh`
 * `/data/git/ruby.git`: Bare Git repository of ruby
-  * `hooks/post-receive`: **Update `/home/git/ruby-commit-hook`** and run `/home/git/ruby-commit-hook/hooks/post-receive.sh`
+  * `hooks/post-receive`:
+     * **Update `/home/git/ruby-commit-hook`**
+     * Run `/home/git/ruby-commit-hook/hooks/post-receive.sh`
 * `/data/git/ruby-commit-hook.git`: Bare Git repository of ruby-commit-hook
 * `/home/git/ruby-commit-hook`: Cloned Git repository of ruby-commit-hook
 
