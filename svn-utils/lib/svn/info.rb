@@ -28,8 +28,8 @@ module Svn
     # Used by: commit-email.rb, update-version.h.rb
     attr_reader :sha256
 
-    def initialize(svnlook_path, rev)
-      @svnlook_path = svnlook_path
+    def initialize(path, rev)
+      @path = path
       @revision = Integer(rev)
       get_info
       get_dirs_changed
@@ -175,7 +175,7 @@ module Svn
     end
 
     def svnlook(command, *others)
-      `svnlook #{command} #{@svnlook_path} -r #{@revision} #{others.join(' ')}`.force_encoding("ASCII-8BIT")
+      `svnlook #{command} #{@path} -r #{@revision} #{others.join(' ')}`.force_encoding("ASCII-8BIT")
     end
 
     def directory_path?(path)

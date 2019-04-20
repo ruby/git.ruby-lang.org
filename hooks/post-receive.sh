@@ -17,7 +17,7 @@ ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 # TODO: commit-email
 # { date; echo commit-email.rb; uptime; } >> "$hook_log"
 # "${ruby_commit_hook}/svn-utils/bin/commit-email.rb" \
-#    "$REV" ruby-cvs@ruby-lang.org \
+#    "$REPOS" "$REV" ruby-cvs@ruby-lang.org \
 #    -I "${ruby_commit_hook}/svn-utils/lib" \
 #    --name Ruby \
 #    --viewvc-uri https://svn.ruby-lang.org/cgi-bin/viewvc.cgi \
