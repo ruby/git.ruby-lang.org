@@ -6,8 +6,8 @@ require "svn/info"
 
 repos, revision = ARGV
 
-info = Svn::Info.new repos, revision
-branches = info.sha256.map{|x,| x[/((?:branches\/)?.+?)\//, 1]}.uniq
+sha256 = Svn::Info.new(repos, revision).sha256
+branches = sha256.map{|x,| x[/((?:branches\/)?.+?)\//, 1]}.uniq
 branches.each do |branch|
   Dir.mktmpdir do |work|
     v = File.join(work, "v")
