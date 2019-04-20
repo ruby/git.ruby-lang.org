@@ -5,26 +5,6 @@ require "ostruct"
 
 SENDMAIL = "/usr/sbin/sendmail"
 
-# Subset of Svn::Info attributes used in this file.
-CommitEmailInfo = Struct.new(
-  :author,
-  :log,
-  :date,
-  :changed_dirs,
-  :added_files,
-  :deleted_files,
-  :updated_files,
-  :added_dirs,
-  :deleted_dirs,
-  :updated_dirs,
-  :diff,
-  :diffs,
-  :path,
-  :revision,
-  :sha256,
-  :entire_sha256,
-)
-
 def parse(args)
   options = OpenStruct.new
   options.to = []
@@ -366,16 +346,11 @@ def main(revision, to, rest)
   case options.vcs
   when "svn"
     require "svn/info"
-    vcs_info = Svn::Info.new(options.svnlook_path, revision)
-    vcs_info.log.sub!(/^([A-Z][a-z]{2} ){2}.*>\n/,"")
+    info = Svn::Info.new(options.svnlook_path, revision)
+    info.log.sub!(/^([A-Z][a-z]{2} ){2}.*>\n/,"")
     default_from = "#{info.author}@ruby-lang.org"
   else
     raise "unsupported vcs #{options.vcs.inspect} is specified"
-  end
-
-  info = CommitEmailInfo.new
-  CommitEmailInfo.members.each do |member|
-    info[member] = vcs_info.public_send(member)
   end
 
   from = options.from || default_from
