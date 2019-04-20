@@ -24,7 +24,11 @@ branches.each do |branch|
     version_h = "#{v}/version.h"
     version_h_orig = version_h + "~"
 
-    system "pwd;echo 1;svn co --depth empty file:///#{repo_path}/#{branch} #{v}; svn up #{version_h}"
+    if vcs == "svn"
+      system "pwd;echo 1;svn co --depth empty file:///#{repo_path}/#{branch} #{v}; svn up #{version_h}"
+    else # git
+      system "git clone --depth=1 --branch=#{branch} file:///#{repo_path} #{v}"
+    end
     formats = {
       'DATE' => [/"\d{4}-\d\d-\d\d"/, '"%Y-%m-%d"'],
       'TIME' => [/".+"/, '"%H:%M:%S"'],
@@ -50,6 +54,12 @@ branches.each do |branch|
         end
       end
     end
-    system "svn commit -m '#{now.strftime %(* %Y-%m-%d)}' #{version_h}"
+    if vcs == "svn"
+      system "svn commit -m '#{now.strftime %(* %Y-%m-%d)}' #{version_h}"
+    else
+      Dir.chdir(v) do
+        system "git add #{version_h} && git commit -m '#{now.strftime %(* %Y-%m-%d)}' && git push origin #{branch}"
+      end
+    end
   end
 end
