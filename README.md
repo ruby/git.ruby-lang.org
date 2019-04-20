@@ -1,4 +1,4 @@
-# Ruby commit hook
+# Ruby commit hook [![Build Status](https://travis-ci.com/ruby/ruby-commit-hook.svg?branch=master)](https://travis-ci.com/ruby/ruby-commit-hook)
 
 ## How this repository is deployed to `git.ruby-lang.org`
 
