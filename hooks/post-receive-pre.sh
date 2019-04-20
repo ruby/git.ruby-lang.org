@@ -14,7 +14,6 @@ ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 
 { date; echo '### start ###'; uptime; } >> "$hook_log"
 export RUBY_GIT_HOOK=1 # used by auto-style.rb
-this_repo="$(cd "$(dirname $0)"; cd ..; pwd)"
 
 # TODO: Enable the following code when in production
 # { date; echo commit-email.rb; uptime; } >> "$hook_log"
@@ -30,7 +29,7 @@ this_repo="$(cd "$(dirname $0)"; cd ..; pwd)"
 #    --vcs git
 
 { date; echo auto-style; uptime; } >> "$hook_log"
-"${this_repo}/svn-utils/bin/auto-style.rb" "$ruby_git"
+"${ruby_commit_hook}/svn-utils/bin/auto-style.rb" "$ruby_git"
 
 # { date; echo update-version.h.rb; uptime; } >> "$hook_log"
 # TODO 2: update revision.h
