@@ -22,14 +22,14 @@ module Svn
     attr_reader :added_files, :deleted_files, :updated_files
     attr_reader :added_dirs, :deleted_dirs, :updated_dirs
     attr_reader :diff, :diffs
-    attr_reader :path, :revision
+    attr_reader :revision
     attr_reader :entire_sha256
 
     # Used by: commit-email.rb, update-version.h.rb
     attr_reader :sha256
 
-    def initialize(path, rev)
-      @path = path
+    def initialize(repo_path, rev)
+      @repo_path = repo_path
       @revision = Integer(rev)
       get_info
       get_dirs_changed
@@ -175,7 +175,7 @@ module Svn
     end
 
     def svnlook(command, *others)
-      `svnlook #{command} #{@path} -r #{@revision} #{others.join(' ')}`.force_encoding("ASCII-8BIT")
+      `svnlook #{command} #{@repo_path} -r #{@revision} #{others.join(' ')}`.force_encoding("ASCII-8BIT")
     end
 
     def directory_path?(path)

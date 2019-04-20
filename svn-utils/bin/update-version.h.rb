@@ -4,10 +4,10 @@ require "fileutils"
 require "tmpdir"
 require "svn/info"
 
-vcs, repos, revision = ARGV
+vcs, repo_path, revision = ARGV
 case vcs
 when "svn"
-  sha256 = Svn::Info.new(repos, revision).sha256
+  sha256 = Svn::Info.new(repo_path, revision).sha256
 else
   raise "unknown vcs: #{vcs.inspect}"
 end
@@ -19,7 +19,7 @@ branches.each do |branch|
     version_h = "#{v}/version.h"
     version_h_orig = version_h + "~"
 
-    system "pwd;echo 1;svn co --depth empty file:///#{repos}/#{branch} #{v}; svn up #{version_h}"
+    system "pwd;echo 1;svn co --depth empty file:///#{repo_path}/#{branch} #{v}; svn up #{version_h}"
     formats = {
       'DATE' => [/"\d{4}-\d\d-\d\d"/, '"%Y-%m-%d"'],
       'TIME' => [/".+"/, '"%H:%M:%S"'],
