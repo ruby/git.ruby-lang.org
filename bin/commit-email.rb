@@ -11,13 +11,13 @@ CommitEmailInfo = Struct.new(
   :revision,
   :entire_sha256,
   :date,
+  :branches,
 
   # TODO
   :log,
   :added_files, :deleted_files, :updated_files,
   :added_dirs, :deleted_dirs, :updated_dirs,
   :diffs,
-  :branches,
 )
 
 class GitInfoBuilder
@@ -25,13 +25,14 @@ class GitInfoBuilder
     @repo_path = repo_path
   end
 
-  def build(_oldrev, newrev, _refname)
+  def build(_oldrev, newrev, refname)
     info = CommitEmailInfo.new
     info.author = git_show(newrev, format: '%an')
     info.author_email = git_show(newrev, format: '%aE')
     info.revision = newrev
     info.entire_sha256 = newrev
     info.date = Time.at(Integer(git_show(newrev, format: '%at')))
+    info.branches = [git('rev-parse', '--symbolic', '--abbrev-ref', refname).strip]
     info
   end
 
