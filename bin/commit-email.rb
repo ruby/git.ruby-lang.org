@@ -12,10 +12,8 @@ CommitEmailInfo = Struct.new(
   :entire_sha256,
   :date,
   :log,
-  :diffs,
   :branches,
-
-  # TODO
+  :diffs,
   :added_files, :deleted_files, :updated_files,
   :added_dirs, :deleted_dirs, :updated_dirs,
 )
@@ -38,12 +36,28 @@ class GitInfoBuilder
     info.entire_sha256 = newrev
     info.date = Time.at(Integer(git_show(newrev, format: '%at')))
     info.log = git_show(newrev, format: '%B')
-    info.diffs = diffs
     info.branches = [git('rev-parse', '--symbolic', '--abbrev-ref', refname).strip]
+    info.diffs = diffs
+    info.added_files = find_files(diffs, status: 'added')
+    info.deleted_files = find_files(diffs, status: 'deleted')
+    info.updated_files = find_files(diffs, status: 'updated')
+    info.added_dirs = [] # git does not deal with directory
+    info.deleted_dirs = [] # git does not deal with directory
+    info.updated_dirs = [] # git does not deal with directory
     info
   end
 
   private
+
+  def find_files(diffs, status:)
+    files = []
+    diffs.each do |path, values|
+      if values.keys.first == status
+        files << path
+      end
+    end
+    files
+  end
 
   # SVN version:
   # {
