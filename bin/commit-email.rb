@@ -59,18 +59,17 @@ class GitInfoBuilder
 
     # Using "#{revision}^" instead of oldrev to exclude diff from unrelated revision
     git('diff', '--name-status', "#{revision}^", revision).each_line do |line|
-      status, path, newpath = line.strip.split("\t", 3)
-      diff = build_diff(revision, newpath || path)
+      status, path, _newpath = line.strip.split("\t", 3)
 
       case status
       when 'A'
-        diffs[path] = { 'added' => { type: 'added', **diff } }
+        diffs[path] = { 'added' => { type: 'added', **build_diff(revision, path) } }
       when 'M'
-        diffs[path] = { 'modified' => { type: 'modified', **diff } }
+        diffs[path] = { 'modified' => { type: 'modified', **build_diff(revision, path) } }
       when 'C'
-        diffs[path] = { 'copied' => { type: 'copied', **diff } }
+        diffs[path] = { 'copied' => { type: 'copied', **build_diff(revision, path) } }
       when 'D'
-        diffs[path] = { 'deleted' => { type: 'deleted', **diff } }
+        diffs[path] = { 'deleted' => { type: 'deleted', **build_diff(revision, path) } }
       when /\AR/ # R100
         # TODO: implement something
       else
@@ -81,6 +80,7 @@ class GitInfoBuilder
     diffs
   end
 
+  # Note: this fails for rename. Don't call this if status is R*.
   def build_diff(revision, path)
     diff = { added: 0, deleted: 0 } # :body not implemented because not used
     line = git('diff', '--numstat', "#{revision}^", revision, path).lines.first
