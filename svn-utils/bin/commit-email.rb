@@ -5,6 +5,37 @@ require "ostruct"
 
 SENDMAIL = "/usr/sbin/sendmail"
 
+CommitEmailInfo = Struct.new(
+  :author,
+  :log,
+  :date,
+  :changed_dirs,
+  :added_files,
+  :deleted_files,
+  :updated_files,
+  :added_dirs,
+  :deleted_dirs,
+  :updated_dirs,
+  :diff,
+  :diffs,
+  :revision,
+  :sha256,
+  :entire_sha256,
+)
+
+class GitInfoBuilder
+  # args: [oldrev, newrev, refname, oldrev, newrev, refname, ...]
+  def initialize(repo_path, args)
+    # TODO
+  end
+
+  def build
+    info = CommitEmailInfo.new
+    # TODO
+    info
+  end
+end
+
 def parse(args)
   options = OpenStruct.new
   options.to = []
@@ -76,9 +107,7 @@ def parse(args)
     end
   end
 
-  opts.parse!(args)
-
-  options
+  return opts.parse!(args), options
 end
 
 def make_body(info, params)
@@ -335,15 +364,19 @@ def rss_items(items, info, repos_uri)
   end.reverse
 end
 
-def main(repo_name, revision, to, rest)
-  options = parse(rest)
+def main(repo_path, to, rest)
+  args, options = parse(rest)
 
   case options.vcs
   when "svn"
     require_relative "../lib/svn/info"
-    info = Svn::Info.new(repo_name, revision)
+    info = Svn::Info.new(repo_path, args.first)
     info.log.sub!(/^([A-Z][a-z]{2} ){2}.*>\n/,"")
     default_from = "#{info.author}@ruby-lang.org"
+  when "git"
+    GitInfoBuilder.new(repo_path, args).build
+    p args
+    abort "not implemented from here"
   else
     raise "unsupported vcs #{options.vcs.inspect} is specified"
   end
@@ -373,14 +406,14 @@ def main(repo_name, revision, to, rest)
   end
 end
 
-repo_name, revision, to, *rest = ARGV
+repo_path, to, *rest = ARGV
 begin
-  main(repo_name, revision, to, rest)
+  main(repo_path, to, rest)
 rescue Exception
   to = [to]
   from = ENV["USER"]
   begin
-    options = parse(rest)
+    _, options = parse(rest)
     to = options.error_to unless options.error_to.empty?
     from = options.from
   rescue Exception

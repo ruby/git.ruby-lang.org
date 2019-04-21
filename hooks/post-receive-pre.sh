@@ -15,18 +15,18 @@ ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 { date; echo '### start ###'; uptime; } >> "$hook_log"
 export RUBY_GIT_HOOK=1 # used by auto-style.rb
 
-# TODO: Enable the following code when in production
-# { date; echo commit-email.rb; uptime; } >> "$hook_log"
-# "${ruby_commit_hook}/svn-utils/bin/commit-email.rb" \
-#    "$REPOS" "$REV" ruby-cvs@ruby-lang.org \
-#    -I "${ruby_commit_hook}/svn-utils/lib" \
-#    --name Ruby \
-#    --viewvc-uri https://svn.ruby-lang.org/cgi-bin/viewvc.cgi \
-#    -r https://svn.ruby-lang.org/repos/ruby \
-#    --rss-path /tmp/ruby.rdf \
-#    --rss-uri https://svn.ruby-lang.org/rss/ruby.rdf \
-#    --error-to cvs-admin@ruby-lang.org \
-#    --vcs git
+{ date; echo commit-email.rb; uptime; } >> "$hook_log"
+"${ruby_commit_hook}/svn-utils/bin/commit-email.rb" \
+   "$ruby_git" ruby-cvs@ruby-lang.org $* \
+   -I "${ruby_commit_hook}/svn-utils/lib" \
+   --name Ruby \
+   --viewvc-uri https://svn.ruby-lang.org/cgi-bin/viewvc.cgi \
+   -r https://svn.ruby-lang.org/repos/ruby \
+   --rss-path /tmp/ruby.rdf \
+   --rss-uri https://svn.ruby-lang.org/rss/ruby.rdf \
+   --error-to cvs-admin@ruby-lang.org \
+   --vcs git \
+   > /tmp/post-receive-pre-commit-email.log 2>&1
 
 { date; echo auto-style; uptime; } >> "$hook_log"
 "${ruby_commit_hook}/svn-utils/bin/auto-style.rb" "$ruby_git"

@@ -17,7 +17,7 @@ ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 # TODO: commit-email
 # { date; echo commit-email.rb; uptime; } >> "$hook_log"
 # "${ruby_commit_hook}/svn-utils/bin/commit-email.rb" \
-#    "$REPOS" "$REV" ruby-cvs@ruby-lang.org \
+#    "$ruby_git" ruby-cvs@ruby-lang.org $* \
 #    -I "${ruby_commit_hook}/svn-utils/lib" \
 #    --name Ruby \
 #    --viewvc-uri https://svn.ruby-lang.org/cgi-bin/viewvc.cgi \
@@ -25,7 +25,8 @@ ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 #    --rss-path /tmp/ruby.rdf \
 #    --rss-uri https://svn.ruby-lang.org/rss/ruby.rdf \
 #    --error-to cvs-admin@ruby-lang.org \
-#    --vcs git
+#    --vcs git \
+#    > /tmp/post-receive-commit-email.log 2>&1
 
 # auto-style (implemented but not enabled yet)
 # { date; echo auto-style; uptime; } >> "$hook_log"
