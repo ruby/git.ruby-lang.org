@@ -17,18 +17,18 @@ ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 { date; echo $REPOS; echo $REV; echo svnadmin; uptime; } >> /tmp/post-commit.log
 svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/ruby/$REV.bz2
 
-{ date; echo commit-email.rb; uptime; } >> /tmp/post-commit.log
-"${ruby_commit_hook}/bin/commit-email.rb" \
-   "$REPOS" ruby-cvs@ruby-lang.org "$REV" \
-   -I "${ruby_commit_hook}/lib" \
-   --name Ruby \
-   --viewer-uri "https://svn.ruby-lang.org/cgi-bin/viewvc.cgi?view=revision&revision=" \
-   -r https://svn.ruby-lang.org/repos/ruby \
-   --rss-path /tmp/ruby.rdf \
-   --rss-uri https://svn.ruby-lang.org/rss/ruby.rdf \
-   --error-to cvs-admin@ruby-lang.org \
-   --vcs svn \
-   > /tmp/post-commit-commit-email.log 2>&1
+# { date; echo commit-email.rb; uptime; } >> /tmp/post-commit.log
+# "${ruby_commit_hook}/bin/commit-email.rb" \
+#    "$REPOS" ruby-cvs@ruby-lang.org "$REV" \
+#    -I "${ruby_commit_hook}/lib" \
+#    --name Ruby \
+#    --viewer-uri "https://svn.ruby-lang.org/cgi-bin/viewvc.cgi?view=revision&revision=" \
+#    -r https://svn.ruby-lang.org/repos/ruby \
+#    --rss-path /tmp/ruby.rdf \
+#    --rss-uri https://svn.ruby-lang.org/rss/ruby.rdf \
+#    --error-to cvs-admin@ruby-lang.org \
+#    --vcs svn \
+#    > /tmp/post-commit-commit-email.log 2>&1
 
 { date; echo auto-style; uptime; } >> /tmp/post-commit.log
 "${ruby_commit_hook}/bin/auto-style.rb" ~svn/ruby/trunk
