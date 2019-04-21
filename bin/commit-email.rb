@@ -108,21 +108,22 @@ class GitInfoBuilder
   end
 
   def git(*args)
-    command = ['git', *args]
-    output = with_lang('C') { IO.popen(command, &:read) }
+    command = ['git', '-C', @repo_path, *args]
+    output = with_gitenv { IO.popen(command, &:read) }
     unless $?.success?
       raise GitCommandFailure, "failed to execute '#{command.join(' ')}':\n#{output}"
     end
     output
   end
 
-  def with_lang(lang)
-    orig = ENV['LANG']
+  def with_gitenv
+    orig = ENV.dup
     begin
-      ENV['LANG'] = lang
+      ENV['LANG'] = 'C'
+      ENV.delete('GIT_DIR')
       yield
     ensure
-      ENV['LANG'] = orig
+      ENV.replace(orig)
     end
   end
 end
