@@ -401,7 +401,7 @@ end
 repo_path, to, *rest = ARGV
 begin
   main(repo_path, to, rest)
-rescue Exception => e
+rescue StandardError => e
   $stderr.puts "#{e.class}: #{e.message}"
   $stderr.puts e.backtrace
   to = [to]
@@ -410,7 +410,7 @@ rescue Exception => e
     _, options = parse(rest)
     to = options.error_to unless options.error_to.empty?
     from = options.from
-  rescue Exception
+  rescue StandardError
   end
   sendmail(to, from, <<-MAIL)
 From: #{from}
