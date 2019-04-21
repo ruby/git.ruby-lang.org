@@ -60,7 +60,7 @@ class GitInfoBuilder
     diffs = {}
 
     # Using "#{revision}^" instead of oldrev to exclude diff from unrelated revision
-    numstats = git('diff', '--numstat', "#{revision}^", revision).lines.map { |l| l.split("\t", 3) }
+    numstats = git('diff', '--numstat', "#{revision}^", revision).lines.map { |l| l.strip.split("\t", 3) }
     git('diff', '--name-status', "#{revision}^", revision).each_line do |line|
       status, path, _newpath = line.strip.split("\t", 3)
       diff = build_diff(revision, path, numstats)
@@ -86,10 +86,7 @@ class GitInfoBuilder
 
   def build_diff(revision, path, numstats)
     diff = { added: 0, deleted: 0 } # :body not implemented because not used
-    line = numstats.find { |(_added, _deleted, file, *)|
-      p [_added, _deleted, file]
-      file == path
-    }
+    line = numstats.find { |(_added, _deleted, file, *)| file == path }
     return diff if line.nil? || line.blank?
 
     added, deleted, _ = line.split("\t", 3)
