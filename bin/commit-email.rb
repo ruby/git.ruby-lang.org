@@ -375,9 +375,13 @@ def make_mail(to, from, info, params)
 end
 
 def sendmail(to, from, mail)
+  puts "=== sendmail BEGIN ==="
+  puts "+ #{SENDMAIL} #{to.join(' ')}"
+  puts mail
   open("| #{SENDMAIL} #{to.join(' ')}", "w") do |f|
     f.print(mail)
   end
+  puts "=== sendmail END ==="
 end
 
 def output_rss(name, file, rss_uri, repos_uri, info)
