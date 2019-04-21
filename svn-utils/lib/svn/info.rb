@@ -35,11 +35,6 @@ module Svn
       get_sha256
     end
 
-    # Used by: commit-email.rb
-    def author_email
-      "#{@author}@ruby-lang.org"
-    end
-
     # Used by: commit-email.rb, update-version.h.rb
     def branches
       sha256.map{|x,| x[/((?:branches\/)?.+?)\//, 1]}.uniq
