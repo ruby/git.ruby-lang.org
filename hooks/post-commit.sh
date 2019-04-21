@@ -26,7 +26,7 @@ svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/rub
    -r https://svn.ruby-lang.org/repos/ruby \
    --rss-path /tmp/ruby.rdf \
    --rss-uri https://svn.ruby-lang.org/rss/ruby.rdf \
-   --error-to k0kubun@ruby-lang.org \
+   --error-to cvs-admin@ruby-lang.org \
    --vcs svn \
    > /tmp/post-commit-commit-email.log 2>&1
 
