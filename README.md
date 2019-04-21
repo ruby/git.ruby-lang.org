@@ -1,6 +1,6 @@
 # Ruby commit hook [![Build Status](https://travis-ci.com/ruby/ruby-commit-hook.svg?branch=master)](https://travis-ci.com/ruby/ruby-commit-hook)
 
-On each commit of Ruby repository, a hook in this repository does:
+On each commit of Ruby repository, `post-receive` hook in this repository does:
 
 * Send notification to ruby-cvs@ruby-lang.org
 * Commit automatic styling:
