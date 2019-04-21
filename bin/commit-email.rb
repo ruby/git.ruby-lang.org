@@ -463,9 +463,7 @@ def main(repo_path, to, rest)
   when "git"
     infos = args.each_slice(3).map do |oldrev, newrev, refname|
       p [oldrev, newrev, refname]
-      GitInfoBuilder.new(repo_path).build(oldrev, newrev, refname).tap do |info|
-        info.log.sub!(/^([A-Z][a-z]{2} ){2}.*>\n/,"")
-      end
+      GitInfoBuilder.new(repo_path).build(oldrev, newrev, refname)
     end
     require "pp"; pp infos
   else
