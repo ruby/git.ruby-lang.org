@@ -27,13 +27,12 @@ ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
    --vcs git \
    > /tmp/post-receive-commit-email.log 2>&1
 
-# auto-style (implemented but not enabled yet)
 # { date; echo auto-style; uptime; } >> "$hook_log"
-# "${ruby_commit_hook}/bin/auto-style.rb" ~svn/ruby/trunk
+# "${ruby_commit_hook}/bin/auto-style.rb" "$ruby_git"
 
-# TODO: update-version
 # { date; echo update-version.h.rb; uptime; } >> "$hook_log"
-# "${ruby_commit_hook}/bin/update-version.h.rb" git "$ruby_git" $* &
+# "${ruby_commit_hook}/bin/update-version.h.rb" git "$ruby_git" $* \
+#    > /tmp/post-receive-update-version.log 2>&1 &
 
 { date; echo redmine fetch changesets; uptime; } >> "$hook_log"
 curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/redmine.key`" &
