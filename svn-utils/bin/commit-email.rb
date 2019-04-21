@@ -356,11 +356,13 @@ def main(repo_path, to, rest)
   case options.vcs
   when "svn"
     require_relative "../lib/svn/info"
-    info = Svn::Info.new(repo_path, args.first)
-    info.log.sub!(/^([A-Z][a-z]{2} ){2}.*>\n/,"")
+    infos = [
+      Svn::Info.new(repo_path, args.first).tap do |info|
+        info.log.sub!(/^([A-Z][a-z]{2} ){2}.*>\n/,"")
+      end
+    ]
   when "git"
-    info = GitInfoBuilder.new(repo_path, args).build
-    p info
+    infos = [GitInfoBuilder.new(repo_path, args).build]
     abort "not implemented from here"
   else
     raise "unsupported vcs #{options.vcs.inspect} is specified"
@@ -372,22 +374,24 @@ def main(repo_path, to, rest)
     name: options.name
   }
   to = [to, *options.to]
-  from = options.from || info.author_email
-  sendmail(to, from, make_mail(to, from, info, params))
+  infos.each do |info|
+    from = options.from || info.author_email
+    sendmail(to, from, make_mail(to, from, info, params))
 
-  if options.repository_uri and
-      options.rss_path and
-      options.rss_uri
-    require "rss/1.0"
-    require "rss/dublincore"
-    require "rss/content"
-    require "rss/maker"
-    include RSS::Utils
-    output_rss(options.name,
-               options.rss_path,
-               options.rss_uri,
-               options.repository_uri,
-               info)
+    if options.repository_uri and
+        options.rss_path and
+        options.rss_uri
+      require "rss/1.0"
+      require "rss/dublincore"
+      require "rss/content"
+      require "rss/maker"
+      include RSS::Utils
+      output_rss(options.name,
+                 options.rss_path,
+                 options.rss_uri,
+                 options.repository_uri,
+                 info)
+    end
   end
 end
 
