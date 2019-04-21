@@ -31,7 +31,7 @@ class GitInfoBuilder
 
     info = CommitEmailInfo.new
     info.author = git_show(newrev, format: '%an')
-    info.author_email = git_show(newrev, format: '%aE')
+    info.author_email = normalize_email(git_show(newrev, format: '%aE'))
     info.revision = newrev[0...10]
     info.entire_sha256 = newrev
     info.date = Time.at(Integer(git_show(newrev, format: '%at')))
@@ -48,6 +48,16 @@ class GitInfoBuilder
   end
 
   private
+
+  # Force git-svn email address to @ruby-lang.org to avoid email bounce by invalid email address.
+  def normalize_email(email)
+    if email.match(/\A[^@]+@\h{8}-\h{4}-\h{4}-\h{4}-\h{12}\z/) # git-svn
+      svn_user, _ = email.split('@', 2)
+      "#{svn_user}@ruby-lang.org"
+    else
+      email
+    end
+  end
 
   def find_files(diffs, status:)
     files = []
