@@ -28,7 +28,7 @@ ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
    > /tmp/post-receive-commit-email.log 2>&1
 
 # { date; echo auto-style; uptime; } >> "$hook_log"
-# "${ruby_commit_hook}/bin/auto-style.rb" "$ruby_git"
+# RUBY_GIT_HOOK=1 "${ruby_commit_hook}/bin/auto-style.rb" "$ruby_git"
 
 # { date; echo update-version.h.rb; uptime; } >> "$hook_log"
 # "${ruby_commit_hook}/bin/update-version.h.rb" git "$ruby_git" $* \
@@ -41,6 +41,6 @@ curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/redmi
 git remote update; git push github
 
 { date; echo notify slack; uptime; } >> "$hook_log"
-$ruby_commit_hook/notify-slack.rb $*
+$ruby_commit_hook/bin/notify-slack.rb $*
 
 { date; echo '### end ###'; uptime; } >> "$hook_log"
