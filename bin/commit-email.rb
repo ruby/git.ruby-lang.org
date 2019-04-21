@@ -38,9 +38,9 @@ class GitInfoBuilder
     info.log = git_show(newrev, format: '%B')
     info.branches = [git('rev-parse', '--symbolic', '--abbrev-ref', refname).strip]
     info.diffs = diffs
-    info.added_files = find_files(diffs, status: 'added')
-    info.deleted_files = find_files(diffs, status: 'deleted')
-    info.updated_files = find_files(diffs, status: 'updated')
+    info.added_files = find_files(diffs, status: :added)
+    info.deleted_files = find_files(diffs, status: :deleted)
+    info.updated_files = find_files(diffs, status: :updated)
     info.added_dirs = [] # git does not deal with directory
     info.deleted_dirs = [] # git does not deal with directory
     info.updated_dirs = [] # git does not deal with directory
