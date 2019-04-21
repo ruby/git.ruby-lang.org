@@ -308,7 +308,8 @@ def diff_info(info, uri)
           rev = "?revision=#{info.revision}&view=markup"
         when :modified, :property_changed
           command = "diff"
-          rev = "?r1=#{info.revision}&r2=#{info.revision - 1}&diff_format=u"
+          prev_revision = (info.revision.is_a?(Integer) ? info.revision - 1 : "#{info.revision}^")
+          rev = "?r1=#{info.revision}&r2=#{prev_revision}&diff_format=u"
         when :deleted, :copied
           command = "cat"
           rev = ""
