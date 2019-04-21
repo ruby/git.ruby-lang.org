@@ -32,7 +32,7 @@ class GitInfoBuilder
     info = CommitEmailInfo.new
     info.author = git_show(newrev, format: '%an')
     info.author_email = git_show(newrev, format: '%aE')
-    info.revision = newrev
+    info.revision = newrev[0...10]
     info.entire_sha256 = newrev
     info.date = Time.at(Integer(git_show(newrev, format: '%at')))
     info.log = git_show(newrev, format: '%B')
