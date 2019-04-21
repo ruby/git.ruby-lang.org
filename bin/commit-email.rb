@@ -21,6 +21,8 @@ CommitEmailInfo = Struct.new(
 )
 
 class GitInfoBuilder
+  GitCommandFailure = Class.new(RuntimeRrror)
+
   def initialize(repo_path)
     @repo_path = repo_path
   end
@@ -60,17 +62,18 @@ class GitInfoBuilder
     # Using "#{revision}^" instead of oldrev to exclude diff from unrelated revision
     git('diff', '--name-status', "#{revision}^", revision).each_line do |line|
       status, path, _newpath = line.strip.split("\t", 3)
+      diff = build_diff(revision, path)
 
       case status
       when 'A'
-        diffs[path] = { 'added' => { type: 'added', **build_diff(revision, path) } }
+        diffs[path] = { 'added' => { type: 'added', **diff } }
       when 'M'
-        diffs[path] = { 'modified' => { type: 'modified', **build_diff(revision, path) } }
+        diffs[path] = { 'modified' => { type: 'modified', **diff } }
       when 'C'
-        diffs[path] = { 'copied' => { type: 'copied', **build_diff(revision, path) } }
+        diffs[path] = { 'copied' => { type: 'copied', **diff } }
       when 'D'
-        diffs[path] = { 'deleted' => { type: 'deleted', added: 0, deleted: 0 } }
-      when /\AR/ # R100
+        diffs[path] = { 'deleted' => { type: 'deleted', **diff } }
+      when /\AR/ # R100 (which does not exist in git.ruby-lang.org's git 2.1.4)
         # TODO: implement something
       else
         $stderr.puts "unexpected git diff status: #{status}"
@@ -80,10 +83,15 @@ class GitInfoBuilder
     diffs
   end
 
-  # Note: this fails for rename/delete. Don't call this if status is R*/D.
   def build_diff(revision, path)
     diff = { added: 0, deleted: 0 } # :body not implemented because not used
-    line = git('diff', '--numstat', "#{revision}^", revision, path).lines.first
+    begin
+      line = git('diff', '--numstat', "#{revision}^", revision, path).lines.first
+    rescue GitCommandFailure => e
+      $stderr.puts "#{e.class}: #{e.message}"
+      $stderr.puts e.backtrace
+      return diff
+    end
     return diff if line.nil? || line.blank?
 
     added, deleted, _ = line.split("\t", 3)
@@ -103,7 +111,7 @@ class GitInfoBuilder
     command = ['git', *args]
     output = with_lang('C') { IO.popen(command, &:read) }
     unless $?.success?
-      raise "failed to execute '#{command.join(' ')}':\n#{output}"
+      raise GitCommandFailure, "failed to execute '#{command.join(' ')}':\n#{output}"
     end
     output
   end
