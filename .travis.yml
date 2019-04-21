@@ -7,4 +7,4 @@ branches:
 before_install:
   - gem install test-unit
 script:
-  - "cd svn-utils; ruby -Ilib -rtest/unit test/test_*.rb"
+  - "ruby -Ilib -rtest/unit test/test_*.rb"

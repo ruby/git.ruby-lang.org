@@ -65,7 +65,6 @@ class InfoTest < Test::Unit::TestCase
     commit(log)
 
     info = make_info
-    assert_equal(["/", dir], info.changed_dirs)
     assert_equal(@rev, info.revision)
     assert_equal(log, info.log)
   end
@@ -196,13 +195,6 @@ class InfoTest < Test::Unit::TestCase
     commit(log)
 
     info = make_info
-    assert_equal(3, info.sha256.size)
-    assert_equal(Digest::SHA256.hexdigest(file1_content),
-                 info.sha256[file1][:sha256])
-    assert_equal(Digest::SHA256.hexdigest(file2_content),
-                 info.sha256[file2][:sha256])
-    assert_equal(Digest::SHA256.hexdigest(file3_content),
-                 info.sha256[file3][:sha256])
     assert_equal(Digest::SHA256.hexdigest(all_content),
                  info.entire_sha256)
     assert_equal(@rev, info.revision)
