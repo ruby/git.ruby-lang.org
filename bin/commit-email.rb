@@ -6,25 +6,40 @@ require "ostruct"
 SENDMAIL = "/usr/sbin/sendmail"
 
 CommitEmailInfo = Struct.new(
-  :author, :log, :date,
+  :author,
+  :author_email,
+
+  # TODO
+  :log, :date,
   :added_files, :deleted_files, :updated_files,
   :added_dirs, :deleted_dirs, :updated_dirs,
   :diffs,
   :revision,
   :entire_sha256,
-  :author_email,
   :branches,
 )
 
 class GitInfoBuilder
-  def initialize(repo_path, oldrev, newrev, refname)
-    # TODO
+  def initialize(repo_path)
+    @repo_path = repo_path
   end
 
-  def build
+  def build(oldrev, newrev, refname)
     info = CommitEmailInfo.new
-    # TODO
+    info.author = git('show', '--pretty=%an', newrev).strip
+    info.author_email = git('show', '--pretty=%aE', newrev).strip
     info
+  end
+
+  private
+
+  def git(*args)
+    command = ['git', *args]
+    output = IO.popen(command, &:read)
+    unless $?.success?
+      raise "failed to execute '#{command.join(' ')}':\n#{output}"
+    end
+    output
   end
 end
 
@@ -363,7 +378,7 @@ def main(repo_path, to, rest)
   when "git"
     infos = args.each_slice(3).map do |oldrev, newrev, refname|
       p [oldrev, newrev, refname]
-      GitInfoBuilder.new(repo_path, oldrev, newrev, refname).build
+      GitInfoBuilder.new(repo_path).build(oldrev, newrev, refname)
     end
     require "pp"; pp infos
     abort "not implemented from here"
