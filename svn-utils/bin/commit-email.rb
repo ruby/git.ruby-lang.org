@@ -12,6 +12,7 @@ CommitEmailInfo = Struct.new(
   :diffs,
   :revision,
   :entire_sha256,
+  :author_email,
   :branches,
 )
 
@@ -357,7 +358,6 @@ def main(repo_path, to, rest)
     require_relative "../lib/svn/info"
     info = Svn::Info.new(repo_path, args.first)
     info.log.sub!(/^([A-Z][a-z]{2} ){2}.*>\n/,"")
-    default_from = "#{info.author}@ruby-lang.org"
   when "git"
     info = GitInfoBuilder.new(repo_path, args).build
     p info
@@ -366,13 +366,13 @@ def main(repo_path, to, rest)
     raise "unsupported vcs #{options.vcs.inspect} is specified"
   end
 
-  from = options.from || default_from
-  to = [to, *options.to]
   params = {
     repository_uri: options.repository_uri,
     viewvc_uri: options.viewvc_uri,
     name: options.name
   }
+  to = [to, *options.to]
+  from = options.from || info.author_email
   sendmail(to, from, make_mail(to, from, info, params))
 
   if options.repository_uri and
