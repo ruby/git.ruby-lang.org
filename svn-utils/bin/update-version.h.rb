@@ -14,6 +14,7 @@ when "git"
     out, _ = Open3.capture2("git", "rev-parse", "--symbolic", "--abbrev-ref", refname)
     out.strip
   end.uniq
+  p branches
 else
   raise "unknown vcs: #{vcs.inspect}"
 end
