@@ -12,12 +12,12 @@ CommitEmailInfo = Struct.new(
   :entire_sha256,
   :date,
   :log,
+  :diffs,
   :branches,
 
   # TODO
   :added_files, :deleted_files, :updated_files,
   :added_dirs, :deleted_dirs, :updated_dirs,
-  :diffs,
 )
 
 class GitInfoBuilder
@@ -33,11 +33,26 @@ class GitInfoBuilder
     info.entire_sha256 = newrev
     info.date = Time.at(Integer(git_show(newrev, format: '%at')))
     info.log = git_show(newrev, format: '%B')
+    info.diffs = build_diffs
     info.branches = [git('rev-parse', '--symbolic', '--abbrev-ref', refname).strip]
     info
   end
 
   private
+
+  # {
+  #   "filename" => {
+  #     "[modified|added|deleted|copied|property_changed]" => {
+  #       type: "[modified|added|deleted|copied|property_changed]",
+  #       body: "diff body",
+  #       added: Integer,
+  #       deleted: Integer,
+  #     }
+  #   }
+  # }
+  def build_diffs
+    {}
+  end
 
   def git_show(revision, format:)
     git('show', "--pretty=#{format}", revision).strip
@@ -45,11 +60,21 @@ class GitInfoBuilder
 
   def git(*args)
     command = ['git', *args]
-    output = IO.popen(command, &:read)
+    output = with_lang('C') { IO.popen(command, &:read) }
     unless $?.success?
       raise "failed to execute '#{command.join(' ')}':\n#{output}"
     end
     output
+  end
+
+  def with_lang(lang)
+    orig = ENV['LANG']
+    begin
+      ENV['LANG'] = lang
+      yield
+    ensure
+      ENV['LANG'] = orig
+    end
   end
 end
 
