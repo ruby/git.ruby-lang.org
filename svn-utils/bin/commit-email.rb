@@ -9,14 +9,12 @@ CommitEmailInfo = Struct.new(
   :author,
   :log,
   :date,
-  :changed_dirs,
   :added_files,
   :deleted_files,
   :updated_files,
   :added_dirs,
   :deleted_dirs,
   :updated_dirs,
-  :diff,
   :diffs,
   :revision,
   :sha256,
@@ -374,8 +372,8 @@ def main(repo_path, to, rest)
     info.log.sub!(/^([A-Z][a-z]{2} ){2}.*>\n/,"")
     default_from = "#{info.author}@ruby-lang.org"
   when "git"
-    GitInfoBuilder.new(repo_path, args).build
-    p args
+    info = GitInfoBuilder.new(repo_path, args).build
+    p info
     abort "not implemented from here"
   else
     raise "unsupported vcs #{options.vcs.inspect} is specified"

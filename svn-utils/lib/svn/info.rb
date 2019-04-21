@@ -18,10 +18,10 @@ end
 module Svn
   class Info
     # Used by: commit-email.rb
-    attr_reader :author, :log, :date, :changed_dirs
+    attr_reader :author, :log, :date
     attr_reader :added_files, :deleted_files, :updated_files
     attr_reader :added_dirs, :deleted_dirs, :updated_dirs
-    attr_reader :diff, :diffs
+    attr_reader :diffs
     attr_reader :revision
     attr_reader :sha256, :entire_sha256
 
