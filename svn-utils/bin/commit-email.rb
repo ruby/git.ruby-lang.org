@@ -394,7 +394,9 @@ end
 repo_path, to, *rest = ARGV
 begin
   main(repo_path, to, rest)
-rescue Exception
+rescue Exception => e
+  $stderr.puts "#{e.class}: #{e.message}"
+  $stderr.puts e.backtrace
   to = [to]
   from = ENV["USER"]
   begin
