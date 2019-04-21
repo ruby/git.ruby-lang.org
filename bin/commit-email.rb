@@ -99,7 +99,7 @@ class GitInfoBuilder
   end
 
   def git_show(revision, format:)
-    git('show', "--pretty=#{format}", revision).strip
+    git('show', "--pretty=#{format}", '--no-patch', revision).strip
   end
 
   def git(*args)
