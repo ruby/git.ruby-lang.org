@@ -81,13 +81,13 @@ class GitInfoBuilder
 
       case status
       when 'A'
-        diffs[path] = { added: => { type: :added, **diff } }
+        diffs[path] = { added: { type: :added, **diff } }
       when 'M'
-        diffs[path] = { :modified => { type: :modified, **diff } }
+        diffs[path] = { modified: { type: :modified, **diff } }
       when 'C'
-        diffs[path] = { :copied => { type: :copied, **diff } }
+        diffs[path] = { :copied: { type: :copied, **diff } }
       when 'D'
-        diffs[path] = { :deleted => { type: :deleted, **diff } }
+        diffs[path] = { :deleted: { type: :deleted, **diff } }
       when /\AR/ # R100 (which does not exist in git.ruby-lang.org's git 2.1.4)
         # TODO: implement something
       else
