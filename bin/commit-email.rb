@@ -25,7 +25,10 @@ class GitInfoBuilder
     @repo_path = repo_path
   end
 
+  # TODO: should we generate info for each revision between oldrev and newrev?
   def build(_oldrev, newrev, refname)
+    diffs = build_diffs(newrev)
+
     info = CommitEmailInfo.new
     info.author = git_show(newrev, format: '%an')
     info.author_email = git_show(newrev, format: '%aE')
@@ -33,25 +36,63 @@ class GitInfoBuilder
     info.entire_sha256 = newrev
     info.date = Time.at(Integer(git_show(newrev, format: '%at')))
     info.log = git_show(newrev, format: '%B')
-    info.diffs = build_diffs
+    info.diffs = diffs
     info.branches = [git('rev-parse', '--symbolic', '--abbrev-ref', refname).strip]
     info
   end
 
   private
 
+  # SVN version:
   # {
   #   "filename" => {
   #     "[modified|added|deleted|copied|property_changed]" => {
   #       type: "[modified|added|deleted|copied|property_changed]",
-  #       body: "diff body",
+  #       body: "diff body", # not implemented because not used
   #       added: Integer,
   #       deleted: Integer,
   #     }
   #   }
   # }
-  def build_diffs
-    {}
+  def build_diffs(revision)
+    diffs = {}
+
+    # Using "#{revision}^" instead of oldrev to exclude diff from unrelated revision
+    git('diff', '--name-status' "#{revision}^", revision).each_line do |line|
+      status, path, _newpath = line.strip.split("\t", 3)
+      diff = build_diff(revision, path)
+
+      case status
+      when 'A'
+        diffs[path] = { 'added' => { type: 'added', **diff } }
+      when 'M'
+        diffs[path] = { 'modified' => { type: 'modified', **diff } }
+      when 'C'
+        diffs[path] = { 'copied' => { type: 'copied', **diff } }
+      when 'D'
+        diffs[path] = { 'deleted' => { type: 'deleted', **diff } }
+      when /\AR/ # R100
+        # TODO: implement something
+      else
+        $stderr.puts "unexpected git diff status: #{status}"
+      end
+    end
+
+    diffs
+  end
+
+  def build_diff(revision, path)
+    diff = { added: 0, deleted: 0 } # :body not implemented because not used
+    line = git('diff', '--numstat', "#{revision}^", revision, path).lines.first
+    return diff if line.nil? || line.blank?
+
+    added, deleted, _ = line.split("\t", 3)
+    if added
+      diff[:added] = Integer(added)
+    end
+    if deleted
+      diff[:deleted] = Integer(deleted)
+    end
   end
 
   def git_show(revision, format:)
@@ -258,17 +299,6 @@ def diff_info(info, uri)
 
         link = [uri, key.sub(/ .+/,"")||""].join("/") + rev
 
-=begin without_diff
-        desc = <<-HEADER
-  #{CHANGED_TYPE[value[:type]]}: #{key} (+#{value[:added]} -#{value[:deleted]})
-HEADER
-
-#       result << <<-CONTENT
-#     % svn #{command} -r #{rev} #{link}
-# CONTENT
-
-        desc << value[:body]
-=end
         desc = ''
 
         [desc, link]
