@@ -22,7 +22,7 @@ svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/rub
    "$REPOS" ruby-cvs@ruby-lang.org "$REV" \
    -I "${ruby_commit_hook}/lib" \
    --name Ruby \
-   --viewvc-uri https://svn.ruby-lang.org/cgi-bin/viewvc.cgi \
+   --viewer-uri "https://svn.ruby-lang.org/cgi-bin/viewvc.cgi?view=revision&revision=" \
    -r https://svn.ruby-lang.org/repos/ruby \
    --rss-path /tmp/ruby.rdf \
    --rss-uri https://svn.ruby-lang.org/rss/ruby.rdf \

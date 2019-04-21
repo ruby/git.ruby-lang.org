@@ -113,9 +113,9 @@ def parse(args)
       options.from = from
     end
 
-    opts.on("--viewvc-uri [URI]",
-            "Use [URI] as URI of viewvc") do |uri|
-      options.viewvc_uri = uri
+    opts.on("--viewer-uri [URI]",
+            "Use [URI] as URI of revision viewer") do |uri|
+      options.viewer_uri = uri
     end
 
     opts.on("-r", "--repository-uri [URI]",
@@ -158,7 +158,7 @@ def make_body(info, params)
   body << "\n"
   body << "  New Revision: #{info.revision}\n"
   body << "\n"
-  body << change_info(info, params[:viewvc_uri])
+  body << "  #{params[:viewer_uri]}#{info.revision}\n"
   body << "\n"
   body << "  Log:\n"
   body << info.log.lstrip.gsub(/^\t*/, "    ").rstrip
@@ -225,10 +225,6 @@ CHANGED_TYPE = {
   :copied => "Copied",
   :property_changed => "Property changed",
 }
-
-def change_info(info, uri)
-  "  #{uri}?view=revision&revision=#{info.revision}\n"
-end
 
 def changed_dirs_info(info, uri)
   rev = info.revision
@@ -423,7 +419,7 @@ def main(repo_path, to, rest)
 
   params = {
     repository_uri: options.repository_uri,
-    viewvc_uri: options.viewvc_uri,
+    viewer_uri: options.viewer_uri,
     name: options.name
   }
   to = [to, *options.to]

@@ -20,7 +20,7 @@ ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 #    "$ruby_git" ruby-cvs@ruby-lang.org $* \
 #    -I "${ruby_commit_hook}/lib" \
 #    --name Ruby \
-#    --viewvc-uri https://svn.ruby-lang.org/cgi-bin/viewvc.cgi \
+#    --viewer-uri "https://svn.ruby-lang.org/cgi-bin/viewvc.cgi?view=revision&revision=" \
 #    -r https://svn.ruby-lang.org/repos/ruby \
 #    --rss-path /tmp/ruby.rdf \
 #    --rss-uri https://svn.ruby-lang.org/rss/ruby.rdf \
