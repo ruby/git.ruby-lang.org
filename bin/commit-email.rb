@@ -21,7 +21,7 @@ CommitEmailInfo = Struct.new(
 )
 
 class GitInfoBuilder
-  GitCommandFailure = Class.new(RuntimeRrror)
+  GitCommandFailure = Class.new(RuntimeError)
 
   def initialize(repo_path)
     @repo_path = repo_path
