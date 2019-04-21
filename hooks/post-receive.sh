@@ -16,9 +16,9 @@ ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 
 # TODO: commit-email
 # { date; echo commit-email.rb; uptime; } >> "$hook_log"
-# "${ruby_commit_hook}/svn-utils/bin/commit-email.rb" \
+# "${ruby_commit_hook}/bin/commit-email.rb" \
 #    "$ruby_git" ruby-cvs@ruby-lang.org $* \
-#    -I "${ruby_commit_hook}/svn-utils/lib" \
+#    -I "${ruby_commit_hook}/lib" \
 #    --name Ruby \
 #    --viewvc-uri https://svn.ruby-lang.org/cgi-bin/viewvc.cgi \
 #    -r https://svn.ruby-lang.org/repos/ruby \
@@ -30,11 +30,11 @@ ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 
 # auto-style (implemented but not enabled yet)
 # { date; echo auto-style; uptime; } >> "$hook_log"
-# "${ruby_commit_hook}/svn-utils/bin/auto-style.rb" ~svn/ruby/trunk
+# "${ruby_commit_hook}/bin/auto-style.rb" ~svn/ruby/trunk
 
 # TODO: update-version
 # { date; echo update-version.h.rb; uptime; } >> "$hook_log"
-# "${ruby_commit_hook}/svn-utils/bin/update-version.h.rb" git "$ruby_git" $* &
+# "${ruby_commit_hook}/bin/update-version.h.rb" git "$ruby_git" $* &
 
 { date; echo redmine fetch changesets; uptime; } >> "$hook_log"
 curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/redmine.key`" &
