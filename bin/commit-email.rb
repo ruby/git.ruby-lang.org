@@ -96,6 +96,7 @@ class GitInfoBuilder
     if deleted
       diff[:deleted] = Integer(deleted)
     end
+    diff
   end
 
   def git_show(revision, format:)
