@@ -340,7 +340,7 @@ def main(repo_name, revision, to, rest)
 
   case options.vcs
   when "svn"
-    require "svn/info"
+    require_relative "../lib/svn/info"
     info = Svn::Info.new(repo_name, revision)
     info.log.sub!(/^([A-Z][a-z]{2} ){2}.*>\n/,"")
     default_from = "#{info.author}@ruby-lang.org"

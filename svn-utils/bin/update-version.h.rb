@@ -6,7 +6,7 @@ require "tmpdir"
 vcs, repo_path, *rest = ARGV
 case vcs
 when "svn"
-  require "svn/info"
+  require_relative "../lib/svn/info"
   branches = Svn::Info.new(repo_path, rest.first).branches
 when "git"
   require "open3"
