@@ -69,7 +69,7 @@ class GitInfoBuilder
       when 'C'
         diffs[path] = { 'copied' => { type: 'copied', **build_diff(revision, path) } }
       when 'D'
-        diffs[path] = { 'deleted' => { type: 'deleted', **build_diff(revision, path) } }
+        diffs[path] = { 'deleted' => { type: 'deleted', added: 0, deleted: 0 } }
       when /\AR/ # R100
         # TODO: implement something
       else
@@ -80,7 +80,7 @@ class GitInfoBuilder
     diffs
   end
 
-  # Note: this fails for rename. Don't call this if status is R*.
+  # Note: this fails for rename/delete. Don't call this if status is R*/D.
   def build_diff(revision, path)
     diff = { added: 0, deleted: 0 } # :body not implemented because not used
     line = git('diff', '--numstat', "#{revision}^", revision, path).lines.first
