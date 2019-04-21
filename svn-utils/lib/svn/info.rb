@@ -42,7 +42,7 @@ module Svn
 
     # Used by: commit-email.rb, update-version.h.rb
     def branches
-      sha256.map{|x,| x[/((?:branches\/)?.+?)\//, 1]}.uniq
+      @sha256.map{|x,| x[/((?:branches\/)?.+?)\//, 1]}.uniq
     end
 
     private
