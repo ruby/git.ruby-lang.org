@@ -6,19 +6,13 @@ require "ostruct"
 SENDMAIL = "/usr/sbin/sendmail"
 
 CommitEmailInfo = Struct.new(
-  :author,
-  :log,
-  :date,
-  :added_files,
-  :deleted_files,
-  :updated_files,
-  :added_dirs,
-  :deleted_dirs,
-  :updated_dirs,
+  :author, :log, :date,
+  :added_files, :deleted_files, :updated_files,
+  :added_dirs, :deleted_dirs, :updated_dirs,
   :diffs,
   :revision,
-  :sha256,
   :entire_sha256,
+  :branches,
 )
 
 class GitInfoBuilder
@@ -243,7 +237,6 @@ def make_header(to, from, info, params)
   headers << x_repository(info)
   headers << x_revision(info)
   headers << x_id(info)
-#  headers << x_sha256(info)
   headers << "Content-Type: text/plain; charset=us-ascii"
   headers << "Content-Transfer-Encoding: 7bit"
   headers << "From: #{from}"
@@ -255,7 +248,7 @@ def make_header(to, from, info, params)
 end
 
 def make_subject(name, info)
-  branches = info.sha256.map{|x,| x[/(?:branches\/|tags\/)?(.+?)\//, 1]}.uniq
+  branches = info.branches
   subject = ""
   subject << "#{info.author}:"
   subject << "r#{info.revision}"
@@ -279,12 +272,6 @@ end
 
 def x_revision(info)
   "X-SVN-Revision: #{info.revision}"
-end
-
-def x_sha256(info)
-  info.sha256.collect do |name, inf|
-    "X-SVN-SHA256-Info: #{name}, #{inf[:revision]}, #{inf[:sha256]}"
-  end.join("\n")
 end
 
 def make_mail(to, from, info, params)
