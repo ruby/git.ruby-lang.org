@@ -8,14 +8,15 @@ SENDMAIL = "/usr/sbin/sendmail"
 CommitEmailInfo = Struct.new(
   :author,
   :author_email,
+  :revision,
+  :entire_sha256,
+  :date,
 
   # TODO
-  :log, :date,
+  :log,
   :added_files, :deleted_files, :updated_files,
   :added_dirs, :deleted_dirs, :updated_dirs,
   :diffs,
-  :revision,
-  :entire_sha256,
   :branches,
 )
 
@@ -24,14 +25,21 @@ class GitInfoBuilder
     @repo_path = repo_path
   end
 
-  def build(oldrev, newrev, refname)
+  def build(_oldrev, newrev, _refname)
     info = CommitEmailInfo.new
-    info.author = git('show', '--pretty=%an', newrev).strip
-    info.author_email = git('show', '--pretty=%aE', newrev).strip
+    info.author = git_show(newrev, format: '%an')
+    info.author_email = git_show(newrev, format: '%aE')
+    info.revision = newrev
+    info.entire_sha256 = newrev
+    info.date = Time.at(Integer(git_show(newrev, format: '%at')))
     info
   end
 
   private
+
+  def git_show(revision, format:)
+    git('show', "--pretty=#{format}", revision).strip
+  end
 
   def git(*args)
     command = ['git', *args]
