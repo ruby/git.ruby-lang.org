@@ -58,7 +58,7 @@ class GitInfoBuilder
     diffs = {}
 
     # Using "#{revision}^" instead of oldrev to exclude diff from unrelated revision
-    git('diff', '--name-status' "#{revision}^", revision).each_line do |line|
+    git('diff', '--name-status', "#{revision}^", revision).each_line do |line|
       status, path, _newpath = line.strip.split("\t", 3)
       diff = build_diff(revision, path)
 
