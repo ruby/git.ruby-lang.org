@@ -86,7 +86,10 @@ class GitInfoBuilder
 
   def build_diff(revision, path, numstats)
     diff = { added: 0, deleted: 0 } # :body not implemented because not used
-    line = numstats.find { |(_added, _deleted, file, *)| file == path }
+    line = numstats.find { |(_added, _deleted, file, *)|
+      p [_added, _deleted, file]
+      file == path
+    }
     return diff if line.nil? || line.blank?
 
     added, deleted, _ = line.split("\t", 3)
