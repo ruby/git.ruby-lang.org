@@ -461,7 +461,6 @@ def main(repo_path, to, rest)
       GitInfoBuilder.new(repo_path).build(oldrev, newrev, refname)
     end
     require "pp"; pp infos
-    abort "not implemented from here"
   else
     raise "unsupported vcs #{options.vcs.inspect} is specified"
   end
