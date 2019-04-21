@@ -17,8 +17,7 @@ CommitEmailInfo = Struct.new(
 )
 
 class GitInfoBuilder
-  # args: [oldrev, newrev, refname, oldrev, newrev, refname, ...]
-  def initialize(repo_path, args)
+  def initialize(repo_path, oldrev, newrev, refname)
     # TODO
   end
 
@@ -362,7 +361,11 @@ def main(repo_path, to, rest)
       end
     ]
   when "git"
-    infos = [GitInfoBuilder.new(repo_path, args).build]
+    infos = args.each_slice(3).map do |oldrev, newrev, refname|
+      p [oldrev, newrev, refname]
+      GitInfoBuilder.new(repo_path, oldrev, newrev, refname).build
+    end
+    require "pp"; pp infos
     abort "not implemented from here"
   else
     raise "unsupported vcs #{options.vcs.inspect} is specified"
