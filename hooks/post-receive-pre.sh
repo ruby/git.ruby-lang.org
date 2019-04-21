@@ -32,7 +32,7 @@ export RUBY_GIT_HOOK=1 # used by auto-style.rb
 "${ruby_commit_hook}/svn-utils/bin/auto-style.rb" "$ruby_git"
 
 { date; echo update-version.h.rb; uptime; } >> "$hook_log"
-"${ruby_commit_hook}/svn-utils/bin/update-version.h.rb" git "$ruby_git" "$REV" $* \
+"${ruby_commit_hook}/svn-utils/bin/update-version.h.rb" git "$ruby_git" $* \
    > /tmp/post-receive-pre-update-version.log 2>&1 &
 
 { date; echo redmine fetch changesets; uptime; } >> "$hook_log"
