@@ -60,9 +60,10 @@ class GitInfoBuilder
     diffs = {}
 
     # Using "#{revision}^" instead of oldrev to exclude diff from unrelated revision
+    numstats = git('diff', '--numstat', "#{revision}^", revision).lines.map { |l| l.split("\t", 3) }
     git('diff', '--name-status', "#{revision}^", revision).each_line do |line|
       status, path, _newpath = line.strip.split("\t", 3)
-      diff = build_diff(revision, path)
+      diff = build_diff(revision, path, numstats)
 
       case status
       when 'A'
@@ -83,15 +84,9 @@ class GitInfoBuilder
     diffs
   end
 
-  def build_diff(revision, path)
+  def build_diff(revision, path, numstats)
     diff = { added: 0, deleted: 0 } # :body not implemented because not used
-    begin
-      line = git('diff', '--numstat', "#{revision}^", revision, path).lines.first
-    rescue GitCommandFailure => e
-      $stderr.puts "#{e.class}: #{e.message}"
-      $stderr.puts e.backtrace
-      return diff
-    end
+    line = numstats.find { |(_added, _deleted, file, *)| file == path }
     return diff if line.nil? || line.blank?
 
     added, deleted, _ = line.split("\t", 3)
