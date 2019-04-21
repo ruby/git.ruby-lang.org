@@ -40,7 +40,7 @@ class GitInfoBuilder
     info.diffs = diffs
     info.added_files = find_files(diffs, status: :added)
     info.deleted_files = find_files(diffs, status: :deleted)
-    info.updated_files = find_files(diffs, status: :updated)
+    info.updated_files = find_files(diffs, status: :modified)
     info.added_dirs = [] # git does not deal with directory
     info.deleted_dirs = [] # git does not deal with directory
     info.updated_dirs = [] # git does not deal with directory
