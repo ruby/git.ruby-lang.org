@@ -11,6 +11,7 @@ require "open3"
 SVN_TO_EMAILS = {
   "hsbt" => ["hsbt@ruby-lang.org"],
   "k0kubun" => ["takashikkbn@gmail.com"],
+  "kazu" => ["zn@mbf.nifty.com"],
   "mame" => ["mame@ruby-lang.org"],
 }
 
