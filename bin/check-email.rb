@@ -9,6 +9,7 @@ require "open3"
 # This association will be used for committer identification of the ruby repository.
 
 SVN_TO_EMAILS = {
+  "k0kubun" => ["takashikkbn@gmail.com"],
   "mame" => ["mame@ruby-lang.org"],
 }
 
