@@ -9,7 +9,7 @@ require "open3"
 # This association will be used for committer identification of the ruby repository.
 
 SVN_TO_EMAILS = {
-  #"mame" => ["mame@ruby-lang.org"],
+  "mame" => ["mame@ruby-lang.org"],
 }
 
 LOG_FILE = "/home/git/email.log"
