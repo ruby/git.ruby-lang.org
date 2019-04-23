@@ -33,6 +33,11 @@ emails = SVN_TO_EMAILS[svn_account_name]
 exit 0 if emails == :admin
 
 ARGV.each_slice(3) do |_oldrev, newrev, _refname|
+  if refname != "refs/heads/trunk"
+    puts "You cannot commit anything to a branch except trunk."
+    exit 1
+  end
+
   out, = Open3.capture2("git", "show", "-s", "--pretty=format:%H\n%ce", newrev)
 
   hash, git_committer_email = out.split("\n")
