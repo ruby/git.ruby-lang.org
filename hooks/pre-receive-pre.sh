@@ -1,6 +1,7 @@
 #!/bin/bash -eu
 set -o pipefail
-# This script is executed by `git@git.ruby-lang.org:ruby-commit-hook.git/hooks/pre-receive`.
+# This script is executed by `git@git.ruby-lang.org:ruby.pre.git/hooks/pre-receive`.
+# The ruby.pre repository is just a sandbox, and any commit isn't pushed to it automatically.
 
 # script parameters
 ruby_git="/var/git/ruby.git"

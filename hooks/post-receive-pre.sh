@@ -2,10 +2,6 @@
 set -o pipefail
 # This script is executed by `git@git.ruby-lang.org:ruby.pre.git/hooks/post-receive`.
 # The ruby.pre repository is just a sandbox, and any commit isn't pushed to it automatically.
-#
-# In the future, we'll copy this `hooks/post-receive-pre.sh` to `hooks/post-receive.sh`
-# to activate this hook's functionality on Ruby's official git repository.
-# Make sure this script is executed asynchronously using `&`, since this script is a little slow.
 
 # script parameters
 ruby_git="/var/git/ruby.pre.git"
