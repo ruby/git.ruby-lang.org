@@ -388,7 +388,7 @@ def sendmail(to, from, mail)
   puts "=== sendmail BEGIN ==="
   puts "+ #{SENDMAIL} #{to.join(' ')}"
   puts mail
-  open("| #{SENDMAIL} #{to.join(' ')}", "w") do |f|
+  IO.popen([SENDMAIL, *to], "w") do |f|
     f.print(mail)
   end
   puts "=== sendmail END ==="
