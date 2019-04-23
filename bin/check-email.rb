@@ -15,6 +15,7 @@ SVN_TO_EMAILS = {
   "mame" => ["mame@ruby-lang.org"],
   "naruse" => :admin,
   "usa" => ["usa@ruby-lang.org"],
+  "shyouhei" => ["shyouhei@ruby-lang.org"],
 }
 
 LOG_FILE = "/home/git/email.log"
