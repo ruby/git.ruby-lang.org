@@ -12,6 +12,7 @@ SVN_TO_EMAILS = {
   "hsbt" => :admin,
   "k0kubun" => ["takashikkbn@gmail.com"],
   "kazu" => ["zn@mbf.nifty.com"],
+  "kou" => ["kou@cozmixng.org", "kou@clear-code.com"],
   "mame" => ["mame@ruby-lang.org"],
   "naruse" => :admin,
   "usa" => ["usa@ruby-lang.org"],
