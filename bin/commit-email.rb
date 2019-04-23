@@ -239,7 +239,7 @@ def make_body(info, params)
   body << deleted_files(info)
   body << modified_dirs(info)
   body << modified_files(info)
-  body.rstrip + "\n"
+  [body.rstrip].pack('M')
 end
 
 def format_time(time)
@@ -343,8 +343,8 @@ def make_header(to, from, info, params)
   headers << x_repository(info)
   headers << x_revision(info)
   headers << x_id(info)
-  headers << "Content-Type: text/plain; charset=us-ascii"
-  headers << "Content-Transfer-Encoding: 7bit"
+  headers << "Content-Type: text/plain; charset=utf-8"
+  headers << "Content-Transfer-Encoding: quoted-printable"
   headers << "From: #{from}"
   headers << "To: #{to.join(' ')}"
   headers << "Subject: #{make_subject(params[:name], info)}"
@@ -361,7 +361,12 @@ def make_subject(name, info)
   subject << " (#{branches.join(', ')})" unless branches.empty?
   subject << ": "
   subject << info.log.lstrip.lines.first.to_s.strip
-  subject
+  subject_packed = [subject].pack('M').chomp
+  if subject_packed == "#{subject}="
+    subject
+  else
+    '=?utf-8?Q?' << subject_packed.gsub(/=\n/, "=?=\n =?utf-8?Q?") << '?='
+  end
 end
 
 def x_author(info)
