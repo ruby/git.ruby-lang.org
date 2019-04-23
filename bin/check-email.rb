@@ -32,7 +32,7 @@ emails = SVN_TO_EMAILS[svn_account_name]
 
 exit 0 if emails == :admin
 
-ARGV.each_slice(3) do |_oldrev, newrev, refname|
+ARGV.each_slice(3) do |oldrev, newrev, refname|
   if refname != "refs/heads/trunk"
     puts "You cannot commit anything to a branch except trunk."
     exit 1
@@ -40,7 +40,7 @@ ARGV.each_slice(3) do |_oldrev, newrev, refname|
 
   out, = Open3.capture2("git", "show", "-s", "--pretty=format:%H\n%ce", newrev)
 
-  hash, git_committer_email = out.split("\n")
+  _hash, git_committer_email = out.split("\n")
   if emails
     if emails == git_committer_email || emails.include?(git_committer_email)
       # OK
@@ -59,7 +59,7 @@ ARGV.each_slice(3) do |_oldrev, newrev, refname|
     else
       # Until the last of 2019, we record the association of SVN_ACCOUNT_NAME and GIT_COMMITTER_EMAIL.
       open(LOG_FILE, "a") do |f|
-        f.puts "#{ hash } #{ svn_account_name } #{ git_committer_email }"
+        f.puts "#{ oldrev } #{ newrev } #{ svn_account_name } #{ git_committer_email }"
       end
     end
   end
