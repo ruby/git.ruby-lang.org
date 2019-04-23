@@ -9,10 +9,11 @@ require "open3"
 # This association will be used for committer identification of the ruby repository.
 
 SVN_TO_EMAILS = {
-  "hsbt" => ["hsbt@ruby-lang.org"],
+  "hsbt" => :admin,
   "k0kubun" => ["takashikkbn@gmail.com"],
   "kazu" => ["zn@mbf.nifty.com"],
   "mame" => ["mame@ruby-lang.org"],
+  "naruse" => :admin,
   "usa" => ["usa@ruby-lang.org"],
 }
 
@@ -27,6 +28,8 @@ if svn_account_name.nil?
 end
 
 emails = SVN_TO_EMAILS[svn_account_name]
+
+exit 0 if emails == :admin
 
 ARGV.each_slice(3) do |_oldrev, newrev, _refname|
   out, = Open3.capture2("git", "show", "-s", "--pretty=format:%H\n%ce", newrev)
