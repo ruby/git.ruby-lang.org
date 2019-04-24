@@ -2,6 +2,7 @@
 
 require "optparse"
 require "ostruct"
+require "nkf"
 
 SENDMAIL = "/usr/sbin/sendmail"
 
@@ -361,12 +362,7 @@ def make_subject(name, info)
   subject << " (#{branches.join(', ')})" unless branches.empty?
   subject << ": "
   subject << info.log.lstrip.lines.first.to_s.strip
-  subject_packed = [subject].pack('M').chomp
-  if subject_packed == "#{subject}="
-    subject
-  else
-    '=?utf-8?Q?' << subject_packed.gsub(/=\n/, "=?=\n =?utf-8?Q?") << '?='
-  end
+  NKF.nkf('-wMq', subject)
 end
 
 def x_author(info)
