@@ -17,7 +17,7 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
   out, = Open3.capture2("git", "rev-parse", "--symbolic", "--abbrev-ref", refname)
   branch = out.strip
 
-  out, = Open3.capture2("git", "log", "--pretty=format:%H\n%h\n%an\n%at\n%cn\n%ct\n%B", "-z", oldrev + ".." + newrev)
+  out, = Open3.capture2("git", "log", "--pretty=format:%H\n%h\n%an\n%at\n%cn\n%ct\n%B", "--abbrev=10", "-z", oldrev + ".." + newrev)
 
   attachments = []
   out.split("\0").reverse_each do |s|
