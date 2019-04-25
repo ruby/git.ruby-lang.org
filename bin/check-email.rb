@@ -5,7 +5,7 @@ require "open3"
 # This is the correspondence table between SVN_ACCOUNT_NAME and GIT_COMMITTER_EMAIL.
 # SVN_ACCOUNT_NAME is set in ~git/.ssh/authorized_keys.
 #
-# You can add a new email address but DO NOT DELETE alread-registered email address.
+# You can add a new email address but DO NOT DELETE already-registered email address.
 # This association will be used for committer identification of the ruby repository.
 
 SVN_TO_EMAILS = {
