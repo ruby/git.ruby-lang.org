@@ -46,7 +46,7 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
     if emails == git_committer_email || emails.include?(git_committer_email)
       # OK
     else
-      puts "Your ssh key is not associated to the git committer email."
+      puts "The git committer email (#{git_committer_email}) does not seem to be #{svn_account_name}'s email (#{emails.join(', ')})."
       puts "Please see https://github.com/ruby/ruby-commit-hook/blob/master/bin/check-email.rb"
       puts "and send PR, or contact on ruby-core@ruby-lang.org."
       exit 1 # NG
