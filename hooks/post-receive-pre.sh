@@ -14,7 +14,7 @@ ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 # git remote update; git push github
 
 # { date; echo '==> notify slack'; uptime; } >> "$hook_log"
-# $ruby_commit_hook/bin/notify-slack.rb $*
+# "${ruby_commit_hook}/bin/notify-slack.rb" $*
 
 # { date; echo '==> commit-email.rb'; uptime; } >> "$hook_log"
 # "${ruby_commit_hook}/bin/commit-email.rb" \
