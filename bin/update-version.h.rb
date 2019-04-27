@@ -9,10 +9,8 @@ when "svn"
   require_relative "../lib/svn/info"
   branches = Svn::Info.new(repo_path, rest.first).branches
 when "git"
-  require "open3"
   branches = rest.each_slice(3).map do |_oldrev, _newrev, refname|
-    out, _ = Open3.capture2("git", "rev-parse", "--symbolic", "--abbrev-ref", refname)
-    out.strip
+    IO.popen(["git", "rev-parse", "--symbolic", "--abbrev-ref", refname], &:read).strip
   end.uniq
 else
   raise "unknown vcs: #{vcs.inspect}"
