@@ -28,11 +28,12 @@ ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 #    > /tmp/post-receive-pre-commit-email.log 2>&1
 
 { date; echo auto-style; uptime; } >> "$hook_log"
-SVN_ACCOUNT_NAME=git RUBY_GIT_HOOK=1 "${ruby_commit_hook}/bin/auto-style.rb" "$ruby_git"
+SVN_ACCOUNT_NAME=git RUBY_GIT_HOOK=1 "${ruby_commit_hook}/bin/auto-style.rb" "$ruby_git" \
+   >> "$hook_log" 2>&1
 
 { date; echo update-version.h.rb; uptime; } >> "$hook_log"
 SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/update-version.h.rb" git "$ruby_git" $* \
-   > /tmp/post-receive-pre-update-version.log 2>&1
+   >> "$hook_log" 2>&1
 
 { date; echo redmine fetch changesets; uptime; } >> "$hook_log"
 curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/redmine.key`" &

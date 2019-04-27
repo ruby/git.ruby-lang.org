@@ -24,14 +24,15 @@ git remote update; git push github
    --rss-uri https://svn.ruby-lang.org/rss/ruby.rdf \
    --error-to cvs-admin@ruby-lang.org \
    --vcs git \
-   > /tmp/post-receive-commit-email.log 2>&1
+   >> "$hook_log" 2>&1
 
 { date; echo auto-style; uptime; } >> "$hook_log"
-SVN_ACCOUNT_NAME=git RUBY_GIT_HOOK=1 "${ruby_commit_hook}/bin/auto-style.rb" "$ruby_git"
+SVN_ACCOUNT_NAME=git RUBY_GIT_HOOK=1 "${ruby_commit_hook}/bin/auto-style.rb" "$ruby_git" \
+   >> "$hook_log" 2>&1
 
 { date; echo update-version.h.rb; uptime; } >> "$hook_log"
 SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/update-version.h.rb" git "$ruby_git" $* \
-   > /tmp/post-receive-update-version.log 2>&1
+   >> "$hook_log" 2>&1
 
 { date; echo redmine fetch changesets; uptime; } >> "$hook_log"
 curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/redmine.key`" &
