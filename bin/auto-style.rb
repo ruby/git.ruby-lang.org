@@ -1,88 +1,9 @@
 #!/usr/bin/env ruby
-#
 # Usage:
-#   auto-style.rb svn [directory] # svn mode
-#   auto-style.rb git [directory] # git mode
-#
+#   auto-style.rb [repo_path]
 
 require 'shellwords'
 ENV["LC_ALL"] = "C"
-
-class SVN
-  # ["foo/bar.c", "baz.h", ...]
-  def updated_paths
-    log = svnread("update", "--accept=postpone")
-    log[1...-1].grep(/^[AMU]/) {|l| l.sub(/^[AMU] +/, '') }
-  end
-
-  # [0, 1, 4, ...]
-  def updated_lines(file)
-    return [] if last_rev.nil?
-
-    lines = []
-    blames = svnread('blame', file)
-    blames.each_with_index do |blame, lineno|
-      if blame.match(/\A\s*#{last_rev}\s/)
-        lines << lineno
-      end
-    end
-    lines
-  end
-
-  def commit(log, *files)
-    exec("ci", "-m", log, *files)
-  end
-
-  def commit_properties(*files)
-    propset("svn:eol-style", "LF", *files)
-    files.grep(/\/extconf\.rb$/) do
-      dir = $`
-      prop = propget("svn:ignore", dir)
-      if prop.size < (prop |= %w[Makefile extconf.h mkmf.log]).size
-        propset("svn:ignore", dir) {|f| f.puts *prop}
-      end
-    end
-    commit("* properties.", *files)
-  end
-
-  def ci_skip?
-    last_rev unless defined?(@ci_skip)
-    @ci_skip
-  end
-
-  private
-
-  def last_rev
-    return @last_rev if defined?(@last_rev)
-    log = svnread('log', '-r', 'HEAD')
-    @ci_skip = (true if /\[ci skip\]/i =~ log[3])
-    @last_rev = log[1].match(/\Ar(?<rev>\d+) /)[:rev]
-  end
-
-  def exec(*args)
-    system("svn", *args)
-  end
-
-  def svnread(*args)
-    IO.popen(["svn", *args], &:readlines).each(&:chomp!)
-  end
-
-  def svnwrite(*args, &block)
-    IO.popen(["svn", *args], "w", &block)
-  end
-
-  def propget(prop, *args)
-    svnread("propget", prop, *args)
-  end
-
-  def propset(prop, *args, &block)
-    if block
-      svnwrite(*%w"propset --file -", prop, *args, &block)
-    else
-      exec("propset", prop, *args)
-    end
-  end
-end
 
 class Git
   def initialize(git_dir)
@@ -124,10 +45,6 @@ class Git
     git('add', *files)
     git('commit', '-m', log)
     git('push', 'origin', current_branch)
-  end
-
-  def commit_properties(*files)
-    # no-op in git
   end
 
   def ci_skip?
@@ -186,15 +103,8 @@ EXPANDTAB_IGNORED_FILES = [
   %r{\Avsnprintf\.c\z},
 ]
 
-vcs_mode, repo_path = ARGV
-case vcs_mode
-when 'git'
-  vcs = Git.new(repo_path)
-when 'svn'
-  vcs = SVN.new
-else
-  abort "unsupported vcs_mode: #{vcs_mode}"
-end
+repo_path = ARGV.first
+vcs = Git.new(repo_path)
 Dir.chdir(repo_path)
 
 paths = vcs.updated_paths
@@ -253,5 +163,3 @@ unless edited_files.empty?
         ].compact
   vcs.commit("* #{msg.join(', ')}.#{' [ci skip]' if vcs.ci_skip?}", *edited_files)
 end
-
-vcs.commit_properties(*files)
