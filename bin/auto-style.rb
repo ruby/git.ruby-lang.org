@@ -92,7 +92,8 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
   vcs = Git.new(oldrev, newrev, branch)
 
   Dir.mktmpdir do |workdir|
-    system "git clone --depth=1 --branch=#{branch} file:///#{repo_path} #{workdir}"
+    depth = IO.popen(['git', 'log', '--pretty=%H', "#{oldrev}..#{newrev}"], &:read).lines.size + 1
+    system "git clone --depth=#{depth} --branch=#{branch} file:///#{repo_path} #{workdir}"
     Dir.chdir(workdir)
 
     paths = vcs.updated_paths
