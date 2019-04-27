@@ -171,15 +171,14 @@ class Git
   end
 end
 
-options = {}
-unless ARGV.empty?
-  options[:repo_path] = ARGV.shift
-end
-
-if ENV['RUBY_GIT_HOOK'] == '1'
-  vcs = Git.new(options.fetch(:repo_path))
+vcs_mode, repo_path = ARGV
+case vcs_mode
+when 'git'
+  vcs = Git.new(repo_path)
+when 'svn'
+  vcs = SVN.new(repo_path)
 else
-  vcs = SVN.new(options[:repo_path])
+  abort "unsupported vcs_mode: #{vcs_mode}"
 end
 
 if vcs.workdir
