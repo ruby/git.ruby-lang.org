@@ -472,7 +472,6 @@ def main(repo_path, to, rest)
       p [oldrev, newrev, refname]
       GitInfoBuilder.new(repo_path).build(oldrev, newrev, refname)
     end
-    require "pp"; pp infos
   else
     raise "unsupported vcs #{options.vcs.inspect} is specified"
   end
