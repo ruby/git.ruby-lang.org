@@ -3,6 +3,7 @@
 require "net/https"
 require "open3"
 require "json"
+require "digest/md5"
 
 SLACK_WEBHOOK_URLS = [
   File.read(File.expand_path("~git/config/slack-webhook-alerts")).chomp,
@@ -17,18 +18,23 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
   out, = Open3.capture2("git", "rev-parse", "--symbolic", "--abbrev-ref", refname)
   branch = out.strip
 
-  out, = Open3.capture2("git", "log", "--pretty=format:%H\n%h\n%an\n%at\n%cn\n%ct\n%B", "--abbrev=10", "-z", oldrev + ".." + newrev)
+  out, = Open3.capture2("git", "log", "--pretty=format:%H\n%h\n%an\n%at\n%cn\n%ce\n%ct\n%B", "--abbrev=10", "-z", oldrev + ".." + newrev)
 
   attachments = []
   out.split("\0").reverse_each do |s|
-    hash, abbr_hash, _author, _authortime, committer, committertime, body = s.split("\n", 7)
+    hash, abbr_hash, _author, _authortime, committer, committeremail, committertime, body = s.split("\n", 8)
     subject, body = body.split("\n", 2)
     body = body.strip.sub(%r(git-svn-id: svn\+ssh://ci\.ruby-lang\.org/ruby/trunk@(\d+) \h+-\h+-\h+-\h+-\h+\z)) { "(r#$1)" }.strip
+
+    committeremail = committeremail.downcase
+    gravatar = "https://www.gravatar.com/avatar/#{ Digest::MD5.hexdigest(committeremail) }"
+
     attachments << {
       title: "#{ abbr_hash } (#{ branch }): #{ escape(subject) }",
       title_link: "https://github.com/ruby/ruby/commit/" + hash,
       text: escape((body || "").strip),
       footer: committer,
+      footer_icon: gravatar,
       ts: committertime.to_i,
     }
   end
