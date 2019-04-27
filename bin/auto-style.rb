@@ -1,9 +1,8 @@
 #!/usr/bin/env ruby
 #
 # Usage:
-#   auto-style.rb [directory] # svn mode
-#   RUBY_GIT_HOOK=0 auto-style.rb [directory] # svn mode
-#   RUBY_GIT_HOOK=1 auto-style.rb [directory] # git mode
+#   auto-style.rb svn [directory] # svn mode
+#   auto-style.rb git [directory] # git mode
 #
 
 require 'shellwords'
