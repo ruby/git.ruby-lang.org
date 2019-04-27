@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash -u
 set -o pipefail
 # This script is executed by `git@git.ruby-lang.org:ruby.git/hooks/post-receive`.
 
