@@ -10,12 +10,6 @@ require 'shellwords'
 ENV["LC_ALL"] = "C"
 
 class SVN
-  attr_reader :workdir
-
-  def initialize(repo_path)
-    @workdir = repo_path
-  end
-
   # ["foo/bar.c", "baz.h", ...]
   def updated_paths
     log = svnread("update", "--accept=postpone")
@@ -92,19 +86,17 @@ class SVN
 end
 
 class Git
-  attr_reader :workdir
-
   def initialize(git_dir)
-    @workdir = File.expand_path(File.join('../../repos', File.basename(git_dir)), __dir__)
+    workdir = File.expand_path(File.join('../../repos', File.basename(git_dir)), __dir__)
 
     # Should be done in another method once SVN is deprecated. Now it has only the same methods.
-    if Dir.exist?(@workdir)
-      Dir.chdir(@workdir) do
+    if Dir.exist?(workdir)
+      Dir.chdir(workdir) do
         git('clean', '-fdx')
         git('pull')
       end
     else
-      git('clone', git_dir, @workdir)
+      git('clone', git_dir, workdir)
     end
   end
 
@@ -171,20 +163,6 @@ class Git
   end
 end
 
-vcs_mode, repo_path = ARGV
-case vcs_mode
-when 'git'
-  vcs = Git.new(repo_path)
-when 'svn'
-  vcs = SVN.new(repo_path)
-else
-  abort "unsupported vcs_mode: #{vcs_mode}"
-end
-
-if vcs.workdir
-  Dir.chdir(vcs.workdir)
-end
-
 EXPANDTAB_IGNORED_FILES = [
   # vendoring
   %r{\Accan/},
@@ -208,6 +186,17 @@ EXPANDTAB_IGNORED_FILES = [
   %r{\Astrftime\.c\z},
   %r{\Avsnprintf\.c\z},
 ]
+
+vcs_mode, repo_path = ARGV
+case vcs_mode
+when 'git'
+  vcs = Git.new(repo_path)
+when 'svn'
+  vcs = SVN.new
+else
+  abort "unsupported vcs_mode: #{vcs_mode}"
+end
+Dir.chdir(repo_path)
 
 paths = vcs.updated_paths
 paths.select! {|l|
