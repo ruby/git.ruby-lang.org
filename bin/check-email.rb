@@ -9,16 +9,16 @@ require "open3"
 # This association will be used for committer identification of the ruby repository.
 
 SVN_TO_EMAILS = {
+  "eregon" => ["eregontp@gmail.com", "eregon@ruby-lang.org"],
   "hsbt" => :admin,
   "k0kubun" => ["takashikkbn@gmail.com"],
   "kazu" => ["zn@mbf.nifty.com"],
   "kou" => ["kou@cozmixng.org", "kou@clear-code.com"],
   "mame" => ["mame@ruby-lang.org"],
   "naruse" => :admin,
-  "usa" => ["usa@ruby-lang.org"],
   "shyouhei" => ["shyouhei@ruby-lang.org"],
   "suke" => ["masaki.suketa@nifty.ne.jp"],
-  "eregon" => ["eregontp@gmail.com", "eregon@ruby-lang.org"],
+  "usa" => ["usa@ruby-lang.org"],
 }
 
 LOG_FILE = "/home/git/email.log"
