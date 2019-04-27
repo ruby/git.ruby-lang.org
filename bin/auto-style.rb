@@ -89,12 +89,6 @@ class SVN
       exec("propset", prop, *args)
     end
   end
-
-  module Debugging
-    def commit(*args)
-      p args
-    end
-  end
 end
 
 class Git
@@ -178,10 +172,6 @@ class Git
 end
 
 options = {}
-if ARGV[0] == "--debug"
-  ARGV.shift
-  options[:debug] = true
-end
 unless ARGV.empty?
   options[:repo_path] = ARGV.shift
 end
@@ -190,9 +180,6 @@ if ENV['RUBY_GIT_HOOK'] == '1'
   vcs = Git.new(options.fetch(:repo_path))
 else
   vcs = SVN.new(options[:repo_path])
-  if options[:debug]
-    vcs.extend(SVN::Debugging)
-  end
 end
 
 if vcs.workdir
