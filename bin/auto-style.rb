@@ -6,7 +6,7 @@ require 'shellwords'
 ENV["LC_ALL"] = "C"
 
 class Git
-  def initialize(git_dir)
+  def self.prepare_workdir(git_dir)
     workdir = File.expand_path(File.join('../../repos', File.basename(git_dir)), __dir__)
 
     # Should be done in another method once SVN is deprecated. Now it has only the same methods.
@@ -18,6 +18,7 @@ class Git
     else
       git('clone', git_dir, workdir)
     end
+    workdir
   end
 
   # ["foo/bar.c", "baz.h", ...]
@@ -103,9 +104,8 @@ EXPANDTAB_IGNORED_FILES = [
   %r{\Avsnprintf\.c\z},
 ]
 
-repo_path = ARGV.first
-vcs = Git.new(repo_path)
-Dir.chdir(repo_path)
+Dir.chdir(Git.prepare_workdir(ARGV.first))
+vcs = Git.new
 
 paths = vcs.updated_paths
 paths.select! {|l|
