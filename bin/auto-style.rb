@@ -3,6 +3,7 @@
 #   auto-style.rb [repo_path] [args...]
 
 require 'shellwords'
+require 'tmpdir'
 ENV['LC_ALL'] = 'C'
 
 class Git
