@@ -27,7 +27,7 @@ git remote update; git push github
    >> "$hook_log" 2>&1
 
 { date; echo '==> auto-style'; uptime; } >> "$hook_log"
-SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/auto-style.rb" "$ruby_git" \
+SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/auto-style.rb" "$ruby_git" $* \
    >> "$hook_log" 2>&1
 
 { date; echo '==> update-version.h.rb'; uptime; } >> "$hook_log"
