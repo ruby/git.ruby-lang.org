@@ -36,6 +36,7 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
       footer: committer,
       footer_icon: gravatar,
       ts: committertime.to_i,
+      color: '#24282D',
     }
   end
 
