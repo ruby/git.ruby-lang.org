@@ -8,15 +8,15 @@ ruby_git="/var/git/ruby.pre.git"
 hook_log="/tmp/post-receive-pre.log"
 ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 
-{ date; echo; echo '### start ###'; uptime; } >> "$hook_log"
+{ echo; echo "### start ($(date)) ###"; uptime; } >> "$hook_log"
 
-# { date; echo '==> github sync'; uptime; } >> "$hook_log"
+# { echo "==> github sync ($(date))"; uptime; } >> "$hook_log"
 # git remote update; git push github
 
-# { date; echo '==> notify slack'; uptime; } >> "$hook_log"
+# { echo "==> notify slack ($(date))"; uptime; } >> "$hook_log"
 # "${ruby_commit_hook}/bin/notify-slack.rb" $*
 
-# { date; echo '==> commit-email.rb'; uptime; } >> "$hook_log"
+# { echo "==> commit-email.rb ($(date))"; uptime; } >> "$hook_log"
 # "${ruby_commit_hook}/bin/commit-email.rb" \
 #    "$ruby_git" ruby-cvs@ruby-lang.org $* \
 #    -I "${ruby_commit_hook}/lib" \
@@ -29,17 +29,17 @@ ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 #    --vcs git \
 #    > /tmp/post-receive-pre-commit-email.log 2>&1
 
-{ date; echo '==> redmine fetch changesets'; uptime; } >> "$hook_log"
+{ echo "==> redmine fetch changesets ($(date))"; uptime; } >> "$hook_log"
 curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/redmine.key`" &
 
 # Make extra commits from here.
 # The above procedure will be executed for the these commits in another post-receive hook.
 
-{ date; echo '==> auto-style'; uptime; } >> "$hook_log"
+{ echo "==> auto-style ($(date))"; uptime; } >> "$hook_log"
 SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/auto-style.rb" "$ruby_git" $* \
    >> "$hook_log" 2>&1
 
-{ date; echo '==> update-version.h.rb'; uptime; } >> "$hook_log"
+{ echo "==> update-version.h.rb ($(date))"; uptime; } >> "$hook_log"
 SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/update-version.h.rb" git "$ruby_git" $* \
    >> "$hook_log" 2>&1
 
