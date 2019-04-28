@@ -2,21 +2,21 @@
 set -o pipefail
 # This script is executed by `git@git.ruby-lang.org:ruby.pre.git/hooks/post-receive`.
 # The ruby.pre repository is just a sandbox, and any commit isn't pushed to it automatically.
+# Its outputs are logged to `/tmp/post-receive-pre.log`.
 
 # script parameters
 ruby_git="/var/git/ruby.pre.git"
-hook_log="/tmp/post-receive-pre.log"
 ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 
-{ echo; echo "### start ($(date)) ###"; uptime; } >> "$hook_log"
+echo; echo "### start ($(date)) ###"; uptime
 
-# { echo "==> github sync ($(date))"; uptime; } >> "$hook_log"
+# echo "==> github sync ($(date))"; uptime
 # git remote update; git push github
 
-# { echo "==> notify slack ($(date))"; uptime; } >> "$hook_log"
+# echo "==> notify slack ($(date))"; uptime
 # "${ruby_commit_hook}/bin/notify-slack.rb" $*
 
-# { echo "==> commit-email.rb ($(date))"; uptime; } >> "$hook_log"
+# echo "==> commit-email.rb ($(date))"; uptime
 # "${ruby_commit_hook}/bin/commit-email.rb" \
 #    "$ruby_git" ruby-cvs@ruby-lang.org $* \
 #    -I "${ruby_commit_hook}/lib" \
@@ -26,21 +26,18 @@ ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 #    --rss-path /tmp/ruby.rdf \
 #    --rss-uri https://svn.ruby-lang.org/rss/ruby.rdf \
 #    --error-to cvs-admin@ruby-lang.org \
-#    --vcs git \
-#    > /tmp/post-receive-pre-commit-email.log 2>&1
+#    --vcs git
 
-{ echo "==> redmine fetch changesets ($(date))"; uptime; } >> "$hook_log"
+echo "==> redmine fetch changesets ($(date))"; uptime
 curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/redmine.key`" &
 
 # Make extra commits from here.
 # The above procedure will be executed for the these commits in another post-receive hook.
 
-{ echo "==> auto-style ($(date))"; uptime; } >> "$hook_log"
-SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/auto-style.rb" "$ruby_git" $* \
-   >> "$hook_log" 2>&1
+echo "==> auto-style ($(date))"; uptime
+SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/auto-style.rb" "$ruby_git" $*
 
-{ echo "==> update-version.h.rb ($(date))"; uptime; } >> "$hook_log"
-SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/update-version.h.rb" git "$ruby_git" $* \
-   >> "$hook_log" 2>&1
+echo "==> update-version.h.rb ($(date))"; uptime
+SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/update-version.h.rb" git "$ruby_git" $*
 
-{ date; echo '### end ###'; uptime; } >> "$hook_log"
+echo "### end ($(date)) ###"; uptime
