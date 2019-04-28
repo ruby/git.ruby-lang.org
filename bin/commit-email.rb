@@ -26,9 +26,8 @@ class GitInfoBuilder
     @repo_path = repo_path
   end
 
-  # TODO: should we generate info for each revision between oldrev and newrev?
-  def build(_oldrev, newrev, refname)
-    diffs = build_diffs(newrev)
+  def build(oldrev, newrev, refname)
+    diffs = build_diffs(oldrev, newrev)
 
     info = CommitEmailInfo.new
     info.author = git_show(newrev, format: '%an')
@@ -81,14 +80,13 @@ class GitInfoBuilder
   #     }
   #   }
   # }
-  def build_diffs(revision)
+  def build_diffs(oldrev, newrev)
     diffs = {}
 
-    # Using "#{revision}^" instead of oldrev to exclude diff from unrelated revision
-    numstats = git('diff', '--numstat', "#{revision}^", revision).lines.map { |l| l.strip.split("\t", 3) }
-    git('diff', '--name-status', "#{revision}^", revision).each_line do |line|
+    numstats = git('diff', '--numstat', oldrev, newrev).lines.map { |l| l.strip.split("\t", 3) }
+    git('diff', '--name-status', oldrev, newrev).each_line do |line|
       status, path, _newpath = line.strip.split("\t", 3)
-      diff = build_diff(revision, path, numstats)
+      diff = build_diff(path, numstats)
 
       case status
       when 'A'
@@ -109,7 +107,7 @@ class GitInfoBuilder
     diffs
   end
 
-  def build_diff(revision, path, numstats)
+  def build_diff(path, numstats)
     diff = { added: 0, deleted: 0 } # :body not implemented because not used
     line = numstats.find { |(_added, _deleted, file, *)| file == path }
     return diff if line.nil?
@@ -468,9 +466,11 @@ def main(repo_path, to, rest)
       end
     ]
   when "git"
-    infos = args.each_slice(3).map do |oldrev, newrev, refname|
-      p [oldrev, newrev, refname]
-      GitInfoBuilder.new(repo_path).build(oldrev, newrev, refname)
+    infos = args.each_slice(3).flat_map do |oldrev, newrev, refname|
+      revisions = IO.popen(['git', 'log', '--pretty=%H', "#{oldrev}^..#{newrev}"], &:read).lines.map(&:strip)
+      revisions[0..-2].zip(revisions[1..-1]).map do |old, new|
+        GitInfoBuilder.new(repo_path).build(old, new, refname)
+      end
     end
   else
     raise "unsupported vcs #{options.vcs.inspect} is specified"
@@ -483,6 +483,8 @@ def main(repo_path, to, rest)
   }
   to = [to, *options.to]
   infos.each do |info|
+    puts "#{info.branches.join(', ')}: #{info.revision} (#{info.author})"
+
     from = options.from || info.author_email
     sendmail(to, from, make_mail(to, from, info, params))
 
