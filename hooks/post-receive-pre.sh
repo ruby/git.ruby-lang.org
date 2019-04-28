@@ -8,8 +8,8 @@ set -o pipefail
 ruby_git="/var/git/ruby.pre.git"
 ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 
-echo "### [$$] start ($(date)) ###"
-echo "==> [$$] $*"
+echo " [$$]### start ($(date)) ###"
+echo " [$$]==> $*"
 
 # echo "==> github sync ($(date))"
 # git remote update; git push github
