@@ -20,4 +20,4 @@ log "==> prohibit merge commits"
 log "==> check email"
 "${ruby_commit_hook}/bin/check-email.rb" $* || exit 1
 
-log "[$$] ### end ###\n"
+log "### end ###\n"
