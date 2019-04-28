@@ -7,7 +7,7 @@ set -o pipefail
 ruby_git="/var/git/ruby.git"
 ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 
-echo; echo "### start ($(date)) ###"
+echo "### start ($(date)) ###"
 
 echo "==> github sync ($(date))"
 git remote update; git push github
@@ -39,4 +39,4 @@ SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/auto-style.rb" "$ruby_git" $*
 echo "==> update-version.h.rb ($(date))"
 SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/update-version.h.rb" git "$ruby_git" $*
 
-echo "### end ($(date)) ###"
+echo "### end ($(date)) ###"; echo
