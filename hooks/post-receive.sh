@@ -7,16 +7,16 @@ set -o pipefail
 ruby_git="/var/git/ruby.git"
 ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 
-echo "### start ($(date)) ###"
-echo "\$*: $*"
+echo "[$$] ### start ($(date)) ###"
+echo "[$$] ==> $*"
 
-echo "==> github sync ($(date))"
+echo "[$$] ==> github sync ($(date))"
 git remote update; git push github
 
-echo "==> notify slack ($(date))"
+echo "[$$] ==> notify slack ($(date))"
 "${ruby_commit_hook}/bin/notify-slack.rb" $*
 
-echo "==> commit-email.rb ($(date))"
+echo "[$$] ==> commit-email.rb ($(date))"
 "${ruby_commit_hook}/bin/commit-email.rb" \
    "$ruby_git" ruby-cvs@ruby-lang.org $* \
    -I "${ruby_commit_hook}/lib" \
@@ -28,16 +28,16 @@ echo "==> commit-email.rb ($(date))"
    --error-to cvs-admin@ruby-lang.org \
    --vcs git
 
-echo "==> redmine fetch changesets ($(date))"
+echo "[$$] ==> redmine fetch changesets ($(date))"
 curl -s "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/redmine.key`" &
 
 # Make extra commits from here.
 # The above procedure will be executed for the these commits in another post-receive hook.
 
-echo "==> auto-style ($(date))"
+echo "[$$] ==> auto-style ($(date))"
 SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/auto-style.rb" "$ruby_git" $*
 
-echo "==> update-version.h.rb ($(date))"
+echo "[$$] ==> update-version.h.rb ($(date))"
 SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/update-version.h.rb" git "$ruby_git" $*
 
-echo "### end ($(date)) ###"; echo
+echo "[$$] ### end ($(date)) ###"; echo

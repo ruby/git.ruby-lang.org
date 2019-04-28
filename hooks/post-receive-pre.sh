@@ -11,13 +11,13 @@ ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 echo "[$$] ### start ($(date)) ###"
 echo "[$$] ==> $*"
 
-# echo "==> github sync ($(date))"
+# echo "[$$] ==> github sync ($(date))"
 # git remote update; git push github
 
-# echo "==> notify slack ($(date))"
+# echo "[$$] ==> notify slack ($(date))"
 # "${ruby_commit_hook}/bin/notify-slack.rb" $*
 
-# echo "==> commit-email.rb ($(date))"
+# echo "[$$] ==> commit-email.rb ($(date))"
 # "${ruby_commit_hook}/bin/commit-email.rb" \
 #    "$ruby_git" ruby-cvs@ruby-lang.org $* \
 #    -I "${ruby_commit_hook}/lib" \
