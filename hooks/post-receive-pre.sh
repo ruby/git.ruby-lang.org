@@ -30,7 +30,7 @@ echo "\$*: $*"
 #    --vcs git
 
 echo "==> redmine fetch changesets ($(date))"
-curl "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/redmine.key`" &
+curl -s "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/redmine.key`" &
 
 # Make extra commits from here.
 # The above procedure will be executed for the these commits in another post-receive hook.
