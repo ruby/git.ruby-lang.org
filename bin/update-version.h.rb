@@ -25,7 +25,10 @@ branches.each do |branch|
     if vcs == "svn"
       system "pwd;echo 1;svn co --depth empty file:///#{repo_path}/#{branch} #{v}; svn up #{version_h}"
     else # git
-      system "git clone --depth=1 --branch=#{branch} file:///#{repo_path} #{v}"
+      unless system("git clone -q --depth=1 --branch=#{branch} file:///#{repo_path} #{v}")
+        puts "Failed to clone #{repo_path} for branch=#{branch}. Skipping."
+        next
+      end
     end
     formats = {
       'DATE' => [/"\d{4}-\d\d-\d\d"/, '"%Y-%m-%d"'],

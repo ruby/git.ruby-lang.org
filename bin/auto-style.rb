@@ -93,7 +93,10 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
 
   Dir.mktmpdir do |workdir|
     depth = IO.popen(['git', 'log', '--pretty=%H', "#{oldrev}..#{newrev}"], &:read).lines.size + 1
-    system "git clone --depth=#{depth} --branch=#{branch} file:///#{repo_path} #{workdir}"
+    unless system("git clone -q --depth=#{depth} --branch=#{branch} file:///#{repo_path} #{workdir}")
+      puts "Failed to clone #{repo_path} for branch=#{branch}. Skipping."
+      next
+    end
     Dir.chdir(workdir)
 
     paths = vcs.updated_paths
