@@ -9,6 +9,9 @@ SLACK_WEBHOOK_URLS = [
   File.read(File.expand_path("~git/config/slack-webhook-alerts")).chomp,
   File.read(File.expand_path("~git/config/slack-webhook-commits")).chomp,
 ]
+GRAVATAR_OVERRIDES = {
+  'svn@b2dd03c8-39d4-4d8f-98ff-823fe69b080e' => 'https://avatars1.githubusercontent.com/u/29403229',
+}
 
 def escape(s)
   s.gsub(/[&<>]/, "&" => "&amp;", "<" => "&lt;", ">" => "&gt;")
@@ -26,12 +29,13 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
     subject, body = body.split("\n", 2)
     body = body.strip.sub(%r(git-svn-id: svn\+ssh://ci\.ruby-lang\.org/ruby/trunk@(\d+) \h+-\h+-\h+-\h+-\h+\z)) { "(r#$1)" }.strip
 
-    committeremail = committeremail.downcase
-    gravatar = "https://www.gravatar.com/avatar/#{ Digest::MD5.hexdigest(committeremail) }"
+    gravatar = GRAVATAR_OVERRIDES.fetch(committeremail) do
+      "https://www.gravatar.com/avatar/#{ Digest::MD5.hexdigest(committeremail.downcase) }"
+    end
 
     attachments << {
       title: "#{ abbr_hash } (#{ branch }): #{ escape(subject) }",
-      title_link: "https://github.com/ruby/ruby/commit/" + hash,
+      title_link: "https://github.com/ruby/ruby/commit/#{ hash }",
       text: escape((body || "").strip),
       footer: committer,
       footer_icon: gravatar,
