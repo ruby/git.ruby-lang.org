@@ -13,7 +13,7 @@ function log() {
 }
 
 log "### start ###"
-log "==> args: $*"
+log "args: $*"
 
 # log "==> github sync"
 # git remote update; git push github

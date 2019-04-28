@@ -12,7 +12,7 @@ function log() {
 }
 
 log "### start ###"
-log "==> args: $*"
+log "args: $*"
 
 log "==> prohibit merge commits"
 "${ruby_commit_hook}/bin/prohibit-merge-commits.rb" $* || exit 1
