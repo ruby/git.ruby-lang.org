@@ -56,7 +56,9 @@ branches.each do |branch|
       system "svn commit -m '#{now.strftime %(* %Y-%m-%d)}' #{version_h}"
     else
       Dir.chdir(v) do
-        system "git add #{version_h} && git commit -m '#{now.strftime %(* %Y-%m-%d)}' && git push origin #{branch}"
+        unless system("git diff --quiet --exit-code #{version_h}")
+          system "git add #{version_h} && git commit -m '#{now.strftime %(* %Y-%m-%d)}' && git push origin #{branch}"
+        end
       end
     end
   end
