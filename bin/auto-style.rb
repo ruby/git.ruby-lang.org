@@ -70,6 +70,7 @@ EXPANDTAB_IGNORED_FILES = [
   %r{\Aext/io/},
   %r{\Aext/json/},
   %r{\Aext/psych/},
+  %r{\Aext/stringio/},
 
   # vendoring (bundler)
   %r{\Abin/bundler\z},
