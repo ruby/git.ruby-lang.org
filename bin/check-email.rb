@@ -10,6 +10,7 @@ require "open3"
 
 SVN_TO_EMAILS = {
   "eregon" => ["eregontp@gmail.com", "eregon@ruby-lang.org"],
+  "git" => :admin,
   "hsbt" => :admin,
   "k0kubun" => ["takashikkbn@gmail.com"],
   "kazu" => ["zn@mbf.nifty.com"],
@@ -36,7 +37,9 @@ emails = SVN_TO_EMAILS[svn_account_name]
 exit 0 if emails == :admin
 
 ARGV.each_slice(3) do |oldrev, newrev, refname|
-  if refname != "refs/heads/trunk" && svn_account_name != "git"
+  # `/var/git-svn/ruby` uses `remote.cgit.url=git@git.ruby-lang.org:ruby.git`.
+  # ~git/.ssh/id_rsa.pub is registered as `SVN_ACCOUNT_NAME=git` in authorized_keys.
+  if refname != "refs/heads/trunk" && svn_account_name != "git" # git-svn
     puts "You cannot commit anything to a branch except trunk. (svn_account_name: #{svn_account_name})"
     exit 1
   end
