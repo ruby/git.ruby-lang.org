@@ -36,7 +36,7 @@ emails = SVN_TO_EMAILS[svn_account_name]
 exit 0 if emails == :admin
 
 ARGV.each_slice(3) do |oldrev, newrev, refname|
-  if refname != "refs/heads/trunk"
+  if refname != "refs/heads/trunk" && svn_account_name != "git"
     puts "You cannot commit anything to a branch except trunk. (svn_account_name: #{svn_account_name})"
     exit 1
   end
