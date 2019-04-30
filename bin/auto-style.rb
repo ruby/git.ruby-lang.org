@@ -67,6 +67,7 @@ EXPANDTAB_IGNORED_FILES = [
   %r{\Accan/},
   %r{\Aext/bigdecimal/},
   %r{\Aext/nkf/},
+  %r{\Aext/io/},
   %r{\Aext/json/},
   %r{\Aext/psych/},
 
