@@ -1,5 +1,6 @@
 #!/bin/sh
 # This hook is used by Ruby's SVN repository on svn.ruby-lang.org.
+# Its outputs are logged to `/tmp/post-commit.log`.
 
 { date; echo '### start ###'; uptime; } >> /tmp/post-commit.log
 
@@ -14,7 +15,7 @@ REV="$2"
 
 ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 
-{ date; echo $REPOS; echo $REV; echo svnadmin; uptime; } >> /tmp/post-commit.log
+{ date; echo $REPOS; echo $REV; echo svnadmin; uptime; }
 svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/ruby/$REV.bz2
 
 # { date; echo commit-email.rb; uptime; } >> /tmp/post-commit.log
@@ -27,14 +28,12 @@ svnadmin dump -q -r "$REV" --incremental "$REPOS" | bzip2 -c > /var/svn/dump/rub
 #    --rss-path /tmp/ruby.rdf \
 #    --rss-uri https://svn.ruby-lang.org/rss/ruby.rdf \
 #    --error-to cvs-admin@ruby-lang.org \
-#    --vcs svn \
-#    > /tmp/post-commit-commit-email.log 2>&1
+#    --vcs svn
 
-{ date; echo update-version.h.rb; uptime; } >> /tmp/post-commit.log
-"${ruby_commit_hook}/bin/update-version.h.rb" svn "$REPOS" "$REV" \
-   > /tmp/post-commit-update-version.log 2>&1 &
+{ date; echo update-version.h.rb; uptime; }
+"${ruby_commit_hook}/bin/update-version.h.rb" svn "$REPOS" "$REV" &
 
-{ date; echo cgit sync; uptime; } >> /tmp/post-commit.log
+{ date; echo cgit sync; uptime; }
 cd /var/git-svn/ruby
 flock -w 100 "$0" sudo -u git git svn fetch --all
 
@@ -52,4 +51,4 @@ for ref in `svnlook changed -r $REV $REPOS |                                    
   sudo -u git git push cgit :$ref
 done
 
-{ date; echo '### end ###'; uptime; } >> /tmp/post-commit.log
+{ date; echo '### end ###'; uptime; }
