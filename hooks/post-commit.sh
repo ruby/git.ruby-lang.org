@@ -2,7 +2,7 @@
 # This hook is used by Ruby's SVN repository on svn.ruby-lang.org.
 # Its outputs are logged to `/tmp/post-commit.log`.
 
-{ date; echo '### start ###'; uptime; } >> /tmp/post-commit.log
+{ date; echo '### start ###'; uptime; }
 
 PATH=/usr/bin:/bin
 export PATH
