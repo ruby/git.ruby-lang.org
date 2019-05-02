@@ -91,6 +91,7 @@ EXPANDTAB_IGNORED_FILES = [
 repo_path, *rest = ARGV
 rest.each_slice(3).map do |oldrev, newrev, refname|
   branch = IO.popen(['git', 'rev-parse', '--symbolic', '--abbrev-ref', refname], &:read).strip
+  next if branch != 'trunk' # Stable branches are on svn, and for consistency we should not make a git-specific commit.
   vcs = Git.new(oldrev, newrev, branch)
 
   Dir.mktmpdir do |workdir|
