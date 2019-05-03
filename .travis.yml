@@ -9,13 +9,10 @@ before_install:
   - git clone --depth=2 https://github.com/ruby/ruby
 
   - |-
-    echo <<EOS > ./sendmail
-    #!/usr/bin/env ruby
-    p ARGV
-    puts STDIN.read
-    EOS
-
     # Install dummy `sendmail` for testing commit-email.rb
+    echo "#!/usr/bin/env ruby
+          p ARGV
+          puts STDIN.read" > ./sendmail
     chmod +x ./sendmail
     sudo mv ./sendmail /usr/sbin/sendmail
 
