@@ -30,7 +30,6 @@ On each commit of Ruby's Git repository, following git hooks are triggered:
   * `hooks/post-receive`:
      * **Update `/home/git/ruby-commit-hook`**
      * Run `/home/git/ruby-commit-hook/hooks/post-receive.sh`
-* `/data/git/ruby-commit-hook.git`: Bare Git repository of ruby-commit-hook
 * `/home/git/ruby-commit-hook`: Cloned Git repository of ruby-commit-hook
 
 ### Notes
