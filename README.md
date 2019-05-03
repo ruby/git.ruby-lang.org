@@ -37,10 +37,3 @@ On each commit of Ruby's Git repository, following git hooks are triggered:
 
 * There's a symlink `/var/git` -> `/data/git`.
 * User `git`'s `$HOME` is NOT `/home/git` but `/var/git`.
-
-### Script used to update `/home/git/ruby-commit-hook`
-
-```
-/usr/bin/git -C /home/git/ruby-commit-hook fetch origin master
-/usr/bin/git -C /home/git/ruby-commit-hook checkout origin/master
-```
