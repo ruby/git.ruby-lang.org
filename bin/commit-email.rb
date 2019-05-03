@@ -152,7 +152,6 @@ class << CommitEmail
 
   def parse(args)
     options = OpenStruct.new
-    options.to = []
     options.error_to = []
     options.from = nil
     options.repository_uri = nil
@@ -163,11 +162,6 @@ class << CommitEmail
 
     opts = OptionParser.new do |opts|
       opts.separator('')
-
-      opts.on('-t', '--to [TO]',
-              'Add [TO] to to address') do |to|
-        options.to << to unless to.nil?
-      end
 
       opts.on('-e', '--error-to [TO]',
               'Add [TO] to to address when error is occurred') do |to|
@@ -223,7 +217,6 @@ class << CommitEmail
       end
     end
 
-    to = [to, *options.to]
     infos.each do |info|
       puts "#{info.branches.join(', ')}: #{info.revision} (#{info.author})"
 
@@ -248,7 +241,7 @@ class << CommitEmail
   end
 
   def sendmail(to, from, mail)
-    IO.popen([SENDMAIL, *to], 'w') do |f|
+    IO.popen([SENDMAIL, to], 'w') do |f|
       f.print(mail)
     end
   end
@@ -480,11 +473,9 @@ begin
 rescue StandardError => e
   $stderr.puts "#{e.class}: #{e.message}"
   $stderr.puts e.backtrace
-  to = [to]
   from = ENV["USER"]
   begin
     _, options = CommitEmail.parse(rest)
-    to = options.error_to unless options.error_to.empty?
     from = options.from
   rescue StandardError
   end
