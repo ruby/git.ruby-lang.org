@@ -160,7 +160,6 @@ class << CommitEmail
     options.rss_uri = nil
     options.name = nil
     options.viewvc_uri = nil
-    options.vcs = 'svn'
 
     opts = OptionParser.new do |opts|
       opts.separator('')
@@ -205,11 +204,6 @@ class << CommitEmail
         options.name = name
       end
 
-      opts.on('--vcs [VCS]',
-              'Use [VCS] as VCS (git, svn)') do |vcs|
-        options.vcs = vcs
-      end
-
       opts.on_tail('--help', 'Show this message') do
         puts opts
         exit
@@ -222,16 +216,11 @@ class << CommitEmail
   def main(repo_path, to, rest)
     args, options = parse(rest)
 
-    case options.vcs
-    when 'git'
-      infos = args.each_slice(3).flat_map do |oldrev, newrev, refname|
-        revisions = IO.popen(['git', 'log', '--reverse', '--pretty=%H', "#{oldrev}^..#{newrev}"], &:read).lines.map(&:strip)
-        revisions[0..-2].zip(revisions[1..-1]).map do |old, new|
-          GitInfoBuilder.new(repo_path).build(old, new, refname)
-        end
+    infos = args.each_slice(3).flat_map do |oldrev, newrev, refname|
+      revisions = IO.popen(['git', 'log', '--reverse', '--pretty=%H', "#{oldrev}^..#{newrev}"], &:read).lines.map(&:strip)
+      revisions[0..-2].zip(revisions[1..-1]).map do |old, new|
+        GitInfoBuilder.new(repo_path).build(old, new, refname)
       end
-    else
-      raise "unsupported vcs #{options.vcs.inspect} is specified"
     end
 
     to = [to, *options.to]
