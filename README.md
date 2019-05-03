@@ -37,3 +37,7 @@ On each commit of Ruby's Git repository, following git hooks are triggered:
 
 * There's a symlink `/var/git` -> `/data/git`.
 * User `git`'s `$HOME` is NOT `/home/git` but `/var/git`.
+
+## Lisence
+
+[Ruby License](https://www.ruby-lang.org/en/LICENSE.txt)
