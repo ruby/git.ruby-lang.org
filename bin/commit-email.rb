@@ -165,11 +165,6 @@ class << CommitEmail
     opts = OptionParser.new do |opts|
       opts.separator('')
 
-      opts.on('-I', '--include [PATH]',
-              'Add [PATH] to load path') do |path|
-        $LOAD_PATH.unshift(path)
-      end
-
       opts.on('-t', '--to [TO]',
               'Add [TO] to to address') do |to|
         options.to << to unless to.nil?
