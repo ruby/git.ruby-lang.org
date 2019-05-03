@@ -152,11 +152,7 @@ class << CommitEmail
 
   def parse(args)
     options = OpenStruct.new
-    options.error_to = []
-    options.repository_uri = nil
-    options.rss_path = nil
-    options.rss_uri = nil
-    options.name = nil
+    options.error_to = nil
     options.viewvc_uri = nil
 
     opts = OptionParser.new do |opts|
@@ -164,32 +160,12 @@ class << CommitEmail
 
       opts.on('-e', '--error-to [TO]',
               'Add [TO] to to address when error is occurred') do |to|
-        options.error_to << to unless to.nil?
+        options.error_to = to
       end
 
       opts.on('--viewer-uri [URI]',
               'Use [URI] as URI of revision viewer') do |uri|
         options.viewer_uri = uri
-      end
-
-      opts.on('-r', '--repository-uri [URI]',
-              'Use [URI] as URI of repository') do |uri|
-        options.repository_uri = uri
-      end
-
-      opts.on('--rss-path [PATH]',
-              'Use [PATH] as output RSS path') do |path|
-        options.rss_path = path
-      end
-
-      opts.on("--rss-uri [URI]",
-              "Use [URI] as output RSS URI") do |uri|
-        options.rss_uri = uri
-      end
-
-      opts.on('--name [NAME]',
-              'Use [NAME] as repository name') do |name|
-        options.name = name
       end
 
       opts.on_tail('--help', 'Show this message') do
@@ -216,21 +192,6 @@ class << CommitEmail
 
       from = info.author_email
       sendmail(to, from, make_mail(to, from, info, viewer_uri: options.viewer_uri))
-
-      if options.repository_uri and
-          options.rss_path and
-          options.rss_uri
-        require 'rss/1.0'
-        require 'rss/dublincore'
-        require 'rss/content'
-        require 'rss/maker'
-        CommitEmail.extend(RSS::Utils)
-        output_rss(options.name,
-                   options.rss_path,
-                   options.rss_uri,
-                   options.repository_uri,
-                   info)
-      end
     end
   end
 
@@ -394,71 +355,6 @@ class << CommitEmail
   def make_mail(to, from, info, viewer_uri:)
     "#{make_header(to, from, info)}\n#{make_body(info, viewer_uri: viewer_uri)}"
   end
-
-  def output_rss(name, file, rss_uri, repos_uri, info)
-    prev_rss = nil
-    begin
-      if File.exist?(file)
-        File.open(file) do |f|
-          prev_rss = RSS::Parser.parse(f)
-        end
-      end
-    rescue RSS::Error
-    end
-
-    File.open(file, 'w') do |f|
-      f.print(make_rss(prev_rss, name, rss_uri, repos_uri, info).to_s)
-    end
-  end
-
-  def make_rss(base_rss, name, rss_uri, repos_uri, info)
-    RSS::Maker.make('1.0') do |maker|
-      maker.encoding = 'UTF-8'
-
-      maker.channel.about = rss_uri
-      maker.channel.title = rss_title(name || repos_uri)
-      maker.channel.link = repos_uri
-      maker.channel.description = rss_title(name || repos_uri)
-      maker.channel.dc_date = info.date
-
-      if base_rss
-        base_rss.items.each do |item|
-          item.setup_maker(maker)
-        end
-      end
-
-      diff_info(info, repos_uri).each do |name, infos|
-        infos.each do |desc, link|
-          item = maker.items.new_item
-          item.title = name
-          item.description = desc
-          item.content_encoded = "<pre>#{h(desc)}</pre>"
-          item.link = link
-          item.dc_date = info.date
-          item.dc_creator = info.author
-        end
-      end
-
-      maker.items.do_sort = true
-      maker.items.max_size = 15
-    end
-  end
-
-  def rss_title(name)
-    "Repository of #{name}"
-  end
-
-  def rss_items(items, info, repos_uri)
-    diff_info(info, repos_uri).each do |name, infos|
-      infos.each do |desc, link|
-        items << [link, name, desc, info.date]
-      end
-    end
-
-    items.sort_by do |uri, title, desc, date|
-      date
-    end.reverse
-  end
 end
 
 repo_path, to, *rest = ARGV
@@ -467,6 +363,9 @@ begin
 rescue StandardError => e
   $stderr.puts "#{e.class}: #{e.message}"
   $stderr.puts e.backtrace
+
+  _, options = CommitEmail.parse(rest)
+  to = options.error_to
   CommitEmail.sendmail(to, to, <<-MAIL)
 From: #{to}
 To: #{to}

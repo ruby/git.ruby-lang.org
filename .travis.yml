@@ -20,9 +20,5 @@ script:
     cd ./ruby &&
     ../bin/commit-email.rb ./ cvs-admin@ruby-lang.org \
       $(git rev-parse HEAD^) $(git rev-parse HEAD) refs/heads/trunk \
-      --name Ruby \
       --viewer-uri "https://git.ruby-lang.org/ruby.git/commit/?id=" \
-      -r https://svn.ruby-lang.org/repos/ruby \
-      --rss-path /tmp/ruby.rdf \
-      --rss-uri https://svn.ruby-lang.org/rss/ruby.rdf \
       --error-to cvs-admin@ruby-lang.org
