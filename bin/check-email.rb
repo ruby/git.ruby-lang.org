@@ -10,6 +10,7 @@ require "open3"
 
 SVN_TO_EMAILS = {
   "eregon" => ["eregontp@gmail.com", "eregon@ruby-lang.org"],
+  "duerst" => ["duerst@it.aoyama.ac.jp"],
   "git" => :admin,
   "hsbt" => :admin,
   "k0kubun" => ["takashikkbn@gmail.com"],
