@@ -8,8 +8,8 @@ before_install:
   - gem install test-unit
   - git clone --depth=3 https://github.com/ruby/ruby
 
+  # Install dummy `sendmail` for testing commit-email.rb
   - |-
-    # Install dummy `sendmail` for testing commit-email.rb
     echo "#!/usr/bin/env ruby
           p ARGV
           puts STDIN.read" > ./sendmail
