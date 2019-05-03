@@ -221,13 +221,13 @@ def parse(args)
   return opts.parse!(args), options
 end
 
-def make_body(info, params)
+def make_body(info, viewer_uri:)
   body = ""
   body << "#{info.author}\t#{format_time(info.date)}\n"
   body << "\n"
   body << "  New Revision: #{info.revision}\n"
   body << "\n"
-  body << "  #{params[:viewer_uri]}#{info.revision}\n"
+  body << "  #{viewer_uri}#{info.revision}\n"
   body << "\n"
   body << "  Log:\n"
   body << info.log.lstrip.gsub(/^\t*/, "    ").rstrip
@@ -336,7 +336,7 @@ def diff_info(info, uri)
   end
 end
 
-def make_header(to, from, info, params)
+def make_header(to, from, info)
   headers = []
   headers << x_author(info)
   headers << x_repository(info)
@@ -346,13 +346,13 @@ def make_header(to, from, info, params)
   headers << "Content-Transfer-Encoding: quoted-printable"
   headers << "From: #{from}"
   headers << "To: #{to.join(' ')}"
-  headers << "Subject: #{make_subject(params[:name], info)}"
+  headers << "Subject: #{make_subject(info)}"
   headers.find_all do |header|
     /\A\s*\z/ !~ header
   end.join("\n")
 end
 
-def make_subject(name, info)
+def make_subject(info)
   branches = info.branches
   subject = ""
   subject << "#{info.author}:"
@@ -379,8 +379,8 @@ def x_revision(info)
   "X-SVN-Revision: #{info.revision}"
 end
 
-def make_mail(to, from, info, params)
-  make_header(to, from, info, params) + "\n" + make_body(info, params)
+def make_mail(to, from, info, viewer_uri:)
+  "#{make_header(to, from, info)}\n#{make_body(info, viewer_uri: viewer_uri)}"
 end
 
 def sendmail(to, from, mail)
@@ -476,13 +476,12 @@ def main(repo_path, to, rest)
     raise "unsupported vcs #{options.vcs.inspect} is specified"
   end
 
-  params = { viewer_uri: options.viewer_uri, name: options.name }
   to = [to, *options.to]
   infos.each do |info|
     puts "#{info.branches.join(', ')}: #{info.revision} (#{info.author})"
 
     from = options.from || info.author_email
-    sendmail(to, from, make_mail(to, from, info, params))
+    sendmail(to, from, make_mail(to, from, info, viewer_uri: options.viewer_uri))
 
     if options.repository_uri and
         options.rss_path and
