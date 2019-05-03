@@ -1,6 +1,15 @@
 # Ruby commit hook [![Build Status](https://travis-ci.com/ruby/ruby-commit-hook.svg?branch=master)](https://travis-ci.com/ruby/ruby-commit-hook)
 
-On each commit of Ruby repository, `post-receive` hook in this repository does:
+## Features
+
+On each commit of Ruby's Git repository, following git hooks are triggered:
+
+### pre-receive
+
+* Verify committer email from `SVN_ACCOUNT_NAME` associated to SSH key used for `git push`
+* Reject merge commits (ask @mame about why)
+
+### post-receive
 
 * Send notification to ruby-cvs@ruby-lang.org
 * Commit automatic styling:
