@@ -5,7 +5,6 @@ branches:
   only:
     - master
 before_install:
-  - gem install test-unit
   - git clone --depth=3 https://github.com/ruby/ruby
 
   # Install dummy `sendmail` for testing commit-email.rb
@@ -17,7 +16,6 @@ before_install:
     sudo mv ./sendmail /usr/sbin/sendmail
 
 script:
-  - "ruby -Ilib -rtest/unit test/test_*.rb"
   - |-
     cd ./ruby &&
     ../bin/commit-email.rb ./ cvs-admin@ruby-lang.org \

@@ -17,14 +17,6 @@ end
 
 module Svn
   class Info
-    # Used by: commit-email.rb
-    attr_reader :author, :log, :date
-    attr_reader :added_files, :deleted_files, :updated_files
-    attr_reader :added_dirs, :deleted_dirs, :updated_dirs
-    attr_reader :diffs
-    attr_reader :revision
-    attr_reader :entire_sha256
-
     def initialize(repo_path, rev)
       @repo_path = repo_path
       @revision = Integer(rev)
@@ -35,12 +27,7 @@ module Svn
       get_sha256
     end
 
-    # Used by: commit-email.rb
-    def author_email
-      "#{@author}@ruby-lang.org"
-    end
-
-    # Used by: commit-email.rb, update-version.h.rb
+    # Used by: update-version.h.rb
     def branches
       @sha256.map{|x,| x[/((?:branches\/)?.+?)\//, 1]}.uniq
     end

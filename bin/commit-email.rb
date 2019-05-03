@@ -458,13 +458,6 @@ def main(repo_path, to, rest)
   args, options = parse(rest)
 
   case options.vcs
-  when "svn"
-    require_relative "../lib/svn/info"
-    infos = [
-      Svn::Info.new(repo_path, args.first).tap do |info|
-        info.log.sub!(/^([A-Z][a-z]{2} ){2}.*>\n/,"")
-      end
-    ]
   when "git"
     infos = args.each_slice(3).flat_map do |oldrev, newrev, refname|
       revisions = IO.popen(['git', 'log', '--reverse', '--pretty=%H', "#{oldrev}^..#{newrev}"], &:read).lines.map(&:strip)
