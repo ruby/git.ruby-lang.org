@@ -522,4 +522,5 @@ Subject: Error
 #{$!.class}: #{$!.message}
 #{$@.join("\n")}
 MAIL
+  exit 1
 end
