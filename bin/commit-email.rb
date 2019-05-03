@@ -252,7 +252,7 @@ class << CommitEmail
         require 'rss/dublincore'
         require 'rss/content'
         require 'rss/maker'
-        include RSS::Utils
+        CommitEmail.extend(RSS::Utils)
         output_rss(options.name,
                    options.rss_path,
                    options.rss_uri,
