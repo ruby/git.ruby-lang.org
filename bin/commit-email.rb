@@ -4,8 +4,6 @@ require "optparse"
 require "ostruct"
 require "nkf"
 
-SENDMAIL = "/usr/sbin/sendmail"
-
 CommitEmailInfo = Struct.new(
   :author,
   :author_email,
@@ -149,6 +147,9 @@ end
 
 CommitEmail = Module.new
 class << CommitEmail
+  SENDMAIL = '/usr/sbin/sendmail'
+  private_constant :SENDMAIL
+
   def parse(args)
     options = OpenStruct.new
     options.to = []
