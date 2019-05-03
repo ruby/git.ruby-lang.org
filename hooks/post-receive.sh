@@ -23,14 +23,8 @@ log "==> notify slack"
 log "==> commit-email.rb"
 "${ruby_commit_hook}/bin/commit-email.rb" \
    "$ruby_git" ruby-cvs@ruby-lang.org $* \
-   -I "${ruby_commit_hook}/lib" \
-   --name Ruby \
    --viewer-uri "https://git.ruby-lang.org/ruby.git/commit/?id=" \
-   -r https://svn.ruby-lang.org/repos/ruby \
-   --rss-path /tmp/ruby.rdf \
-   --rss-uri https://svn.ruby-lang.org/rss/ruby.rdf \
-   --error-to cvs-admin@ruby-lang.org \
-   --vcs git
+   --error-to cvs-admin@ruby-lang.org
 
 log "==> redmine fetch changesets"
 curl -s "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/redmine.key`" &
