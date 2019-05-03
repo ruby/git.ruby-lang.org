@@ -357,7 +357,7 @@ class << CommitEmail
     headers << 'Content-Type: text/plain; charset=utf-8'
     headers << 'Content-Transfer-Encoding: quoted-printable'
     headers << "From: #{from}"
-    headers << "To: #{to.join(' ')}"
+    headers << "To: #{to}"
     headers << "Subject: #{make_subject(info)}"
     headers.find_all do |header|
       /\A\s*\z/ !~ header
