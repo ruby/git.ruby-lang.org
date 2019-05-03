@@ -6,5 +6,29 @@ branches:
     - master
 before_install:
   - gem install test-unit
+  - git clone --depth=2 https://github.com/ruby/ruby
+
+  - |-
+    echo <<EOS > ./sendmail
+    #!/usr/bin/env ruby
+    p ARGV
+    puts STDIN.read
+    EOS
+
+    # Install dummy `sendmail` for testing commit-email.rb
+    chmod +x ./sendmail
+    sudo mv ./sendmail /usr/sbin/sendmail
+
 script:
   - "ruby -Ilib -rtest/unit test/test_*.rb"
+  - |-
+    bin/commit-email.rb ./ruby cvs-admin@ruby-lang.org \
+      $(git -C ./ruby rev-parse HEAD^) $(git -C ./ruby rev-parse HEAD) refs/heads/trunk \
+      -I ./lib \
+      --name Ruby \
+      --viewer-uri "https://git.ruby-lang.org/ruby.git/commit/?id=" \
+      -r https://svn.ruby-lang.org/repos/ruby \
+      --rss-path /tmp/ruby.rdf \
+      --rss-uri https://svn.ruby-lang.org/rss/ruby.rdf \
+      --error-to cvs-admin@ruby-lang.org \
+      --vcs git
