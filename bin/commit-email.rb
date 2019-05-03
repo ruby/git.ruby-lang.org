@@ -476,11 +476,7 @@ def main(repo_path, to, rest)
     raise "unsupported vcs #{options.vcs.inspect} is specified"
   end
 
-  params = {
-    repository_uri: options.repository_uri,
-    viewer_uri: options.viewer_uri,
-    name: options.name
-  }
+  params = { viewer_uri: options.viewer_uri, name: options.name }
   to = [to, *options.to]
   infos.each do |info|
     puts "#{info.branches.join(', ')}: #{info.revision} (#{info.author})"
