@@ -6,7 +6,7 @@ branches:
     - master
 before_install:
   - gem install test-unit
-  - git clone --depth=2 https://github.com/ruby/ruby
+  - git clone --depth=3 https://github.com/ruby/ruby
 
   - |-
     # Install dummy `sendmail` for testing commit-email.rb
