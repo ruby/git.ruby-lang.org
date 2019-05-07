@@ -7,7 +7,7 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
   if status.success?
     out.lines.each do |s|
       if s.split.size >= 3
-        puts "A merge commit is prohibited."
+        STDERR.puts "A merge commit is prohibited."
         exit 1
       end
     end
