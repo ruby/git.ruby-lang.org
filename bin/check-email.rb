@@ -67,7 +67,7 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
     else
       # Until the last of 2019, we record the association of SVN_ACCOUNT_NAME and GIT_COMMITTER_EMAIL.
       open(LOG_FILE, "a") do |f|
-        f.puts "#{ oldrev } #{ newrev } #{ svn_account_name } #{ git_committer_email }"
+        f.puts "#{ oldrev } #{ newrev } #{ refname } #{ svn_account_name } #{ git_committer_email }"
       end
     end
   end
