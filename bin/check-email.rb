@@ -17,6 +17,7 @@ SVN_TO_EMAILS = {
   "kazu" => ["zn@mbf.nifty.com"],
   "kou" => ["kou@cozmixng.org", "kou@clear-code.com"],
   "mame" => ["mame@ruby-lang.org"],
+  "nagachika" => ["nagachika@ruby-lang.org"],
   "naruse" => :admin,
   "shyouhei" => ["shyouhei@ruby-lang.org"],
   "suke" => ["masaki.suketa@nifty.ne.jp"],
