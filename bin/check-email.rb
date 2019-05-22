@@ -45,11 +45,16 @@ emails = SVN_TO_EMAILS[svn_account_name]
 
 exit 0 if emails == :admin
 
+pushable_refnames = [
+  'refs/heads/master',
+  'refs/heads/trunk',
+]
+
 ARGV.each_slice(3) do |oldrev, newrev, refname|
   # `/var/git-svn/ruby` uses `remote.cgit.url=git@git.ruby-lang.org:ruby.git`.
   # ~git/.ssh/id_rsa.pub is registered as `SVN_ACCOUNT_NAME=git` in authorized_keys.
-  if refname != "refs/heads/trunk" && svn_account_name != "git" # git-svn
-    STDERR.puts "You cannot commit anything to a branch except trunk. (svn_account_name: #{svn_account_name})"
+  if !pushable_refnames.include?(refname) && svn_account_name != "git" # git-svn
+    STDERR.puts "You cannot commit anything to a branch except #{pushable_refnames.map(&File.method(:basename)).join(', ')}. (svn_account_name: #{svn_account_name})"
     exit 1
   end
 
