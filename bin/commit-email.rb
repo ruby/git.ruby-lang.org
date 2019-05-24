@@ -333,7 +333,7 @@ class << CommitEmail
     subject << " (#{branches.join(', ')})" unless branches.empty?
     subject << ': '
     subject << info.log.lstrip.lines.first.to_s.strip
-    NKF.nkf('-wMq', subject)
+    NKF.nkf('-WwMq', subject)
   end
 
   def x_author(info)
