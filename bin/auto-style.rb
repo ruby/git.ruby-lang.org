@@ -11,6 +11,9 @@ class Git
     @oldrev = oldrev
     @newrev = newrev
     @branch = branch
+    with_clean_env do
+      @revs = IO.popen(['git', 'log', '--format=%H', "#{@oldrev}..#{@newrev}"], &:readlines).map(&:chomp!)
+    end
   end
 
   # ["foo/bar.c", "baz.h", ...]
@@ -23,9 +26,9 @@ class Git
   # [0, 1, 4, ...]
   def updated_lines(file)
     lines = []
-    with_clean_env { IO.popen(['git', 'blame', file], &:readlines) }.each_with_index do |line, index|
-      # git 2.1.4 on git@git.ruby-lang.org shows only 8 chars on blame.
-      if line[0..7] == @newrev[0..7]
+    revs_pattern = /\A(?:#{@revs.join('|')}) /
+    with_clean_env { IO.popen(['git', 'blame', '-l', '--', file], &:readlines) }.each_with_index do |line, index|
+      if revs_pattern =~ line
         lines << index
       end
     end
