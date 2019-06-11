@@ -111,20 +111,7 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
     files = paths.select {|n| File.file?(n)}
     next if files.empty?
 
-    translit = trailing = eofnewline = expandtab = false
-
-    files.grep(/\/ChangeLog\z/) do |changelog|
-      if IO.foreach(changelog, 'rb').any? { |line| !line.ascii_only? }
-        tmp = "#{changelog}.ascii"
-        if system('iconv', '-f', 'utf-8', '-t', 'us-ascii//translit', changelog, out: tmp) and
-            (File.size(tmp) - File.size(changelog)).abs < 10
-          File.rename(tmp, changelog)
-          translit = true
-        else
-          File.unlink(tmp) rescue nil
-        end
-      end
-    end
+    trailing = eofnewline = expandtab = false
 
     edited_files = files.select do |f|
       src = File.binread(f) rescue next
@@ -152,7 +139,6 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
     unless edited_files.empty?
       msg = [('remove trailing spaces' if trailing),
              ('append newline at EOF' if eofnewline),
-             ('translit ChangeLog' if translit),
              ('expand tabs' if expandtab),
             ].compact
       vcs.commit("* #{msg.join(', ')}.#{' [ci skip]' if vcs.ci_skip?}", *edited_files)

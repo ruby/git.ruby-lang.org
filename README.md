@@ -15,7 +15,6 @@ On each commit of Ruby's Git repository, following git hooks are triggered:
 * Commit automatic styling:
   * remove trailing spaces
   * append newline at EOF
-  * translit ChangeLog
   * expand tabs
 * Update version.h if date is changed
 * Request Redmine to fetch changesets
