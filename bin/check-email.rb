@@ -14,6 +14,7 @@ SVN_TO_EMAILS = {
   "eregon" => ["eregontp@gmail.com", "eregon@ruby-lang.org"],
   "git" => :admin,
   "hsbt" => :admin,
+  "jeremy" => ["code@jeremyevans.net"],
   "k0kubun" => ["takashikkbn@gmail.com"],
   "kazu" => ["zn@mbf.nifty.com"],
   "ko1" => ["ko1@atdot.net"],
