@@ -67,16 +67,14 @@ end
 
 EXPANDTAB_IGNORED_FILES = [
   # vendoring
+  %r{\Abin/bundler\z},
   %r{\Accan/},
   %r{\Aext/bigdecimal/},
-  %r{\Aext/nkf/},
   %r{\Aext/io/},
   %r{\Aext/json/},
+  %r{\Aext/nkf/},
   %r{\Aext/psych/},
   %r{\Aext/stringio/},
-
-  # vendoring (bundler)
-  %r{\Abin/bundler\z},
   %r{\Alib/bundler/},
 
   # vendoring (onigmo)
