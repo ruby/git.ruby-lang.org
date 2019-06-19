@@ -76,6 +76,8 @@ EXPANDTAB_IGNORED_FILES = [
   %r{\Aext/psych/},
   %r{\Aext/stringio/},
   %r{\Alib/bundler/},
+  %r{\Alib/racc/},
+  %r{\Atest/racc/},
 
   # vendoring (onigmo)
   %r{\Aenc/},
