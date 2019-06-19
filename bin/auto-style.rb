@@ -65,19 +65,71 @@ class Git
   end
 end
 
+DEFAULT_GEM_LIBS = %w[
+  bundler
+  cmath
+  csv
+  e2mmap
+  fileutils
+  forwardable
+  ipaddr
+  irb
+  logger
+  matrix
+  mutex_m
+  ostruct
+  prime
+  rdoc
+  rexml
+  rss
+  scanf
+  shell
+  sync
+  thwait
+  tracer
+  webrick
+] + [
+  'racc', # under migration?
+]
+
+DEFAULT_GEM_EXTS = %w[
+  bigdecimal
+  date
+  dbm
+  etc
+  fcntl
+  fiddle
+  gdbm
+  io/console
+  json
+  openssl
+  psych
+  sdbm
+  stringio
+  strscan
+  zlib
+]
+
 EXPANDTAB_IGNORED_FILES = [
-  # vendoring
-  %r{\Abin/bundler\z},
+  # default gems whose master is GitHub
+  %r{\Abin/(?!erb)\w+\z},
+  *DEFAULT_GEM_LIBS.flat_map { |lib|
+    [
+      %r{\Alib/#{lib}/},
+      %r{\Alib/#{lib}\.gemspec\z},
+      %r{\Alib/#{lib}\.rb\z},
+      %r{\Atest/#{lib}/},
+    ]
+  },
+  *DEFAULT_GEM_EXTS.flat_map { |ext|
+    [
+      %r{\Aext/#{ext}/},
+      %r{\Atest/#{ext}/},
+    ]
+  },
+
+  # vendoring (ccan)
   %r{\Accan/},
-  %r{\Aext/bigdecimal/},
-  %r{\Aext/io/},
-  %r{\Aext/json/},
-  %r{\Aext/nkf/},
-  %r{\Aext/psych/},
-  %r{\Aext/stringio/},
-  %r{\Alib/bundler/},
-  %r{\Alib/racc/},
-  %r{\Atest/racc/},
 
   # vendoring (onigmo)
   %r{\Aenc/},
