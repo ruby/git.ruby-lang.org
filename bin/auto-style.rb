@@ -79,6 +79,7 @@ DEFAULT_GEM_LIBS = %w[
   mutex_m
   ostruct
   prime
+  racc
   rdoc
   rexml
   rss
@@ -88,8 +89,6 @@ DEFAULT_GEM_LIBS = %w[
   thwait
   tracer
   webrick
-] + [
-  'racc', # under migration?
 ]
 
 DEFAULT_GEM_EXTS = %w[
