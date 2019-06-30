@@ -19,6 +19,6 @@ script:
   - |-
     cd ./ruby &&
     ../bin/commit-email.rb ./ cvs-admin@ruby-lang.org \
-      $(git rev-parse HEAD^) $(git rev-parse HEAD) refs/heads/trunk \
+      $(git rev-parse HEAD^) $(git rev-parse HEAD) refs/heads/master \
       --viewer-uri "https://github.com/ruby/ruby/commit/" \
       --error-to cvs-admin@ruby-lang.org
