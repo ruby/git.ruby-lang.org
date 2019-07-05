@@ -24,12 +24,15 @@ SVN_TO_EMAILS = {
   "nagachika" => ["nagachika@ruby-lang.org"],
   "naruse" => :admin,
   "nobu" => ["nobu@ruby-lang.org"],
+  "samuel" => ["samuel.williams@oriontransfer.co.nz"],
   "seki" => ["m_seki@mva.biglobe.ne.jp"],
+  "shugo" => ["shugo@ruby-lang.org"],
   "shyouhei" => ["shyouhei@ruby-lang.org"],
   "stomar" => ["sto.mar@web.de"],
   "suke" => ["masaki.suketa@nifty.ne.jp"],
   "tenderlove" => ["aaron.patterson@gmail.com", "tenderlove@ruby-lang.org"],
   "usa" => ["usa@ruby-lang.org"],
+  "yugui" => ["yugui@yugui.jp"],
 }
 
 LOG_FILE = "/home/git/email.log"
