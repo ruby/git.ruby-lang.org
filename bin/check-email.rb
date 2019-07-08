@@ -26,6 +26,7 @@ SVN_TO_EMAILS = {
   "nobu" => ["nobu@ruby-lang.org"],
   "samuel" => ["samuel.williams@oriontransfer.co.nz"],
   "seki" => ["m_seki@mva.biglobe.ne.jp"],
+  "sorah" => ["her@sorah.jp", "sorah@cookpad.com"],
   "shugo" => ["shugo@ruby-lang.org"],
   "shyouhei" => ["shyouhei@ruby-lang.org"],
   "stomar" => ["sto.mar@web.de"],
