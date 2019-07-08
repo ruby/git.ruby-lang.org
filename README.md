@@ -38,4 +38,4 @@ On each commit of Ruby's Git repository, following git hooks are triggered:
 
 ## License
 
-[Ruby License](https://www.ruby-lang.org/en/LICENSE.txt)
+[Ruby License](./license.txt)
