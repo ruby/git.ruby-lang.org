@@ -31,6 +31,7 @@ SVN_TO_EMAILS = {
   "shyouhei" => ["shyouhei@ruby-lang.org"],
   "stomar" => ["sto.mar@web.de"],
   "suke" => ["masaki.suketa@nifty.ne.jp"],
+  "tadd" => ["tad.a.digger@gmail.com", "tadd@ruby-lang.org"],
   "tenderlove" => ["aaron.patterson@gmail.com", "tenderlove@ruby-lang.org"],
   "usa" => ["usa@ruby-lang.org"],
   "yugui" => ["yugui@yugui.jp"],
