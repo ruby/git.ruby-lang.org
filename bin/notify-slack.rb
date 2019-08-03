@@ -47,22 +47,25 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
     }
   end
 
-  payload = { attachments: attachments }
+  # 100 attachments cannot be exceeded. 20 is recommended. https://api.slack.com/docs/message-attachments
+  attachments.each_slice(20).each do |attachments_group|
+    payload = { attachments: attachments_group }
 
-  #Net::HTTP.post(
-  #  URI.parse(SLACK_WEBHOOK_URL),
-  #  JSON.generate(payload),
-  #  "Content-Type" => "application/json"
-  #)
-  SLACK_WEBHOOK_URLS.each do |url|
-    uri = URI.parse(url)
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    resp = http.start do
-      req = Net::HTTP::Post.new(uri.path)
-      req.set_form_data(payload: payload.to_json)
-      http.request(req)
+    #Net::HTTP.post(
+    #  URI.parse(SLACK_WEBHOOK_URL),
+    #  JSON.generate(payload),
+    #  "Content-Type" => "application/json"
+    #)
+    SLACK_WEBHOOK_URLS.each do |url|
+      uri = URI.parse(url)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      resp = http.start do
+        req = Net::HTTP::Post.new(uri.path)
+        req.set_form_data(payload: payload.to_json)
+        http.request(req)
+      end
+      puts "#{resp.code}: #{resp.body} (#{payload.to_json})"
     end
-    puts "#{resp.code}: #{resp.body} (#{payload.to_json})"
   end
 end
