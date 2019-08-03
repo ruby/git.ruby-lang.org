@@ -56,16 +56,18 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
     #  JSON.generate(payload),
     #  "Content-Type" => "application/json"
     #)
-    SLACK_WEBHOOK_URLS.each do |url|
+    responses = SLACK_WEBHOOK_URLS.map do |url|
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
-      resp = http.start do
+      http.start do
         req = Net::HTTP::Post.new(uri.path)
         req.set_form_data(payload: payload.to_json)
         http.request(req)
       end
-      puts "#{resp.code}: #{resp.body} (#{payload.to_json})"
     end
+
+    results = responses.map { |resp| "#{resp.code} (#{resp.body})" }.join(', ')
+    puts "#{results} -- #{payload.to_json}"
   end
 end
