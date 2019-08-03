@@ -47,21 +47,22 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
     }
   end
 
-  json = { attachments: attachments }
+  payload = { attachments: attachments }
 
   #Net::HTTP.post(
   #  URI.parse(SLACK_WEBHOOK_URL),
-  #  JSON.generate(json),
+  #  JSON.generate(payload),
   #  "Content-Type" => "application/json"
   #)
   SLACK_WEBHOOK_URLS.each do |url|
     uri = URI.parse(url)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
-    http.start do
+    resp = http.start do
       req = Net::HTTP::Post.new(uri.path)
-      req.set_form_data(payload: json.to_json)
+      req.set_form_data(payload: payload.to_json)
       http.request(req)
     end
+    puts "#{resp.code}: #{resp.body} (#{payload.to_json})"
   end
 end
