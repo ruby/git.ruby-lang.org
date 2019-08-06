@@ -30,7 +30,6 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
   out.split("\0").reverse_each do |s|
     hash, abbr_hash, _author, _authortime, committer, committeremail, committertime, body = s.split("\n", 8)
     subject, body = body.split("\n", 2)
-    body = body.strip.sub(%r(git-svn-id: svn\+ssh://ci\.ruby-lang\.org/ruby/trunk@(\d+) \h+-\h+-\h+-\h+-\h+\z)) { "(r#$1)" }.strip
 
     gravatar = GRAVATAR_OVERRIDES.fetch(committeremail) do
       "https://www.gravatar.com/avatar/#{ Digest::MD5.hexdigest(committeremail.downcase) }"
