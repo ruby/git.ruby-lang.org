@@ -8,6 +8,7 @@ require "digest/md5"
 SLACK_WEBHOOK_URLS = [
   File.read(File.expand_path("~git/config/slack-webhook-alerts")).chomp,
   File.read(File.expand_path("~git/config/slack-webhook-commits")).chomp,
+  File.read(File.expand_path("~git/config/slack-webhook-ruby-jp")).chomp,
 ]
 GRAVATAR_OVERRIDES = {
   "nagachika@b2dd03c8-39d4-4d8f-98ff-823fe69b080e" => "https://avatars0.githubusercontent.com/u/21976",
