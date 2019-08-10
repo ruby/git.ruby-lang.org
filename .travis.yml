@@ -1,4 +1,5 @@
 language: ruby
+cache: bundler
 rvm:
   - 2.1 # git.ruby-lang.org is debian 8 (jessie), ruby 2.1.5p273
 branches:
@@ -22,3 +23,4 @@ script:
       $(git rev-parse HEAD^) $(git rev-parse HEAD) refs/heads/master \
       --viewer-uri "https://github.com/ruby/ruby/commit/" \
       --error-to cvs-admin@ruby-lang.org
+  - bundle exec rake test
