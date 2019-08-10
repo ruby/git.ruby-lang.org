@@ -5,6 +5,7 @@ GEM
     rake (12.3.3)
     test-unit (3.3.3)
       power_assert
+    unindent (1.0)
 
 PLATFORMS
   ruby
@@ -12,6 +13,7 @@ PLATFORMS
 DEPENDENCIES
   rake
   test-unit
+  unindent
 
 BUNDLED WITH
    1.17.2
