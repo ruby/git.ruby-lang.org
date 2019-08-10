@@ -64,28 +64,30 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
     exit 1
   end
 
-  out, = Open3.capture2("git", "show", "-s", "--pretty=format:%H\n%ce", newrev)
+  out, = Open3.capture2("git", "log", "--first-parent", "--pretty=format:%H %ce", oldrev + ".." + newrev)
 
-  _hash, git_committer_email = out.split("\n")
-  if emails
-    if emails == git_committer_email || emails.include?(git_committer_email)
-      # OK
+  out.each_line do |s|
+    commit, git_committer_email = s.strip.split(" ", 2)
+    if emails
+      if emails == git_committer_email || emails.include?(git_committer_email)
+        # OK
+      else
+        STDERR.puts "The git committer email (#{git_committer_email}) does not seem to be #{svn_account_name}'s email (#{emails.join(', ')})."
+        STDERR.puts "Please see https://github.com/ruby/ruby-commit-hook/blob/master/bin/check-email.rb"
+        STDERR.puts "and send PR, or contact on ruby-core@ruby-lang.org."
+        exit 1 # NG
+      end
     else
-      STDERR.puts "The git committer email (#{git_committer_email}) does not seem to be #{svn_account_name}'s email (#{emails.join(', ')})."
-      STDERR.puts "Please see https://github.com/ruby/ruby-commit-hook/blob/master/bin/check-email.rb"
-      STDERR.puts "and send PR, or contact on ruby-core@ruby-lang.org."
-      exit 1 # NG
-    end
-  else
-    if Time.now > Time.new(2020, 1, 1)
-      STDERR.puts "Your ssh key is unknown."
-      STDERR.puts "Please see https://github.com/ruby/ruby-commit-hook/blob/master/bin/check-email.rb"
-      STDERR.puts "and send PR, or contact on ruby-core@ruby-lang.org."
-      exit 1 # NG
-    else
-      # Until the last of 2019, we record the association of SVN_ACCOUNT_NAME and GIT_COMMITTER_EMAIL.
-      open(LOG_FILE, "a") do |f|
-        f.puts "#{ oldrev } #{ newrev } #{ refname } #{ svn_account_name } #{ git_committer_email }"
+      if Time.now > Time.new(2020, 1, 1)
+        STDERR.puts "Your ssh key is unknown."
+        STDERR.puts "Please see https://github.com/ruby/ruby-commit-hook/blob/master/bin/check-email.rb"
+        STDERR.puts "and send PR, or contact on ruby-core@ruby-lang.org."
+        exit 1 # NG
+      else
+        # Until the last of 2019, we record the association of SVN_ACCOUNT_NAME and GIT_COMMITTER_EMAIL.
+        open(LOG_FILE, "a") do |f|
+          f.puts "#{ commit } #{ refname } #{ svn_account_name } #{ git_committer_email }"
+        end
       end
     end
   end
