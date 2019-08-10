@@ -53,22 +53,6 @@ class TestPreReceive < Test::Unit::TestCase
     FileUtils.remove_entry(@working_copy) if @working_copy
   end
 
-  def git(*cmd, chdir: @working_copy)
-    env = { "SVN_ACCOUNT_NAME" => @svn_account_name }
-    out, status = Open3.capture2e(env, "git", *cmd, chdir: chdir)
-    unless status.success?
-      raise "git #{ cmd.join(" ") }\n" + out
-    end
-  end
-
-  def make_commit(user, email, file)
-    git("config", "--local", "user.name", user)
-    git("config", "--local", "user.email", email)
-    File.write(File.join(@working_copy, file), file)
-    git("add", file)
-    git("commit", "-m", file)
-  end
-
   def test_check_right_svn_account
     make_commit("mame", "mame@ruby-lang.org", "test")
     git("push")
@@ -117,5 +101,23 @@ class TestPreReceive < Test::Unit::TestCase
       /A merge commit is prohibited\./,
       err.message
     )
+  end
+
+  private
+
+  def git(*cmd, chdir: @working_copy)
+    env = { "SVN_ACCOUNT_NAME" => @svn_account_name }
+    out, status = Open3.capture2e(env, "git", *cmd, chdir: chdir)
+    unless status.success?
+      raise "git #{ cmd.join(" ") }\n" + out
+    end
+  end
+
+  def make_commit(user, email, file)
+    git("config", "--local", "user.name", user)
+    git("config", "--local", "user.email", email)
+    File.write(File.join(@working_copy, file), file)
+    git("add", file)
+    git("commit", "-m", file)
   end
 end
