@@ -2,7 +2,6 @@ require "test/unit"
 require "open3"
 require "tmpdir"
 require "fileutils"
-require "unindent"
 
 class TestPreReceive < Test::Unit::TestCase
   def setup
@@ -24,7 +23,7 @@ class TestPreReceive < Test::Unit::TestCase
     pre_receive = File.join(@bare_dir, "hooks/pre-receive")
     pre_receive_sh = File.join(@bare_dir, "hooks/pre-receive.sh")
 
-    File.write(pre_receive, <<-END.unindent)
+    File.write(pre_receive, <<~END)
       #!/bin/bash
 
       args=""
