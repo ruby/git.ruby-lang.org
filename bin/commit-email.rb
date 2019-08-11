@@ -147,7 +147,7 @@ end
 
 CommitEmail = Module.new
 class << CommitEmail
-  SENDMAIL = '/usr/sbin/sendmail'
+  SENDMAIL = ENV.fetch('SENDMAIL', '/usr/sbin/sendmail')
   private_constant :SENDMAIL
 
   def parse(args)
