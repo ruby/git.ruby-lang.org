@@ -64,13 +64,16 @@ class PushHook
   end
 
   def process(repository:, ref:)
-    logger.info([repository, ref])
-
     case repository
     when 'ruby/ruby-commit-hook'
       if ref == 'refs/heads/master'
+        logger.info('ref')
+        require 'open3'
         # www-data user is allowed to sudo `/home/git/ruby-commit-hook/bin/update-ruby-commit-hook.sh`.
-        system('sudo', '-u', 'git', '/home/git/ruby-commit-hook/bin/update-ruby-commit-hook.sh')
+        out, err, status = Open3.capture3('sudo', '-u', 'git', '/home/git/ruby-commit-hook/bin/update-ruby-commit-hook.sh')
+        logger.info([out, err, status.success?])
+      else
+        logger.info('else')
       end
     when 'ruby/ruby'
       # TODO: sync GitHub to git.ruby-lang.org
