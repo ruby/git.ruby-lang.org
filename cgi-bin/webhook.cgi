@@ -1,4 +1,10 @@
 #!/usr/bin/env ruby
+# This file is deployed as CGI on `https://git.ruby-lang.org/webhook`.
+# See `sites-available/git.ruby-lang.org.conf`.
+#
+# Currently this webhook is triggered by a "push" hook of:
+# * https://github.com/ruby/ruby-commit-hook
+
 require 'cgi'
 require 'json'
 require 'logger'
@@ -18,8 +24,13 @@ class Webhook
       logger.info('Request was not an authorized webhook')
       return false
     end
+    logger.info('Authorization succeeded!')
 
-    logger.info('Authorization success!')
+    payload = JSON.parse(@payload)
+    repository = payload.fetch('repository').fetch('full_name')
+    ref = payload.fetch('ref')
+
+    PushHook.new(repository, ref).process
     return true
   rescue => e
     logger.info("#{e.class}: #{e.message}")
@@ -41,6 +52,25 @@ class Webhook
 
   def logger
     @logger ||= Logger.new(LOG_PATH)
+  end
+end
+
+class PushHook
+  def initialize(repository, ref)
+    @repository = repository
+    @ref = ref
+  end
+
+  def process
+    case @repository
+    when 'ruby/ruby-commit-hook'
+      if @ref == 'refs/heads/master'
+        # www-data user is allowed to sudo `/home/git/ruby-commit-hook/bin/update-ruby-commit-hook.sh`.
+        system('sudo', '-u', 'git', '/home/git/ruby-commit-hook/bin/update-ruby-commit-hook.sh')
+      end
+    when 'ruby/ruby'
+      # TODO: sync GitHub to git.ruby-lang.org
+    end
   end
 end
 
