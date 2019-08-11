@@ -61,7 +61,8 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
   # `/var/git-svn/ruby` uses `remote.cgit.url=git@git.ruby-lang.org:ruby.git`.
   # ~git/.ssh/id_rsa.pub is registered as `SVN_ACCOUNT_NAME=git` in authorized_keys.
   if !pushable_refnames.include?(refname) && svn_account_name != "git" # git-svn
-    STDERR.puts "You pushed objects to '#{refname}', but you can push objects to only #{pushable_refnames.map{|ref| "'#{ref}'" }.join(', ')}. (svn_account_name: #{svn_account_name})"
+    STDERR.puts "You pushed '#{newrev}' to '#{refname}', but you can push commits "\
+      "to only '#{pushable_refnames.join("', '")}'. (svn_account_name: #{svn_account_name})"
     exit 1
   end
 
