@@ -18,7 +18,7 @@ log "args: $*"
 log "==> prohibit merge commits"
 "${ruby_commit_hook}/bin/prohibit-merge-commits.rb" $* || exit 1
 
-log "==> check email"
-"${ruby_commit_hook}/bin/check-email.rb" $* || exit 1
+log "==> check email and refname"
+"${ruby_commit_hook}/bin/check-email-and-refname.rb" $* || exit 1
 
 log "### end ###\n"
