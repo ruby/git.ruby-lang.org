@@ -61,8 +61,6 @@ end
 class PushHook
   def initialize(logger:)
     @logger = logger
-    @repository = repository
-    @ref = ref
   end
 
   def process(repository:, ref:)
