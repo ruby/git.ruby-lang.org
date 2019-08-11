@@ -30,6 +30,8 @@ class Webhook
   # https://developer.github.com/webhooks/securing/
   def authorized_webhook?
     return false if @payload.nil? || @signature.nil? || @secret.nil?
+    logger.info("sig: #{@signature}")
+    logger.info("ans: sha1=#{OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'), @secret, @payload)}")
     @signature == "sha1=#{OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'), @secret, @payload)}"
   end
 
