@@ -19,8 +19,12 @@ class Webhook
       return false
     end
 
-    logger.info(Time.now.to_s)
+    logger.info('Authorization success!')
     return true
+  rescue => e
+    logger.info("#{e.class}: #{e.message}")
+    logger.info(e.backtrace.join("\n"))
+    return false
   end
 
   private
@@ -30,10 +34,6 @@ class Webhook
   # https://developer.github.com/webhooks/securing/
   def authorized_webhook?
     return false if @payload.nil? || @signature.nil? || @secret.nil?
-    logger.info("body: '#{@payload}'")
-    logger.info("secret: '#{@secret}'")
-    logger.info("sig: #{@signature}")
-    logger.info("ans: sha1=#{OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'), @secret, @payload)}")
     @signature == "sha1=#{OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'), @secret, @payload)}"
   end
 
@@ -42,16 +42,10 @@ class Webhook
   end
 end
 
-payload = STDIN.read # must be before CGI.new
+webhook = Webhook.new(
+  payload: STDIN.read, # must be done before CGI.new
+  signature: ENV['HTTP_X_HUB_SIGNATURE'],
+  secret: 'helloworld', # don't worry, this will be changed later
+)
 print CGI.new.header
-begin
-  webhook = Webhook.new(
-    payload: payload,
-    signature: ENV['HTTP_X_HUB_SIGNATURE'],
-    secret: 'helloworld', # don't worry, this will be changed later
-  )
-  print "#{webhook.process}\r\n"
-rescue => e
-  puts "#{e.class}: #{e.message}"
-  puts e.backtrace
-end
+print "#{webhook.process}\r\n"
