@@ -39,10 +39,15 @@ class Webhook
 end
 
 cgi = CGI.new
-webhook = Webhook.new(
-  payload: cgi['payload'],
-  signature: ENV['HTTP_X_HUB_SIGNATURE'],
-  secret: 'helloworld', # don't worry, this will be changed later
-)
 print cgi.header
-print "#{webhook.process}\r\n"
+begin
+  webhook = Webhook.new(
+    payload: cgi['payload'],
+    signature: ENV['HTTP_X_HUB_SIGNATURE'],
+    secret: 'helloworld', # don't worry, this will be changed later
+  )
+  print "#{webhook.process}\r\n"
+rescue => e
+  puts "#{e.class}: #{e.message}"
+  puts e.backtrace
+end
