@@ -30,7 +30,10 @@ class Webhook
     repository = payload.fetch('repository').fetch('full_name')
     ref = payload.fetch('ref')
 
-    PushHook.new(repository, ref).process
+    PushHook.new(logger: logger).process(
+      repository: repository,
+      ref: ref,
+    )
     return true
   rescue => e
     logger.info("#{e.class}: #{e.message}")
@@ -56,15 +59,18 @@ class Webhook
 end
 
 class PushHook
-  def initialize(repository, ref)
+  def initialize(logger:)
+    @logger = logger
     @repository = repository
     @ref = ref
   end
 
-  def process
-    case @repository
+  def process(repository:, ref:)
+    logger.info([repository, ref])
+
+    case repository
     when 'ruby/ruby-commit-hook'
-      if @ref == 'refs/heads/master'
+      if ref == 'refs/heads/master'
         # www-data user is allowed to sudo `/home/git/ruby-commit-hook/bin/update-ruby-commit-hook.sh`.
         system('sudo', '-u', 'git', '/home/git/ruby-commit-hook/bin/update-ruby-commit-hook.sh')
       end
@@ -72,6 +78,10 @@ class PushHook
       # TODO: sync GitHub to git.ruby-lang.org
     end
   end
+
+  private
+
+  attr_reader :logger
 end
 
 # The following `Rack::Util.secure_compare` is copied from:
