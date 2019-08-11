@@ -42,10 +42,11 @@ class Webhook
   end
 end
 
+payload = STDIN.read # must be before CGI.new
 print CGI.new.header
 begin
   webhook = Webhook.new(
-    payload: STDIN.read,
+    payload: payload,
     signature: ENV['HTTP_X_HUB_SIGNATURE'],
     secret: 'helloworld', # don't worry, this will be changed later
   )
