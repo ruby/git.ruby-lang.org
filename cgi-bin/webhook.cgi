@@ -66,7 +66,7 @@ class PushHook
   def process(repository:, ref:)
     case repository
     when 'ruby/ruby-commit-hook'
-      if ref == 'refs/heads/master'
+      if ref == 'refs/heads/test'
         logger.info('ref')
         require 'open3'
         # www-data user is allowed to sudo `/home/git/ruby-commit-hook/bin/update-ruby-commit-hook.sh`.
