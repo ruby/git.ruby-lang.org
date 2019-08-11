@@ -67,7 +67,8 @@ class PushHook
     case repository
     when 'ruby/ruby-commit-hook'
       if ref == 'refs/heads/test'
-        git('pull', 'origin', 'master', chdir: '/home/git/ruby-commit-hook')
+        # TODO: git pull origin master, in /home/git/ruby-commit-hook
+        logger.info('to be implemented')
       else
         logger.info("skipped ruby-commit-hook ref: #{ref}")
       end
@@ -83,14 +84,13 @@ class PushHook
 
   attr_reader :logger
 
-  # www-data user is allowed to sudo `git`.
-  def git(*cmd, chdir:)
-    require 'open3'
-    stdout, stderr, status = Dir.chdir(chdir) { Open3.capture3('/usr/bin/sudo', '-u', '/usr/bin/git', *cmd) }
-    logger.info("+ #{cmd.join(' ')} (success: #{status.success?})")
-    logger.info("stdout: #{stdout}")
-    logger.info("stderr: #{stderr}")
-  end
+  # def git(*cmd, chdir:)
+  #   require 'open3'
+  #   stdout, stderr, status = Dir.chdir(chdir) { Open3.capture3('/usr/bin/sudo', '-u', '/usr/bin/git', *cmd) }
+  #   logger.info("+ #{cmd.join(' ')} (success: #{status.success?})")
+  #   logger.info("stdout: #{stdout}")
+  #   logger.info("stderr: #{stderr}")
+  # end
 end
 
 # The following `Rack::Util.secure_compare` is copied from:
