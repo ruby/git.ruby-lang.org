@@ -15,7 +15,8 @@ log "### start ###"
 log "args: $*"
 
 log "==> github sync"
-git remote update; git push github
+time git remote update
+time git push github
 
 log "==> notify slack"
 "${ruby_commit_hook}/bin/notify-slack.rb" $*
