@@ -39,6 +39,6 @@ log "==> update-version.h"
 SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/update-version.h.rb" git "$ruby_git" $*
 
 log "==> notes-github-pr"
-SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/notes-github-pr.rb" git "$ruby_git" $*
+SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/notes-github-pr.rb" "$ruby_git" $*
 
 log "### end ###\n"
