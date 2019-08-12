@@ -79,7 +79,7 @@ class PushHook
   attr_reader :logger
 
   def on_push_ruby_commit_hook(ref)
-    if ref == 'refs/heads/test'
+    if ref == 'refs/heads/master'
       # www-data user is allowed to sudo `/home/git/ruby-commit-hook/bin/update-ruby-commit-hook.sh`.
       execute('/home/git/ruby-commit-hook/bin/update-ruby-commit-hook.sh', user: 'git')
     else
