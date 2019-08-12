@@ -21,20 +21,33 @@ On each commit of Ruby's Git repository, following git hooks are triggered:
 * Mirror cgit to GitHub
 * Notify committer's Slack
 
-## How this repository is deployed to `git.ruby-lang.org`
+## The directory structure of `git.ruby-lang.org`
 
 * `/data/svn/repos/ruby`: SVN repository of Ruby
   * `hooks/post-commit`: Run `/home/git/ruby-commit-hook/hooks/post-commit.sh`
 * `/data/git/ruby.git`: Bare Git repository of ruby
-  * `hooks/post-receive`:
-     * **Update `/home/git/ruby-commit-hook`**
-     * Run `/home/git/ruby-commit-hook/hooks/post-receive.sh`
+  * `hooks/post-receive`: Run `/home/git/ruby-commit-hook/hooks/post-receive.sh`
 * `/home/git/ruby-commit-hook`: Cloned Git repository of ruby-commit-hook
 
 ### Notes
 
 * There's a symlink `/var/git` -> `/data/git`.
 * User `git`'s `$HOME` is NOT `/home/git` but `/var/git`.
+
+## How to deploy ruby-commit-hook
+### bin, cgi-bin, hooks
+* `git push` to ruby-commit-hook's master branch automatically updates them.
+  * ruby-commit-hook push webhook triggers `cgi-bin/webhook.cgi`
+  * It runs `sudo -u git bin/update-ruby-commit-hook.sh`
+
+### sites-available
+Note: `git.ruby-lang.org.conf` is managed in this repository.
+
+To apply apache2 config changes, once the webhook finishes, run:
+
+```
+sudo /etc/init.d/apache2 reload
+```
 
 ## License
 
