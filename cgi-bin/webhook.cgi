@@ -29,10 +29,12 @@ class Webhook
     payload = JSON.parse(@payload)
     repository = payload.fetch('repository').fetch('full_name')
     ref = payload.fetch('ref')
+    pusher = paylaod.fetch('pusher').fetch('name')
 
     PushHook.new(logger: logger).process(
       repository: repository,
       ref: ref,
+      pusher: pusher,
     )
     return true
   rescue => e
@@ -63,12 +65,12 @@ class PushHook
     @logger = logger
   end
 
-  def process(repository:, ref:)
+  def process(repository:, ref:, pusher:)
     case repository
     when 'ruby/ruby-commit-hook'
       on_push_ruby_commit_hook(ref)
     when 'ruby/ruby'
-      on_push_ruby(ref)
+      on_push_ruby(ref, pusher: pusher)
     else
       logger.info("unexpected repository: #{repository}")
     end
@@ -87,12 +89,12 @@ class PushHook
     end
   end
 
-  def on_push_ruby(ref)
-    if ref == 'refs/heads/master'
+  def on_push_ruby(ref, pusher:)
+    if ref == 'refs/heads/master' && pusher != 'matzbot' # matzbot should stop an infinite loop here.
       # www-data user is allowed to sudo `/home/git/ruby-commit-hook/bin/update-ruby-commit-hook.sh`.
       execute('/home/git/ruby-commit-hook/bin/update-ruby.sh', user: 'git')
     else
-      logger.info("skipped ruby ref: #{ref}")
+      logger.info("skipped ruby ref: #{ref} (pusher: #{pusher})")
     end
   end
 
