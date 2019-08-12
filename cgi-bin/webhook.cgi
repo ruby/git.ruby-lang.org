@@ -29,7 +29,7 @@ class Webhook
     payload = JSON.parse(@payload)
     repository = payload.fetch('repository').fetch('full_name')
     ref = payload.fetch('ref')
-    pusher = paylaod.fetch('pusher').fetch('name')
+    pusher = payload.fetch('pusher').fetch('name')
 
     PushHook.new(logger: logger).process(
       repository: repository,
