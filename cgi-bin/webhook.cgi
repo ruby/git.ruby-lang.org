@@ -87,9 +87,13 @@ class PushHook
     end
   end
 
-  def on_push_ruby(_ref)
-    # TODO: sync GitHub to git.ruby-lang.org
-    logger.info('ruby/ruby hook is not implemented yet')
+  def on_push_ruby(ref)
+    if ref == 'refs/heads/master'
+      # www-data user is allowed to sudo `/home/git/ruby-commit-hook/bin/update-ruby-commit-hook.sh`.
+      execute('/home/git/ruby-commit-hook/bin/update-ruby.sh', user: 'git')
+    else
+      logger.info("skipped ruby ref: #{ref}")
+    end
   end
 
   def execute(*cmd, user:)
