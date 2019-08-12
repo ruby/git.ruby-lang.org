@@ -67,8 +67,10 @@ class PushHook
     case repository
     when 'ruby/ruby-commit-hook'
       if ref == 'refs/heads/test'
-        # TODO: git pull origin master, in /home/git/ruby-commit-hook
-        logger.info('to be implemented')
+        # WIP
+        require 'open3'
+        out, err, status = Open3.capture3('/usr/bin/git', '--help')
+        logger.info("to be implemented: #{[out, err, status.success?]}")
       else
         logger.info("skipped ruby-commit-hook ref: #{ref}")
       end
