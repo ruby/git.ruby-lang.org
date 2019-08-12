@@ -68,9 +68,12 @@ class PushHook
     when 'ruby/ruby-commit-hook'
       if ref == 'refs/heads/test'
         # WIP
-        require 'open3'
-        out, err, status = Open3.capture3('/usr/bin/git', '--help')
-        logger.info("to be implemented: #{[out, err, status.success?]}")
+        logger.info('test')
+        pid = fork do
+          logger.info('test1')
+        end
+        logger.info('test2')
+        Process.waitpid2(pid)
       else
         logger.info("skipped ruby-commit-hook ref: #{ref}")
       end
