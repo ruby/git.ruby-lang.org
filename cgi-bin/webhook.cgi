@@ -66,20 +66,9 @@ class PushHook
   def process(repository:, ref:)
     case repository
     when 'ruby/ruby-commit-hook'
-      if ref == 'refs/heads/test'
-        # WIP
-        logger.info('test')
-        pid = fork do
-          logger.info('test1')
-        end
-        logger.info('test2')
-        Process.waitpid2(pid)
-      else
-        logger.info("skipped ruby-commit-hook ref: #{ref}")
-      end
+      on_push_ruby_commit_hook(ref)
     when 'ruby/ruby'
-      # TODO: sync GitHub to git.ruby-lang.org
-      logger.info('ruby/ruby hook is not implemented yet')
+      on_push_ruby(ref)
     else
       logger.info("unexpected repository: #{repository}")
     end
@@ -89,13 +78,27 @@ class PushHook
 
   attr_reader :logger
 
-  # def git(*cmd, chdir:)
-  #   require 'open3'
-  #   stdout, stderr, status = Dir.chdir(chdir) { Open3.capture3('/usr/bin/sudo', '-u', '/usr/bin/git', *cmd) }
-  #   logger.info("+ #{cmd.join(' ')} (success: #{status.success?})")
-  #   logger.info("stdout: #{stdout}")
-  #   logger.info("stderr: #{stderr}")
-  # end
+  def on_push_ruby_commit_hook(ref)
+    if ref == 'refs/heads/test'
+      # www-data user is allowed to sudo `/home/git/ruby-commit-hook/bin/update-ruby-commit-hook.sh`.
+      execute('/home/git/ruby-commit-hook/bin/update-ruby-commit-hook.sh', user: 'git')
+    else
+      logger.info("skipped ruby-commit-hook ref: #{ref}")
+    end
+  end
+
+  def on_push_ruby(_ref)
+    # TODO: sync GitHub to git.ruby-lang.org
+    logger.info('ruby/ruby hook is not implemented yet')
+  end
+
+  def execute(*cmd, user:)
+    require 'open3'
+    stdout, stderr, status = Open3.capture3('/usr/bin/sudo', '-u', user, *cmd)
+    logger.info("+ #{cmd.join(' ')} (success: #{status.success?})")
+    logger.info("stdout: #{stdout}")
+    logger.info("stderr: #{stderr}")
+  end
 end
 
 # The following `Rack::Util.secure_compare` is copied from:
