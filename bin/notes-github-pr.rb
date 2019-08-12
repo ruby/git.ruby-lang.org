@@ -81,6 +81,7 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
       github.pulls(owner: 'ruby', repo: 'ruby', commit_sha: sha).each do |pull|
         number = pull.fetch('number')
         url = pull.fetch('html_url')
+        next unless url.start_with?('https://github.com/ruby/ruby/pull/')
 
         message = Git.commit_message(sha)
         notes = Git.notes_message(sha)
