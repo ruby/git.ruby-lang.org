@@ -5,6 +5,28 @@
 #
 # This supports only updating master branch for now.
 
-# TODO: cancel GIT_DIR here
+# Cancel impact from git hook
+unset GIT_DIR
 
-# TODO: care about SVN_ACCOUNT_NAME on push
+ruby_repo="/var/git/ruby.git"
+ruby_workdir="/home/git/update-ruby"
+log_path="/tmp/update-ruby.log"
+
+function log() {
+  echo -e "[$$: $(date "+%Y-%m-%d %H:%M:%S %Z")] $1" >> "$log_path"
+}
+
+# Initialize working directory only if missing
+if [ ! -d "$ruby_workdir" ]; then
+  git clone "file://${ruby_repo}" "$ruby_workdir"
+  git -C "$ruby_workdir" remote add github https://github.com/ruby/ruby
+fi
+
+log "### start ###"
+
+# Sync: GitHub -> ruby_workdir -> cgit
+# By doing this way, we can make sure all git hooks are performed on sync-ed commits.
+git -C "$ruby_workdir" pull github master >> "$log_path" 2>&1
+SVN_ACCOUNT_NAME=git git -C "$ruby_workdir" push origin master >> "$log_path" 2>&1
+
+log "### end ###\n"
