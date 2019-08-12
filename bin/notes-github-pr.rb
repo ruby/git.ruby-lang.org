@@ -32,11 +32,11 @@ end
 module Git
   class << self
     def abbrev_ref(refname, repo_path:)
-      IO.popen({ 'GIT_DIR' => repo_path }, ['git', 'rev-parse', '--symbolic', '--abbrev-ref', refname], &:read).strip
+      git('rev-parse', '--symbolic', '--abbrev-ref', refname, repo_path: repo_path).strip
     end
 
-    def rev_parse(arg, first_parent: false)
-      git('rev-parse', *[('--first-parent' if first_parent)].compact, arg).lines.map(&:chomp)
+    def rev_list(arg, first_parent: false, repo_path: nil)
+      git('rev-list', *[('--first-parent' if first_parent)].compact, arg, repo_path: repo_path).lines.map(&:chomp)
     end
 
     def commit_message(sha)
@@ -49,8 +49,12 @@ module Git
 
     private
 
-    def git(*cmd)
-      out = IO.popen(['git', *cmd], &:read)
+    def git(*cmd, repo_path: nil)
+      env = {}
+      if repo_path
+        env['GIT_DIR'] = repo_path
+      end
+      out = IO.popen(env, ['git', *cmd], &:read)
       unless $?.success?
         abort "Failed to execute: git #{cmd.join(' ')}\n#{out}"
       end
@@ -67,12 +71,12 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
   next if branch != 'master' # we use pull requests only for master branches
 
   Dir.mktmpdir do |workdir|
-    depth = Git.rev_parse("#{oldrev}..#{newrev}").size + 1
+    depth = Git.rev_list("#{oldrev}..#{newrev}", repo_path: repo_path).size + 1
     system('git', 'clone', "--depth=#{depth}", "--branch=#{branch}", "file:///#{repo_path}", workdir)
     Dir.chdir(workdir)
 
     updated = false
-    Git.rev_parse("#{oldrev}..#{newrev}", first_parent: true).each do |sha|
+    Git.rev_list("#{oldrev}..#{newrev}", first_parent: true).each do |sha|
       github.pulls(owner: 'ruby', repo: 'ruby', commit_sha: sha).each do |pull|
         number = pull.fetch('number')
         url = pull.fetch('url')
