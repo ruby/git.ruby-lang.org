@@ -80,7 +80,7 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
     Git.rev_list("#{oldrev}..#{newrev}", first_parent: true).each do |sha|
       github.pulls(owner: 'ruby', repo: 'ruby', commit_sha: sha).each do |pull|
         number = pull.fetch('number')
-        url = pull.fetch('url')
+        url = pull.fetch('html_url')
 
         message = Git.commit_message(sha)
         notes = Git.notes_message(sha)
