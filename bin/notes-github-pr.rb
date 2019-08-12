@@ -31,8 +31,8 @@ end
 
 module Git
   class << self
-    def abbrev_ref(refname)
-      git('rev-parse', '--symbolic', '--abbrev-ref', refname).strip
+    def abbrev_ref(refname, repo_path:)
+      IO.popen({ 'GIT_DIR' => repo_path }, ['git', 'rev-parse', '--symbolic', '--abbrev-ref', refname], &:read).strip
     end
 
     def rev_parse(arg, first_parent: false)
@@ -63,7 +63,7 @@ github = GitHub.new(File.read(File.expand_path('~git/config/github-access-token'
 
 repo_path, *rest = ARGV
 rest.each_slice(3).map do |oldrev, newrev, refname|
-  branch = Git.abbrev_ref(refname)
+  branch = Git.abbrev_ref(refname, repo_path: repo_path)
   next if branch != 'master' # we use pull requests only for master branches
 
   Dir.mktmpdir do |workdir|
