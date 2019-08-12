@@ -20,7 +20,4 @@ log "==> prohibit merge commits"
 log "==> check email and refname"
 "${ruby_commit_hook}/bin/check-email-and-refname.rb" $* || exit 1
 
-log "==> github sync"
-time "${ruby_commit_hook}/bin/git-push-github.rb" "$ruby_git" $* || exit 1
-
 log "### end ###\n"

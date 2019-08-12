@@ -14,6 +14,9 @@ function log() {
 log "### start ###"
 log "args: $*"
 
+log "==> github sync"
+time "${ruby_commit_hook}/bin/git-push-github.rb" "$ruby_git" $*
+
 log "==> notify slack"
 "${ruby_commit_hook}/bin/notify-slack.rb" $*
 
