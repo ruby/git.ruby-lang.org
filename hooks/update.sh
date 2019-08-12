@@ -14,12 +14,24 @@ function log() {
 log "### start ###"
 log "args: $*"
 
-log "==> git push github"
+# normalize branch for mirroring master <-> trunk
+if [ "$refname" = "refs/heads/trunk" ]; then
+  refname="refs/heads/master"
+fi
+
+log "==> git push github ($newrev:$refname)"
 if ! git push github "$newrev:$refname"; then
   if [ "$refname" = "refs/heads/master" ]; then
     nohup /home/git/ruby-commit-hook/bin/update-ruby.sh > /dev/null 2>&1 &
   fi
   exit 1
+fi
+
+# Mirror master <-> trunk without `push --mirror`, on GitHub side.
+# cgit is always mirroed by symbolic ref. TODO: drop trunk (in 2020)
+if [ "$refname" = "refs/heads/master" ]; then
+  log "==> git push github (mirror: $newrev:refs/heads/trunk)"
+  nohup git push github "$newrev:refs/heads/trunk" > /dev/null 2>&1 &
 fi
 
 log "### end ###\n"
