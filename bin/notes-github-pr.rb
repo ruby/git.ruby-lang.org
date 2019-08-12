@@ -74,6 +74,7 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
     depth = Git.rev_list("#{oldrev}..#{newrev}", repo_path: repo_path).size + 1
     system('git', 'clone', "--depth=#{depth}", "--branch=#{branch}", "file:///#{repo_path}", workdir)
     Dir.chdir(workdir)
+    system('git', 'fetch', 'origin', 'refs/notes/commits:refs/notes/commits')
 
     updated = false
     Git.rev_list("#{oldrev}..#{newrev}", first_parent: true).each do |sha|
