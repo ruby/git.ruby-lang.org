@@ -1,0 +1,10 @@
+[Unit]
+Description=Timer for git-sync-check.service
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=10min
+Unit=git-sync-check.service
+
+[Install]
+WantedBy=timers.target
