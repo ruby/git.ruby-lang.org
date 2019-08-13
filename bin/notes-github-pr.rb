@@ -20,7 +20,7 @@ class GitHub
   end
 
   # https://developer.github.com/v3/pulls/#get-a-single-pull-request
-  def pull_request(owner: repo:, number:)
+  def pull_request(owner:, repo:, number:)
     resp = get("/repos/#{owner}/#{repo}/pulls/#{number}")
     JSON.parse(resp.body)
   end
