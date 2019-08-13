@@ -32,9 +32,16 @@ end
 ls_remote = Git.ls_remote('github')
 show_ref  = Git.show_ref
 
+p ls_remote
+p show_ref
+
 # Start digesting the data after the collection.
 remote_refs = Hash[ls_remote.lines.map { |l| rev, ref = l.chomp.split(/ +/); [ref, rev] }]
 local_refs  = Hash[show_ref.lines.map  { |l| rev, ref = l.chomp.split(/ +/); [ref, rev] }]
+
+require 'pp'
+pp remote_refs
+pp local_refs
 
 # Remove refs which are not to be checked here.
 remote_refs.delete('HEAD') # show-ref does not show it
