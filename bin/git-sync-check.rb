@@ -2,6 +2,7 @@
 # This is executed by `/lib/systemd/system/git-sync-check.service` as User=git
 # which is triggered every 10 minutes by `/lib/systemd/system/git-sync-check.timer`.
 
+require 'json'
 require 'net/http'
 require 'uri'
 
