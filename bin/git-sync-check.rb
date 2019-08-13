@@ -37,13 +37,14 @@ module Slack
   class << self
     def notify(message)
       attachment = {
-        title: 'ruby/ruby-commit-hook - bin/git-sync-check.rb',
+        title: 'bin/git-sync-check.rb',
         title_link: 'https://github.com/ruby/ruby-commit-hook/blob/master/bin/git-sync-check.rb',
         text: message,
-        color: 'danger',
+        #color: 'danger',
+        color: 'good',
       }
 
-      payload = { attachments: [attachment] }
+      payload = { username: 'ruby/ruby-commit-hook', attachments: [attachment] }
       resp = post(WEBHOOK_URL, payload: payload)
       puts "#{resp.code} (#{resp.body}) -- #{payload.to_json}"
     end
@@ -89,6 +90,7 @@ end
 
 if errors.empty?
   puts 'SUCCUESS: Everything is consistent.'
+  Slack.notify('Hi')
 else
   puts 'FAILURE: Following inconsistencies are found.'
   errors.each do |remote_rev, local_rev|
