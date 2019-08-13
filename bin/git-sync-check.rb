@@ -31,7 +31,7 @@ module Git
 end
 
 module Slack
-  WEBHOOK_URL = File.read(File.expand_path('~git/config/slack-webhook-alerts'))
+  WEBHOOK_URL = File.read(File.expand_path('~git/config/slack-webhook-alerts')).chomp
 
   class << self
     def notify(message)
