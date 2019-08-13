@@ -89,7 +89,6 @@ end
 
 if errors.empty?
   puts 'SUCCUESS: Everything is consistent.'
-  Slack.notify('test')
 else
   puts 'FAILURE: Following inconsistencies are found.'
   errors.each do |remote_rev, local_rev|
