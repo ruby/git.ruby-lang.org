@@ -2,6 +2,9 @@
 # This is executed by `/lib/systemd/system/git-sync-check.service` as User=git
 # which is triggered every 10 minutes by `/lib/systemd/system/git-sync-check.timer`.
 
+require 'net/http'
+require 'uri'
+
 module Git
   # cgit bare repository
   GIT_DIR = '/var/git/ruby.git'
@@ -23,6 +26,38 @@ module Git
         raise "Failed to execute: git #{cmd.join(' ')}"
       end
       out
+    end
+  end
+end
+
+module Slack
+  WEBHOOK_URL = File.read(File.expand_path('~git/config/slack-webhook-alerts'))
+
+  class << self
+    def notify(message)
+      attachment = {
+        title: 'ruby/ruby-commit-hook - bin/git-sync-check.rb',
+        title_link: 'https://github.com/ruby/ruby-commit-hook/blob/master/bin/git-sync-check.rb',
+        text: message,
+        color: 'danger',
+      }
+
+      payload = { attachments: [attachment] }
+      resp = post(WEBHOOK_URL, payload: payload)
+      puts "#{resp.code} (#{resp.body}) -- #{payload.to_json}"
+    end
+
+    private
+
+    def post(url, payload:)
+      uri = URI.parse(url)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = (uri.scheme == 'https')
+      http.start do
+        req = Net::HTTP::Post.new(uri.path)
+        req.set_form_data(payload: payload.to_json)
+        http.request(req)
+      end
     end
   end
 end
@@ -53,6 +88,7 @@ end
 
 if errors.empty?
   puts 'SUCCUESS: Everything is consistent.'
+  Slack.notify('test')
 else
   puts 'FAILURE: Following inconsistencies are found.'
   errors.each do |remote_rev, local_rev|
