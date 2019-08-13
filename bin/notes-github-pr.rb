@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# Add GitHub pull request reference to git notes.
+# Add GitHub pull request reference / author info to git notes.
 
 require 'net/http'
 require 'uri'
@@ -16,6 +16,18 @@ class GitHub
   # https://developer.github.com/changes/2019-04-11-pulls-branches-for-commit/
   def pulls(owner:, repo:, commit_sha:)
     resp = get("/repos/#{owner}/#{repo}/commits/#{commit_sha}/pulls", accept: 'application/vnd.github.groot-preview+json')
+    JSON.parse(resp.body)
+  end
+
+  # https://developer.github.com/v3/pulls/#get-a-single-pull-request
+  def pull_request(owner: repo:, number:)
+    resp = get("/repos/#{owner}/#{repo}/pulls/#{number}")
+    JSON.parse(resp.body)
+  end
+
+  # https://developer.github.com/v3/users/#get-a-single-user
+  def user(username:)
+    resp = get("/users/#{username}")
     JSON.parse(resp.body)
   end
 
@@ -45,6 +57,14 @@ module Git
 
     def notes_message(sha)
       git('log', '-1', '--pretty=format:%N', sha)
+    end
+
+    def committer_name(sha)
+      git('log', '-1', '--pretty=format:%cn', sha)
+    end
+
+    def committer_email(sha)
+      git('log', '-1', '--pretty=format:%cE', sha)
     end
 
     private
@@ -87,6 +107,13 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
         notes = Git.notes_message(sha)
         if !message.include?(url) && !message.include?("(##{number})") && !notes.include?(url)
           system('git', 'notes', 'append', '-m', "Merged: #{url}", sha)
+          updated = true
+        end
+
+        if Git.committer_name(sha) == 'GitHub' && Git.committer_email(sha) == 'noreply@github.com'
+          username = github.pull_request(owner: 'ruby', repo: 'ruby', number: number).fetch('merged_by').fetch('login')
+          email = github.user(username: username).fetch('email')
+          system('git', 'notes', 'append', '-m', "Merged-By: #{username}#{(" <#{email}>" if email)}", sha)
           updated = true
         end
       end
