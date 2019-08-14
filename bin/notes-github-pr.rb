@@ -67,11 +67,6 @@ module Git
       git('log', '-1', '--pretty=format:%cE', sha)
     end
 
-    def add_note(message, sha:)
-      system('git', 'notes', 'append', '-m', message, sha)
-      system('git', 'commit', '--amend', '-m', message)
-    end
-
     private
 
     def git(*cmd, repo_path: nil)
@@ -100,7 +95,6 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
     system('git', 'clone', "--depth=#{depth}", "--branch=#{branch}", "file:///#{repo_path}", workdir)
     Dir.chdir(workdir)
     system('git', 'fetch', 'origin', 'refs/notes/commits:refs/notes/commits')
-    system('git', 'checkout', 'refs/notes/commits')
 
     updated = false
     Git.rev_list("#{oldrev}..#{newrev}", first_parent: true).each do |sha|
@@ -112,14 +106,14 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
         message = Git.commit_message(sha)
         notes = Git.notes_message(sha)
         if !message.include?(url) && !message.include?("(##{number})") && !notes.include?(url)
-          Git.add_note("Merged: #{url}", sha: sha)
+          system('git', 'notes', 'append', '-m', "Merged: #{url}", sha)
           updated = true
         end
 
         if Git.committer_name(sha) == 'GitHub' && Git.committer_email(sha) == 'noreply@github.com'
           username = github.pull_request(owner: 'ruby', repo: 'ruby', number: number).fetch('merged_by').fetch('login')
           email = github.user(username: username).fetch('email')
-          Git.add_note("Merged-By: #{username}#{(" <#{email}>" if email)}", sha: sha)
+          system('git', 'notes', 'append', '-m', "Merged-By: #{username}#{(" <#{email}>" if email)}", sha)
           updated = true
         end
       end
