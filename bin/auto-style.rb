@@ -41,13 +41,6 @@ class Git
     git('push', 'origin', @branch)
   end
 
-  def ci_skip?
-    unless defined?(@ci_skip)
-      @ci_skip = (true if /\[ci skip\]/i =~ with_clean_env {IO.popen(['git', 'log', '-n1', @newrev]) {|f| f.gets(''); f.gets}})
-    end
-    @ci_skip
-  end
-
   private
 
   def git(*args)
@@ -192,7 +185,7 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
              ('append newline at EOF' if eofnewline),
              ('expand tabs' if expandtab),
             ].compact
-      vcs.commit("* #{msg.join(', ')}.#{' [ci skip]' if vcs.ci_skip?}", *edited_files)
+      vcs.commit("* #{msg.join(', ')}. [ci skip]", *edited_files)
     end
   end
 end

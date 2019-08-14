@@ -109,7 +109,7 @@ branches.each do |branch|
     else
       Dir.chdir(v) do
         unless system("git diff --quiet --exit-code #{version_h}")
-          system "git add #{version_h} && git commit -m '#{now.strftime %(* %Y-%m-%d)}' && git push origin #{branch}"
+          system "git add #{version_h} && git commit -m '#{now.strftime %(* %Y-%m-%d)} [ci skip]' && git push origin #{branch}"
         end
       end
     end
