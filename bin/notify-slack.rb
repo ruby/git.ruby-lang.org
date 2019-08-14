@@ -33,6 +33,14 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
     hash, abbr_hash, _author, _authortime, committer, committeremail, committertime, body = s.split("\n", 8)
     subject, body = body.split("\n", 2)
 
+    # Append notes content to `body` if it's notes
+    if refname.match(%r[\Arefs/notes/\w+\z])
+      object = IO.popen(["git", "diff", "--name-only", "#{newrev}^..#{newrev}"], &:read).chomp
+      if object.match(/\A\h{40}\z/)
+        body = [body, IO.popen(["git", "notes", "show", object], &:read)].compact.join("\n---\n")
+      end
+    end
+
     gravatar = GRAVATAR_OVERRIDES.fetch(committeremail) do
       "https://www.gravatar.com/avatar/#{ Digest::MD5.hexdigest(committeremail.downcase) }"
     end
