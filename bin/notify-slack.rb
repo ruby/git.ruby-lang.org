@@ -37,7 +37,7 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
     if refname.match(%r[\Arefs/notes/\w+\z])
       object = IO.popen(["git", "diff", "--name-only", "#{newrev}^..#{newrev}"], &:read).chomp
       if object.match(/\A\h{40}\z/)
-        body = [body, IO.popen(["git", "notes", "show", object], &:read)].compact.join("\n---\n")
+        body = [body, IO.popen(["git", "notes", "show", object], &:read)].join
       end
     end
 
