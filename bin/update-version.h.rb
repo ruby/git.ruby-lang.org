@@ -85,6 +85,11 @@ branches.each do |branch|
 
     now = Time.now
 
+    unless File.exist?(version_h) # refs/notes/commits does not have version.h
+      puts "skipped '#{branch}' because '#{version_h}' is missing."
+      next
+    end
+
     File.rename version_h, version_h_orig
     open(version_h_orig) do |fold|
       open(version_h, "w") do |fnew|
