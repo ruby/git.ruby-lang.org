@@ -91,7 +91,7 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
   next if branch != 'master' # we use pull requests only for master branches
 
   Dir.mktmpdir do |workdir|
-    depth = Git.rev_list("#{oldrev}..#{newrev}", repo_path: repo_path).size + 1
+    depth = Git.rev_list("#{oldrev}..#{newrev}", repo_path: repo_path).size + 50
     system('git', 'clone', "--depth=#{depth}", "--branch=#{branch}", "file://#{repo_path}", workdir)
     Dir.chdir(workdir)
     system('git', 'fetch', 'origin', 'refs/notes/commits:refs/notes/commits')
