@@ -63,41 +63,64 @@ module Slack
   end
 end
 
+module GitSyncCheck
+  class Errors < StandardError
+    attr_reader :errors
+
+    def initialize(errors)
+      @errors = errors
+      super('git-sync-check failed')
+    end
+  end
+
+  def self.check_consistency
+    # Quickly finish collecting facts to avoid a race condition as much as possible.
+    # TODO: Retry this operation several times if the race happens often.
+    ls_remote = Git.ls_remote('github')
+    show_ref  = Git.show_ref
+
+    # Start digesting the data after the collection.
+    remote_refs = Hash[ls_remote.lines.map { |l| rev, ref = l.chomp.split("\t"); [ref, rev] }]
+    local_refs  = Hash[show_ref.lines.map  { |l| rev, ref = l.chomp.split(' ');  [ref, rev] }]
+
+    # Remove refs which are not to be checked here.
+    remote_refs.delete('HEAD') # show-ref does not show it
+    remote_refs.keys.each { |ref| remote_refs.delete(ref) if ref.match(%r[\Arefs/pull/\d+/\w+\z]) } # pull requests
+
+    # Check consistency
+    errors = {}
+    (remote_refs.keys | local_refs.keys).each do |ref|
+      remote_rev = remote_refs[ref]
+      local_rev  = local_refs[ref]
+
+      if remote_rev != local_rev
+        errors[ref] = [remote_rev, local_rev]
+      end
+    end
+
+    unless errors.empty?
+      raise Errors.new(errors)
+    end
+  end
+end
+
+attempts = 3
 begin
-  # Quickly finish collecting facts to avoid a race condition as much as possible.
-  # TODO: Retry this operation several times if the race happens often.
-  ls_remote = Git.ls_remote('github')
-  show_ref  = Git.show_ref
-
-  # Start digesting the data after the collection.
-  remote_refs = Hash[ls_remote.lines.map { |l| rev, ref = l.chomp.split("\t"); [ref, rev] }]
-  local_refs  = Hash[show_ref.lines.map  { |l| rev, ref = l.chomp.split(' ');  [ref, rev] }]
-
-  # Remove refs which are not to be checked here.
-  remote_refs.delete('HEAD') # show-ref does not show it
-  remote_refs.keys.each { |ref| remote_refs.delete(ref) if ref.match(%r[\Arefs/pull/\d+/\w+\z]) } # pull requests
-
-  # Check consistency
-  errors = []
-  (remote_refs.keys | local_refs.keys).each do |ref|
-    remote_rev = remote_refs[ref]
-    local_rev  = local_refs[ref]
-
-    if remote_rev != local_rev
-      errors << [remote_rev, local_rev]
-    end
+  GitSyncCheck.check_consistency
+  puts 'SUCCUESS: Everything is consistent.'
+rescue GitSyncCheck::Errors => e
+  attempts -= 1
+  if attempts > 0
+    sleep 5
+    retry
   end
 
-  if errors.empty?
-    puts 'SUCCUESS: Everything is consistent.'
-  else
-    message = "FAILURE: Following inconsistencies are found.\n"
-    errors.each do |remote_rev, local_rev|
-      message << "remote:#{remote_rev.inspect} local:#{local_rev.inspect}\n"
-    end
-    Slack.notify(message)
-    puts message
+  message = "FAILURE: Following inconsistencies are found.\n"
+  e.errors.each do |ref, (remote_rev, local_rev)|
+    message << "ref:#{ref.inspect} remote:#{remote_rev.inspect} local:#{local_rev.inspect}\n"
   end
+  Slack.notify(message)
+  puts message
 rescue => e
   Slack.notify("#{e.class}: #{e.message}\n#{e.backtrace.join("\n")}")
 end
