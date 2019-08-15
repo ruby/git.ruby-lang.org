@@ -75,7 +75,6 @@ module GitSyncCheck
 
   def self.check_consistency
     # Quickly finish collecting facts to avoid a race condition as much as possible.
-    # TODO: Retry this operation several times if the race happens often.
     ls_remote = Git.ls_remote('github')
     show_ref  = Git.show_ref
 
