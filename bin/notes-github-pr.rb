@@ -83,7 +83,8 @@ module Git
   end
 end
 
-github = GitHub.new(File.read(File.expand_path('~git/config/github-access-token')).chomp)
+# github-access-token-repo-status: only `repo.repo:status`
+github = GitHub.new(File.read(File.expand_path('~git/config/github-access-token-repo-status')).chomp)
 
 repo_path, *rest = ARGV
 rest.each_slice(3).map do |oldrev, newrev, refname|
