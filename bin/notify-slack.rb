@@ -13,6 +13,7 @@ SLACK_WEBHOOK_URLS = [
 GRAVATAR_OVERRIDES = {
   "nagachika@b2dd03c8-39d4-4d8f-98ff-823fe69b080e" => "https://avatars0.githubusercontent.com/u/21976",
   "noreply@github.com" => "https://avatars1.githubusercontent.com/u/9919",
+  "svn-admin@ruby-lang.org" => "https://avatars1.githubusercontent.com/u/29403229",
   "svn@b2dd03c8-39d4-4d8f-98ff-823fe69b080e" => "https://avatars1.githubusercontent.com/u/29403229",
   "usa@b2dd03c8-39d4-4d8f-98ff-823fe69b080e" => "https://avatars2.githubusercontent.com/u/17790",
   "usa@ruby-lang.org" => "https://avatars2.githubusercontent.com/u/17790",
