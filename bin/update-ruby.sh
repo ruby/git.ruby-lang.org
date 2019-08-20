@@ -8,6 +8,9 @@
 # Cancel impact from git hook
 unset GIT_DIR
 
+# Cancel impact from LANG=C set by apache2
+export LANG=en_US.UTF-8
+
 ruby_repo="/var/git/ruby.git"
 ruby_workdir="/home/git/update-ruby"
 log_path="/tmp/update-ruby.log"
