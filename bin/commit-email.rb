@@ -199,6 +199,9 @@ class << CommitEmail
     IO.popen([SENDMAIL, to], 'w') do |f|
       f.print(mail)
     end
+    unless $?.success?
+      raise "Failed to run `#{SENDMAIL} #{to}` with: '#{mail}'"
+    end
   end
 
   private

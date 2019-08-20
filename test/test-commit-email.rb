@@ -13,7 +13,7 @@ class TestCommitEmail < Test::Unit::TestCase
     File.write(@sendmail, <<~SENDMAIL)
       #!/usr/bin/env ruby
       p ARGV
-      puts STDIN.read"
+      puts STDIN.read
     SENDMAIL
     FileUtils.chmod(0755, @sendmail)
 
