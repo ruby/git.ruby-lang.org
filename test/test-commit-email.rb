@@ -7,7 +7,14 @@ require 'open3'
 class TestCommitEmail < Test::Unit::TestCase
   def setup
     @ruby = Dir.mktmpdir
-    git('clone', '--depth=3', 'https://github.com/ruby/ruby', @ruby)
+    Dir.chdir(@ruby) do
+      git('init')
+      git('config', 'user.name', 'David Rodríguez')
+      git('config', 'user.email', 'deivid@rodrigu.ez')
+      git('commit', '--allow-empty', '-m', 'New repository initialized by cvs2svn.')
+      git('commit', '--allow-empty', '-m', 'Initial revision')
+      git('commit', '--allow-empty', '-m', 'version 1.0.0')
+    end
 
     @sendmail = File.join(Dir.mktmpdir, 'sendmail')
     File.write(@sendmail, <<~SENDMAIL)
