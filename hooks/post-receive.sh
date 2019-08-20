@@ -13,6 +13,7 @@ function log() {
 
 log "### start ###"
 log "args: $*"
+env
 
 log "==> notify slack"
 "${ruby_commit_hook}/bin/notify-slack.rb" $*
