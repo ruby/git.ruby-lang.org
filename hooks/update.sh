@@ -22,8 +22,8 @@ fi
 
 log "==> git push github ($newrev:$refname)"
 if [ "${SVN_ACCOUNT_NAME:-}" = "ko1" -o "${SVN_ACCOUNT_NAME:-}" = "k0kubun" ]; then
-  ssh -T git@github.com
   env
+  ssh -T git@github.com
 fi
 if ! git push github "$newrev:$refname"; then
   if [ "$refname" = "refs/heads/master" ]; then
