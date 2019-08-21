@@ -24,10 +24,6 @@ if [ "$refname" = "refs/heads/trunk" ]; then
 fi
 
 log "==> git push github ($newrev:$refname)"
-if [ "${SVN_ACCOUNT_NAME:-}" = "ko1" -o "${SVN_ACCOUNT_NAME:-}" = "k0kubun" ]; then
-  env
-  ssh -T git@github.com
-fi
 if ! git push github "$newrev:$refname"; then
   if [ "$refname" = "refs/heads/master" ]; then
     nohup /home/git/ruby-commit-hook/bin/update-ruby.sh > /dev/null 2>&1 &
