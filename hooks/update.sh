@@ -7,6 +7,9 @@ refname="$1"
 oldrev="$2"
 newrev="$3"
 
+# Cancel impact of SSH Agent Forwarding to git push by matzbot
+unset SSH_AUTH_SOCK
+
 function log() {
   echo -e "[$$: $(date "+%Y-%m-%d %H:%M:%S %Z")] $1"
 }

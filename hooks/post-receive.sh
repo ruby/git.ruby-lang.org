@@ -7,6 +7,9 @@ set -o pipefail
 ruby_git="/var/git/ruby.git"
 ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 
+# Cancel impact of SSH Agent Forwarding to git push by matzbot
+unset SSH_AUTH_SOCK
+
 function log() {
   echo -e "[$$: $(date "+%Y-%m-%d %H:%M:%S %Z")] $1"
 }
