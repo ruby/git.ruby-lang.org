@@ -12,6 +12,7 @@ function log() {
 }
 
 log "### start ###"
+log "SVN_ACCOUNT_NAME: ${SVN_ACCOUNT_NAME:-}"
 log "args: $*"
 env
 

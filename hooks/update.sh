@@ -12,6 +12,7 @@ function log() {
 }
 
 log "### start ###"
+log "SVN_ACCOUNT_NAME: ${SVN_ACCOUNT_NAME:-}"
 log "args: $*"
 
 # normalize branch for mirroring master <-> trunk
@@ -20,6 +21,9 @@ if [ "$refname" = "refs/heads/trunk" ]; then
 fi
 
 log "==> git push github ($newrev:$refname)"
+if [ "${SVN_ACCOUNT_NAME:-}" = "ko1" ]; then
+  ssh -T git@github.com
+fi
 if ! git push github "$newrev:$refname"; then
   if [ "$refname" = "refs/heads/master" ]; then
     nohup /home/git/ruby-commit-hook/bin/update-ruby.sh > /dev/null 2>&1 &
