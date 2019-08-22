@@ -17,7 +17,6 @@ function log() {
 log "### start ###"
 log "SVN_ACCOUNT_NAME: ${SVN_ACCOUNT_NAME:-}"
 log "args: $*"
-env
 
 log "==> notify slack"
 "${ruby_commit_hook}/bin/notify-slack.rb" $*
