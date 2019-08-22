@@ -192,7 +192,12 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
              ('append newline at EOF' if eofnewline),
              ('expand tabs' if expandtab),
             ].compact
-      vcs.commit("* #{msg.join(', ')}. [ci skip]", *edited_files)
+      message = "* #{msg.join(', ')}. [ci skip]"
+      if expandtab
+        message += "\n\nTabs are expanded because previously the file did not have any tab indentation."
+        message += "\nPlease update your editor config, and use misc/expand_tabs.rb in the pre-commit hook."
+      end
+      vcs.commit(, *edited_files)
     end
   end
 end
