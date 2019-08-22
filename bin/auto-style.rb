@@ -197,7 +197,7 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
         message += "\n\nTabs are expanded because previously the file did not have any tab indentation."
         message += "\nPlease update your editor config, and use misc/expand_tabs.rb in the pre-commit hook."
       end
-      vcs.commit(, *edited_files)
+      vcs.commit(message, *edited_files)
     end
   end
 end
