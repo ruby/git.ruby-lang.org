@@ -165,12 +165,19 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
       expandtab0 = false
       updated_lines = vcs.updated_lines(f)
       if !updated_lines.empty? && (f.end_with?('.c') || f.end_with?('.h') || f == 'insns.def') && EXPANDTAB_IGNORED_FILES.all? { |re| !f.match(re) }
-        src.gsub!(/^.*$/).with_index do |line, lineno|
-          if updated_lines.include?(lineno) && line.start_with?("\t") # last-committed line with hard tabs
-            expandtab = expandtab0 = true
-            line.sub(/\A\t+/) { |tabs| ' ' * (8 * tabs.length) }
-          else
-            line
+        # If and only if unedited lines did not have tab indentation, prevent introducing tab indentation to the file.
+        expandtab_allowed = src.each_line.with_index.all? do |line, lineno|
+          updated_lines.include?(lineno) || !line.start_with?("\t")
+        end
+
+        if expandtab_allowed
+          src.gsub!(/^.*$/).with_index do |line, lineno|
+            if updated_lines.include?(lineno) && line.start_with?("\t") # last-committed line with hard tabs
+              expandtab = expandtab0 = true
+              line.sub(/\A\t+/) { |tabs| ' ' * (8 * tabs.length) }
+            else
+              line
+            end
           end
         end
       end
