@@ -38,12 +38,8 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
     if refname.match(%r[\Arefs/notes/\w+\z])
       # `--diff-filter=AM -M` to exclude rename by git's directory optimization
       object = IO.popen(["git", "diff", "--diff-filter=AM", "-M" "--name-only", "#{oldrev}..#{newrev}"], &:read).chomp
-      puts "object: #{object.inspect}"
       if md = object.match(/\A(?<prefix>\h{2})\/?(?<rest>\h{38})\z/)
-        puts "md: #{md.inspect}"
-        body_rest = IO.popen(["git", "notes", "show", md[:prefix] + md[:rest]], &:read)
-        puts "body_rest: #{body_rest.inspect}"
-        body = [body, body_rest].join
+        body = [body, IO.popen(["git", "notes", "show", md[:prefix] + md[:rest]], &:read)].join
       end
     end
 
