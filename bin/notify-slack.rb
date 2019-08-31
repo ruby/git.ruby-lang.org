@@ -36,7 +36,8 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
 
     # Append notes content to `body` if it's notes
     if refname.match(%r[\Arefs/notes/\w+\z])
-      object = IO.popen(["git", "diff", "--diff-filter=A", "-M" "--name-only", "#{oldrev}..#{newrev}"], &:read).chomp
+      # `--diff-filter=AM -M` to exclude rename by git's directory optimization
+      object = IO.popen(["git", "diff", "--diff-filter=AM", "-M" "--name-only", "#{oldrev}..#{newrev}"], &:read).chomp
       if md = object.match(/\A(?<prefix>\h{2})\/?(?<rest>\h{38})\z/)
         body = [body, IO.popen(["git", "notes", "show", md[:prefix] + md[:rest]], &:read)].join
       end
