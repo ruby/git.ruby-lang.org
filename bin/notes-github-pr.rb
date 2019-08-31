@@ -92,6 +92,7 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
   next if branch != 'master' # we use pull requests only for master branches
 
   Dir.mktmpdir do |workdir|
+    # Clone a branch and fetch notes
     depth = Git.rev_list("#{oldrev}..#{newrev}", repo_path: repo_path).size + 50
     system('git', 'clone', "--depth=#{depth}", "--branch=#{branch}", "file://#{repo_path}", workdir)
     Dir.chdir(workdir)
@@ -104,6 +105,7 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
         url = pull.fetch('html_url')
         next unless url.start_with?('https://github.com/ruby/ruby/pull/')
 
+        # "Merged" notes for "Squash and merge"
         message = Git.commit_message(sha)
         notes = Git.notes_message(sha)
         if !message.include?(url) && !message.include?("(##{number})") && !notes.include?(url)
@@ -111,6 +113,7 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
           updated = true
         end
 
+        # "Merged-By" notes for "Rebase and merge"
         if Git.committer_name(sha) == 'GitHub' && Git.committer_email(sha) == 'noreply@github.com'
           username = github.pull_request(owner: 'ruby', repo: 'ruby', number: number).fetch('merged_by').fetch('login')
           email = github.user(username: username).fetch('email')
