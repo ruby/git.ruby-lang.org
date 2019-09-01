@@ -11,7 +11,7 @@ CommitEmailInfo = Struct.new(
   :entire_sha256,
   :date,
   :log,
-  :branches,
+  :branch,
   :diffs,
   :added_files, :deleted_files, :updated_files,
   :added_dirs, :deleted_dirs, :updated_dirs,
@@ -34,7 +34,7 @@ class GitInfoBuilder
     info.entire_sha256 = newrev
     info.date = Time.at(Integer(git_show(newrev, format: '%at')))
     info.log = git_show(newrev, format: '%B')
-    info.branches = [git('rev-parse', '--symbolic', '--abbrev-ref', refname).strip]
+    info.branch = git('rev-parse', '--symbolic', '--abbrev-ref', refname).strip
     info.diffs = diffs
     info.added_files = find_files(diffs, status: :added)
     info.deleted_files = find_files(diffs, status: :deleted)
@@ -188,7 +188,7 @@ class << CommitEmail
     end
 
     infos.each do |info|
-      puts "#{info.branches.join(', ')}: #{info.revision} (#{info.author})"
+      puts "#{info.branch}: #{info.revision} (#{info.author})"
 
       from = info.author_email
       sendmail(to, from, make_mail(to, from, info, viewer_uri: options.viewer_uri))
@@ -329,11 +329,10 @@ class << CommitEmail
   end
 
   def make_subject(info)
-    branches = info.branches
     subject = ''
     subject << "#{info.author}:"
     subject << " #{info.revision}"
-    subject << " (#{branches.join(', ')})" unless branches.empty?
+    subject << " (#{info.branch})"
     subject << ': '
     subject << info.log.lstrip.lines.first.to_s.strip
     NKF.nkf('-WwMq', subject)
