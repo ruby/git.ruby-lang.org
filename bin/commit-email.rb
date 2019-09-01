@@ -188,6 +188,7 @@ class << CommitEmail
     end
 
     infos.each do |info|
+      next if info.branch.start_with?('notes/')
       puts "#{info.branch}: #{info.revision} (#{info.author})"
 
       from = info.author_email
