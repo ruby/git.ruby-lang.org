@@ -331,8 +331,7 @@ class << CommitEmail
 
   def make_subject(info)
     subject = ''
-    subject << "#{info.author}:"
-    subject << " #{info.revision}"
+    subject << "#{info.revision}"
     subject << " (#{info.branch})"
     subject << ': '
     subject << info.log.lstrip.lines.first.to_s.strip
