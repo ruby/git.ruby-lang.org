@@ -5,50 +5,105 @@
 # You can add a new email address but DO NOT DELETE already-registered email address.
 # This association will be used for committer identification of the ruby repository.
 #
+# a_matsuda
+# aamine
+# akira
+# akiyoshi
+# akr
+# arton
 aycabta:
   - aycabta@gmail.com
+# ayumin
+# azav
+# chad
+# charliesome
+# dave
+# davidflanagan
+# dblack
+# dblack
+# drbrain
 duerst:
   - duerst@it.aoyama.ac.jp
+# eban
+# emboss
 eregon:
   - eregontp@gmail.com
   - eregon@ruby-lang.org
+# evan
+# funny_falcon
 git:
   - svn-admin@ruby-lang.org
+# glass
+# gogotanaka
+# gotoken
+# gotoyuzo
+# headius
+# hone
 hsbt:
   - hsbt@ruby-lang.org
+# iwamatsu
+# jeg2
 jeremy:
   - code@jeremyevans.net
 k0kubun:
   - takashikkbn@gmail.com
+# kanemoto
+# katsu
 kazu:
   - zn@mbf.nifty.com
+# keiju
+# knu
 ko1:
   - ko1@atdot.net
+# kosaki
+# kosako
 kou:
   - kou@cozmixng.org
   - kou@clear-code.com
+# kouji
 ktsj:
   - kazuki@callcc.net
+# luislavena
 mame:
   - mame@ruby-lang.org
+# marcandre
+# matz
+# michal
+# mneumann
+# moonwolf
 mrkn:
   - mrkn@ruby-lang.org
   - mrkn@mrkn.jp
   - muraken@gmail.com
 nagachika:
   - nagachika@ruby-lang.org
+# nagai
+# nahi
+# nari
 naruse:
   - naruse@airemix.jp
+# ngoto
 nobu:
   - nobu@ruby-lang.org
+# normal
+# ntalbott
+# ocean
+# odaira
+# okkez
+# rhe
+# ryan
 samuel:
   - samuel.williams@oriontransfer.co.nz
 seki:
   - m_seki@mva.biglobe.ne.jp
+# ser
+# shigek
+# shirosaki
 shugo:
   - shugo@ruby-lang.org
 shyouhei:
   - shyouhei@ruby-lang.org
+# sonots
 sorah:
   - her@sorah.jp
   - sorah@cookpad.com
@@ -59,10 +114,26 @@ suke:
 tadd:
   - tad.a.digger@gmail.com
   - tadd@ruby-lang.org
+# tadf
+# takano32
+# tarui
+# technorama
 tenderlove:
   - aaron.patterson@gmail.com
   - tenderlove@ruby-lang.org
+# tmm1
+# toyoshim
+# ttate
 usa:
   - usa@ruby-lang.org
+# wanabe
+# watson1978
+# why
+# wyhaines
+# xibbar
 yugui:
   - yugui@yugui.jp
+# yui-knk
+# yuki
+# zsombor
+# zzak
