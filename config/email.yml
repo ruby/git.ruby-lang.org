@@ -1,10 +1,10 @@
 # This is the correspondence table between "committer email" of Git commits and
 # SVN_ACCOUNT_NAME (set in ~git/.ssh/authorized_keys for each SSH key).
+# See `bin/check-email-and-refname.rb` for details.
 #
 # You can add a new email address but DO NOT DELETE already-registered email address.
 # This association will be used for committer identification of the ruby repository.
 #
-# See `bin/check-email-and-refname.rb` for details.
 aycabta:
   - aycabta@gmail.com
 duerst:
@@ -45,13 +45,13 @@ samuel:
   - samuel.williams@oriontransfer.co.nz
 seki:
   - m_seki@mva.biglobe.ne.jp
-sorah:
-  - her@sorah.jp
-  - sorah@cookpad.com
 shugo:
   - shugo@ruby-lang.org
 shyouhei:
   - shyouhei@ruby-lang.org
+sorah:
+  - her@sorah.jp
+  - sorah@cookpad.com
 stomar:
   - sto.mar@web.de
 suke:
