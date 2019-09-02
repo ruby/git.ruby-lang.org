@@ -41,7 +41,8 @@ On each commit of Ruby's Git repository, following git hooks are triggered:
   * It runs `sudo -u git bin/update-ruby-commit-hook.sh`
 
 ### sites-available
-Note: `git.ruby-lang.org.conf` is managed in this repository.
+Note: `git.ruby-lang.org.conf` (in `/etc/apache2/sites-available`) is managed
+in this repository.
 
 To apply apache2 config changes, once the webhook finishes, run:
 
