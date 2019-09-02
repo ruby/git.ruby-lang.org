@@ -5,6 +5,22 @@ require 'net/http'
 require 'uri'
 require 'tmpdir'
 require 'json'
+require 'yaml'
+
+# Conversion for people whose GitHub account name and SVN_ACCOUNT_NAME are different.
+GITHUB_TO_SVN = {
+  'amatsuda'    => 'a_matsuda',
+  'matzbot'     => 'git',
+  'jeremyevans' => 'jeremy',
+  'znz'         => 'kazu',
+  'k-tsj'       => 'ktsj',
+  'nurse'       => 'naruse',
+  'ioquatix'    => 'samuel',
+  'suketa'      => 'suke',
+  'unak'        => 'usa',
+}
+
+SVN_TO_EMAILS = YAML.safe_load(File.read(File.expand_path('../config/email.yml', __dir__)))
 
 class GitHub
   ENDPOINT = URI.parse('https://api.github.com')
@@ -117,6 +133,7 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
         if Git.committer_name(sha) == 'GitHub' && Git.committer_email(sha) == 'noreply@github.com'
           username = github.pull_request(owner: 'ruby', repo: 'ruby', number: number).fetch('merged_by').fetch('login')
           email = github.user(username: username).fetch('email')
+          email ||= SVN_TO_EMAILS[GITHUB_TO_SVN.fetch(username, username)]&.first
           system('git', 'notes', 'append', '-m', "Merged-By: #{username}#{(" <#{email}>" if email)}", sha)
           updated = true
         end
