@@ -5,7 +5,8 @@
 # You can add a new email address but DO NOT DELETE already-registered email address.
 # This association will be used for committer identification of the ruby repository.
 #
-# a_matsuda
+a_matsuda:
+  - ronnie@dio.jp
 # aamine
 # akira
 # akiyoshi
