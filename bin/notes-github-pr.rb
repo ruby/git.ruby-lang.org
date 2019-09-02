@@ -124,7 +124,7 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
         # "Merged" notes for "Squash and merge"
         message = Git.commit_message(sha)
         notes = Git.notes_message(sha)
-        if !message.include?(url) && !message.include?("(##{number})") && !notes.include?(url)
+        if !message.include?(url) && !message.match(/[ (]##{number}[) ]/) && !notes.include?(url)
           system('git', 'notes', 'append', '-m', "Merged: #{url}", sha)
           updated = true
         end
