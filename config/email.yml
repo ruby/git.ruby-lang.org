@@ -1,0 +1,62 @@
+# This is the correspondence table between "committer email" of Git commits and
+# SVN_ACCOUNT_NAME (set in ~git/.ssh/authorized_keys for each SSH key).
+#
+# You can add a new email address but DO NOT DELETE already-registered email address.
+# This association will be used for committer identification of the ruby repository.
+aycabta:
+  - aycabta@gmail.com
+duerst:
+  - duerst@it.aoyama.ac.jp
+eregon:
+  - eregontp@gmail.com
+  - eregon@ruby-lang.org
+git:
+  - svn-admin@ruby-lang.org
+hsbt:
+  - hsbt@ruby-lang.org
+jeremy:
+  - code@jeremyevans.net
+k0kubun:
+  - takashikkbn@gmail.com
+kazu:
+  - zn@mbf.nifty.com
+ko1:
+  - ko1@atdot.net
+kou:
+  - kou@cozmixng.org
+  - kou@clear-code.com
+ktsj:
+  - kazuki@callcc.net
+mame:
+  - mame@ruby-lang.org
+nagachika:
+  - nagachika@ruby-lang.org
+naruse:
+  - naruse@airemix.jp
+nobu:
+  - nobu@ruby-lang.org
+samuel:
+  - samuel.williams@oriontransfer.co.nz
+seki:
+  - m_seki@mva.biglobe.ne.jp
+sorah:
+  - her@sorah.jp
+  - sorah@cookpad.com
+shugo:
+  - shugo@ruby-lang.org
+shyouhei:
+  - shyouhei@ruby-lang.org
+stomar:
+  - sto.mar@web.de
+suke:
+  - masaki.suketa@nifty.ne.jp
+tadd:
+  - tad.a.digger@gmail.com
+  - tadd@ruby-lang.org
+tenderlove:
+  - aaron.patterson@gmail.com
+  - tenderlove@ruby-lang.org
+usa:
+  - usa@ruby-lang.org
+yugui:
+  - yugui@yugui.jp
