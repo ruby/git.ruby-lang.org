@@ -75,14 +75,14 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
         # OK
       else
         STDERR.puts "The git committer email (#{git_committer_email}) does not seem to be #{svn_account_name}'s email (#{emails.join(', ')})."
-        STDERR.puts "Please see https://github.com/ruby/ruby-commit-hook/blob/master/bin/check-email.rb"
+        STDERR.puts "Please see https://github.com/ruby/ruby-commit-hook/blob/master/bin/check-email-and-refname.rb"
         STDERR.puts "and send PR, or contact on ruby-core@ruby-lang.org."
         exit 1 # NG
       end
     else
       if Time.now > Time.new(2020, 1, 1)
         STDERR.puts "Your ssh key is unknown."
-        STDERR.puts "Please see https://github.com/ruby/ruby-commit-hook/blob/master/bin/check-email.rb"
+        STDERR.puts "Please see https://github.com/ruby/ruby-commit-hook/blob/master/bin/check-email-and-refname.rb"
         STDERR.puts "and send PR, or contact on ruby-core@ruby-lang.org."
         exit 1 # NG
       else
