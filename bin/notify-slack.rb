@@ -31,13 +31,13 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
 
   attachments = []
   out.split("\0").reverse_each do |s|
-    hash, abbr_hash, _author, _authortime, committer, committeremail, committertime, body = s.split("\n", 8)
+    sha, sha_abbr, _author, _authortime, committer, committeremail, committertime, body = s.split("\n", 8)
     subject, body = body.split("\n", 2)
 
     # Append notes content to `body` if it's notes
     if refname.match(%r[\Arefs/notes/\w+\z])
       # `--diff-filter=AM -M` to exclude rename by git's directory optimization
-      object = IO.popen(["git", "diff", "--diff-filter=AM", "-M", "--name-only", "#{oldrev}..#{newrev}"], &:read).chomp
+      object = IO.popen(["git", "diff", "--diff-filter=AM", "-M", "--name-only", "#{sha}^..#{sha}"], &:read).chomp
       if md = object.match(/\A(?<prefix>\h{2})\/?(?<rest>\h{38})\z/)
         body = [body, IO.popen(["git", "notes", "show", md[:prefix] + md[:rest]], &:read)].join
       end
@@ -48,8 +48,8 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
     end
 
     attachments << {
-      title: "#{ abbr_hash } (#{ branch }): #{ escape(subject) }",
-      title_link: "https://github.com/ruby/ruby/commit/#{ hash }",
+      title: "#{ sha_abbr } (#{ branch }): #{ escape(subject) }",
+      title_link: "https://github.com/ruby/ruby/commit/#{ sha }",
       text: escape((body || "").strip),
       footer: committer,
       footer_icon: gravatar,
