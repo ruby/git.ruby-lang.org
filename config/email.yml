@@ -3,6 +3,8 @@
 #
 # You can add a new email address but DO NOT DELETE already-registered email address.
 # This association will be used for committer identification of the ruby repository.
+#
+# See `bin/check-email-and-refname.rb` for details.
 aycabta:
   - aycabta@gmail.com
 duerst:

@@ -1,4 +1,7 @@
 #!/usr/bin/env ruby
+# This script is hooked by pre-receive hook of ruby.git to:
+#   * Make sure the pusher uses his/her "committer email", based on `config/email.yml`.
+#   * Prohibit creating topic branches on ruby.git.
 
 require "open3"
 require "yaml"
@@ -7,6 +10,11 @@ ADMIN_USERS = [
   "git",
   "hsbt",
   "naruse",
+]
+PUSHABLE_REFNAMES = [
+  "refs/heads/master",
+  "refs/heads/trunk",
+  "refs/notes/commits",
 ]
 
 SVN_TO_EMAILS = YAML.safe_load(File.read(File.expand_path('../config/email.yml', __dir__)))
@@ -24,18 +32,12 @@ exit 0 if ADMIN_USERS.include?(svn_account_name)
 
 emails = SVN_TO_EMAILS[svn_account_name]
 
-pushable_refnames = [
-  'refs/heads/master',
-  'refs/heads/trunk',
-  'refs/notes/commits',
-]
-
 ARGV.each_slice(3) do |oldrev, newrev, refname|
   # `/var/git-svn/ruby` uses `remote.cgit.url=git@git.ruby-lang.org:ruby.git`.
   # ~git/.ssh/id_rsa.pub is registered as `SVN_ACCOUNT_NAME=git` in authorized_keys.
-  if !pushable_refnames.include?(refname) && svn_account_name != "git" # git-svn
+  if !PUSHABLE_REFNAMES.include?(refname) && svn_account_name != "git" # git-svn
     STDERR.puts "You pushed '#{newrev}' to '#{refname}', but you can push commits "\
-      "to only '#{pushable_refnames.join("', '")}'. (svn_account_name: #{svn_account_name})"
+      "to only '#{PUSHABLE_REFNAMES.join("', '")}'. (svn_account_name: #{svn_account_name})"
     exit 1
   end
 
