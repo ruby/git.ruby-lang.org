@@ -191,7 +191,7 @@ class << CommitEmail
       next if info.branch.start_with?('notes/')
       puts "#{info.branch}: #{info.revision} (#{info.author})"
 
-      from = info.author_email
+      from = make_from(name: info.author, name: info.author_email)
       sendmail(to, from, make_mail(to, from, info, viewer_uri: options.viewer_uri))
     end
   end
@@ -337,6 +337,14 @@ class << CommitEmail
     subject << ': '
     subject << info.log.lstrip.lines.first.to_s.strip
     NKF.nkf('-WwMq', subject)
+  end
+
+  # https://tools.ietf.org/html/rfc822#section-4.1
+  # https://tools.ietf.org/html/rfc822#section-6.1
+  # https://tools.ietf.org/html/rfc822#appendix-D
+  def make_from(name:, email:)
+    escaped_name = name.gsub(/["\\\n]/) { |c| "\\#{c}" }
+    %Q["#{escaped_name}" <#{email}>]
   end
 
   def x_author(info)
