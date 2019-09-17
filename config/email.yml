@@ -34,7 +34,8 @@ eregon:
 # funny_falcon
 git:
   - svn-admin@ruby-lang.org
-# glass
+glass:
+  - glass.saga@gmail.com
 # gogotanaka
 # gotoken
 # gotoyuzo
