@@ -27,11 +27,11 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
   out, = Open3.capture2("git", "rev-parse", "--symbolic", "--abbrev-ref", refname)
   branch = out.strip
 
-  out, = Open3.capture2("git", "log", "--pretty=format:%H\n%h\n%an\n%at\n%cn\n%ce\n%ct\n%B", "--abbrev=10", "-z", oldrev + ".." + newrev)
+  out, = Open3.capture2("git", "log", "--pretty=format:%H\n%h\n%cn\n%ce\n%ct\n%B", "--abbrev=10", "-z", "#{oldrev}..#{newrev}")
 
   attachments = []
   out.split("\0").reverse_each do |s|
-    sha, sha_abbr, _author, _authortime, committer, committeremail, committertime, body = s.split("\n", 8)
+    sha, sha_abbr, committer, committeremail, committertime, body = s.split("\n", 6)
     subject, body = body.split("\n", 2)
 
     # Append notes content to `body` if it's notes
