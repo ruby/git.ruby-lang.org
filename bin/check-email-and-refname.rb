@@ -41,6 +41,12 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
     exit 1
   end
 
+  if refname == "refs/heads/trunk"
+    STDERR.puts "#"
+    STDERR.puts "# WARNING: `git push` to the 'trunk' branch is deprecated! Use 'master' branch instead."
+    STDERR.puts "#"
+  end
+
   out, = Open3.capture2("git", "log", "--first-parent", "--pretty=format:%H %ce", oldrev + ".." + newrev)
 
   out.each_line do |s|
