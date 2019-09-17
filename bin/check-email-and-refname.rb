@@ -43,7 +43,7 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
 
   if refname == "refs/heads/trunk"
     STDERR.puts "#"
-    STDERR.puts "# WARNING: `git push` to the 'trunk' branch is deprecated! Use 'master' branch instead."
+    STDERR.puts "# WARNING: `git push` to 'trunk' branch is deprecated! Use 'master' branch instead."
     STDERR.puts "#"
   end
 
