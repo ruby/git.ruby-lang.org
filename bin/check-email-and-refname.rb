@@ -48,8 +48,8 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
     STDERR.puts "@   WARNING: THE TRUNK BRANCH OF RUBY.GIT IS DEPRECATED!  @"
     STDERR.puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
     STDERR.puts ""
-    STDERR.puts "You pushed your commits to 'trunk' branch, but it will be deleted soon."
-    STDERR.puts "Please delete your local 'trunk' branch, and use 'master' branch instead."
+    STDERR.puts "You pushed commits to 'trunk' branch, but the branch will be deleted soon."
+    STDERR.puts "Please delete your local 'trunk' branch, and use the 'master' branch instead."
     STDERR.puts ""
     STDERR.puts ""
   end
