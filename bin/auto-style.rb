@@ -72,7 +72,6 @@ DEFAULT_GEM_LIBS = %w[
   mutex_m
   ostruct
   prime
-  racc
   rdoc
   rexml
   rss
@@ -96,16 +95,17 @@ DEFAULT_GEM_EXTS = %w[
   json
   openssl
   psych
+  racc
   sdbm
   stringio
   strscan
   zlib
 ]
 
-EXPANDTAB_IGNORED_FILES = [
+IGNORED_FILES = [
   # default gems whose master is GitHub
   %r{\Abin/(?!erb)\w+\z},
-  *DEFAULT_GEM_LIBS.flat_map { |lib|
+  *(DEFAULT_GEM_LIBS + DEFAULT_GEM_EXTS).flat_map { |lib|
     [
       %r{\Alib/#{lib}/},
       %r{\Alib/#{lib}\.gemspec\z},
@@ -152,7 +152,10 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
       (/\A(?:config|[Mm]akefile|GNUmakefile|README)/ =~ File.basename(l) or
        /\A\z|\.(?:[chsy]|\d+|e?rb|tmpl|bas[eh]|z?sh|in|ma?k|def|src|trans|rdoc|ja|en|el|sed|awk|p[ly]|scm|mspec|html|)\z/ =~ File.extname(l))
     }
-    files = paths.select {|n| File.file?(n)}
+    files = paths.select {|n| File.file?(n) }
+    files.reject! do |f|
+      IGNORED_FILES.any? { |re| f.match(re) }
+    end
     next if files.empty?
 
     trailing = eofnewline = expandtab = false
@@ -164,7 +167,7 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
 
       expandtab0 = false
       updated_lines = vcs.updated_lines(f)
-      if !updated_lines.empty? && (f.end_with?('.c') || f.end_with?('.h') || f == 'insns.def') && EXPANDTAB_IGNORED_FILES.all? { |re| !f.match(re) }
+      if !updated_lines.empty? && (f.end_with?('.c') || f.end_with?('.h') || f == 'insns.def')
         # If and only if unedited lines did not have tab indentation, prevent introducing tab indentation to the file.
         expandtab_allowed = src.each_line.with_index.all? do |line, lineno|
           updated_lines.include?(lineno) || !line.start_with?("\t")
