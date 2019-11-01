@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
-# This is executed by `/lib/systemd/system/git-sync-check.service` as User=git
-# which is triggered every 10 minutes by `/lib/systemd/system/git-sync-check.timer`.
+# This is executed by `/etc/systemd/system/git-sync-check.service` as User=git
+# which is triggered every 10 minutes by `/etc/systemd/system/git-sync-check.timer`.
 
 require 'json'
 require 'net/http'
