@@ -17,6 +17,7 @@ GRAVATAR_OVERRIDES = {
   "svn@b2dd03c8-39d4-4d8f-98ff-823fe69b080e" => "https://avatars1.githubusercontent.com/u/29403229",
   "usa@b2dd03c8-39d4-4d8f-98ff-823fe69b080e" => "https://avatars2.githubusercontent.com/u/17790",
   "usa@ruby-lang.org" => "https://avatars2.githubusercontent.com/u/17790",
+  "yui-knk@ruby-lang.org" => "https://avatars0.githubusercontent.com/u/5356517",
   "znz@users.noreply.github.com" => "https://avatars3.githubusercontent.com/u/11857",
 }
 
