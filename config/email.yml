@@ -98,7 +98,8 @@ nobu:
 # normal
 # ntalbott
 # ocean
-# odaira
+odaira:
+  - rodaira@us.ibm.com
 # okkez
 # rhe
 # ryan
