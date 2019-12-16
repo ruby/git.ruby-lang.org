@@ -75,7 +75,9 @@ ktsj:
 # luislavena
 mame:
   - mame@ruby-lang.org
-# marcandre
+marcandre:
+  - github@marc-andre.ca
+  - marcandre@ruby-lang.org
 # matz
 # michal
 # mneumann
