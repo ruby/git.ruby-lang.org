@@ -97,7 +97,8 @@ ngoto:
   - ngotogenome@gmail.com
 nobu:
   - nobu@ruby-lang.org
-# normal
+normal:
+  - normal@ruby-lang.org
 # ntalbott
 # ocean
 odaira:
