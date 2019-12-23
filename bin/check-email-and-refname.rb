@@ -15,6 +15,7 @@ PUSHABLE_REFNAMES = [
   "refs/heads/master",
   "refs/heads/trunk",
   "refs/notes/commits",
+  "refs/notes/log-fix",
 ]
 
 SVN_TO_EMAILS = YAML.safe_load(File.read(File.expand_path('../config/email.yml', __dir__)))
