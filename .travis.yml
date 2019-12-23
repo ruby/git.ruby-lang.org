@@ -2,6 +2,8 @@ language: ruby
 cache: bundler
 rvm:
   - 2.3.3 # git.ruby-lang.org uses ruby 2.3.3 by default
+before_install:
+  - gem install bundler -v 1.17.2
 branches:
   only:
     - master
