@@ -80,7 +80,8 @@ mame:
 marcandre:
   - github@marc-andre.ca
   - marcandre@ruby-lang.org
-# matz
+matz:
+  - matz@ruby.or.jp
 # michal
 # mneumann
 # moonwolf
