@@ -9,7 +9,6 @@ require "yaml"
 ADMIN_USERS = [
   "git",
   "hsbt",
-  "k0kubun",
   "naruse",
 ]
 PUSHABLE_REFNAMES = [
