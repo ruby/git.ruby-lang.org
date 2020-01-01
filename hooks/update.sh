@@ -31,11 +31,4 @@ if ! git push github "$newrev:$refname"; then
   exit 1
 fi
 
-# Mirror master <-> trunk without `push --mirror`, on GitHub side.
-# cgit is always mirroed by symbolic ref. TODO: drop trunk (in 2020)
-if [ "$refname" = "refs/heads/master" ]; then
-  log "==> git push github (mirror: $newrev:refs/heads/trunk)"
-  nohup git push github "$newrev:refs/heads/trunk" > /dev/null 2>&1 &
-fi
-
 log "### end ###\n"
