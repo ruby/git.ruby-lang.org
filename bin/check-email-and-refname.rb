@@ -13,7 +13,6 @@ ADMIN_USERS = [
 ]
 PUSHABLE_REFNAMES = [
   "refs/heads/master",
-  "refs/heads/trunk",
   "refs/notes/commits",
   "refs/notes/log-fix",
 ]
