@@ -18,11 +18,6 @@ log "### start ###"
 log "SVN_ACCOUNT_NAME: ${SVN_ACCOUNT_NAME:-}"
 log "args: $*"
 
-# normalize branch for mirroring master <-> trunk
-if [ "$refname" = "refs/heads/trunk" ]; then
-  refname="refs/heads/master"
-fi
-
 log "==> git push github ($newrev:$refname)"
 if ! git push github "$newrev:$refname"; then
   if [ "$refname" = "refs/heads/master" ]; then
