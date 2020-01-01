@@ -41,19 +41,6 @@ ARGV.each_slice(3) do |oldrev, newrev, refname|
     exit 1
   end
 
-  if refname == "refs/heads/trunk"
-    STDERR.puts ""
-    STDERR.puts ""
-    STDERR.puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-    STDERR.puts "@   WARNING: THE TRUNK BRANCH OF RUBY.GIT IS DEPRECATED!  @"
-    STDERR.puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-    STDERR.puts ""
-    STDERR.puts "You pushed commits to 'trunk' branch, but the branch will be deleted soon."
-    STDERR.puts "Please delete your local 'trunk' branch, and use the 'master' branch instead."
-    STDERR.puts ""
-    STDERR.puts ""
-  end
-
   out, = Open3.capture2("git", "log", "--first-parent", "--pretty=format:%H %ce", oldrev + ".." + newrev)
 
   out.each_line do |s|
