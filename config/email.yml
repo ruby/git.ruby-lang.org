@@ -46,7 +46,8 @@ glass:
 # gotoyuzo
 # gsinclair
 # H_Konishi
-# headius
+headius
+  - headius@headius.com
 # hone
 hsbt:
   - hsbt@ruby-lang.org
