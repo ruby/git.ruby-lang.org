@@ -50,20 +50,20 @@ module Slack
 
       payload = { username: 'ruby/ruby-commit-hook', attachments: [attachment] }
       NOTIFY_CHANNELS.each do |channel|
-        resp = post(WEBHOOK_URL, payload: payload, channel: channel)
+        resp = post(WEBHOOK_URL, payload: payload.merge(channel: channel))
         puts "#{resp.code} (#{resp.body}) -- #{payload.to_json} (channel: #{channel})"
       end
     end
 
     private
 
-    def post(url, payload:, channel:)
+    def post(url, payload:)
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = (uri.scheme == 'https')
       http.start do
         req = Net::HTTP::Post.new(uri.path)
-        req.set_form_data({ payload: payload.to_json, channel: channel })
+        req.set_form_data({ payload: payload.to_json })
         http.request(req)
       end
     end
