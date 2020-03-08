@@ -33,6 +33,11 @@ end
 
 module Slack
   WEBHOOK_URL = File.read(File.expand_path('~git/config/slack-webhook-alerts')).chomp
+  NOTIFY_CHANNELS = [
+    "C5FCXFXDZ", # alerts
+    "CR2QGFCAE", # alerts-emoji
+    "CUEBRBFLH", # alerts3
+  ]
 
   class << self
     def notify(message)
@@ -44,19 +49,21 @@ module Slack
       }
 
       payload = { username: 'ruby/ruby-commit-hook', attachments: [attachment] }
-      resp = post(WEBHOOK_URL, payload: payload)
-      puts "#{resp.code} (#{resp.body}) -- #{payload.to_json}"
+      NOTIFY_CHANNELS.each do |channel|
+        resp = post(WEBHOOK_URL, payload: payload, channel: channel)
+        puts "#{resp.code} (#{resp.body}) -- #{payload.to_json} (channel: #{channel})"
+      end
     end
 
     private
 
-    def post(url, payload:)
+    def post(url, payload:, channel:)
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = (uri.scheme == 'https')
       http.start do
         req = Net::HTTP::Post.new(uri.path)
-        req.set_form_data(payload: payload.to_json)
+        req.set_form_data({ payload: payload.to_json, channel: channel })
         http.request(req)
       end
     end
