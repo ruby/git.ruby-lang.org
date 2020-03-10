@@ -36,7 +36,6 @@ module Slack
   NOTIFY_CHANNELS = [
     "C5FCXFXDZ", # alerts
     "CR2QGFCAE", # alerts-emoji
-    "CUEBRBFLH", # alerts3
   ]
 
   class << self
