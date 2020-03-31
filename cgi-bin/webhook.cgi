@@ -61,6 +61,11 @@ class Webhook
 end
 
 class PushHook
+  RUBY_SYNCED_REFS = %w[
+    refs/heads/master
+    refs/heads/ruby_2_7
+  ]
+
   def initialize(logger:)
     @logger = logger
   end
@@ -90,9 +95,9 @@ class PushHook
   end
 
   def on_push_ruby(ref, pusher:)
-    if ref == 'refs/heads/master' && pusher != 'matzbot' # matzbot should stop an infinite loop here.
+    if RUBY_SYNCED_REFS.include?(ref) && pusher != 'matzbot' # matzbot should stop an infinite loop here.
       # www-data user is allowed to sudo `/home/git/ruby-commit-hook/bin/update-ruby-commit-hook.sh`.
-      execute('/home/git/ruby-commit-hook/bin/update-ruby.sh', user: 'git')
+      execute('/home/git/ruby-commit-hook/bin/update-ruby.sh', File.basename(ref), user: 'git')
     else
       logger.info("skipped ruby ref: #{ref} (pusher: #{pusher})")
     end

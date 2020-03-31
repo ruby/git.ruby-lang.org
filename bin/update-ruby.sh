@@ -12,6 +12,7 @@ unset GIT_DIR
 export LANG=en_US.UTF-8
 
 ruby_repo="/var/git/ruby.git"
+ruby_branch="$1"
 ruby_workdir="/home/git/update-ruby"
 log_path="/tmp/update-ruby.log"
 
@@ -29,7 +30,7 @@ log "### start ###"
 
 # Sync: GitHub -> ruby_workdir -> cgit
 # By doing this way, we can make sure all git hooks are performed on sync-ed commits.
-git -C "$ruby_workdir" pull github master >> "$log_path" 2>&1
-SVN_ACCOUNT_NAME=git git -C "$ruby_workdir" push origin master >> "$log_path" 2>&1
+git -C "$ruby_workdir" pull github "$ruby_branch" >> "$log_path" 2>&1
+SVN_ACCOUNT_NAME=git git -C "$ruby_workdir" push origin "$ruby_branch" >> "$log_path" 2>&1
 
 log "### end ###\n"
