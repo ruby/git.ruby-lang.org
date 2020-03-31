@@ -21,7 +21,7 @@ log "args: $*"
 log "==> git push github ($newrev:$refname)"
 if ! git push github "$newrev:$refname"; then
   if [ "$refname" = "refs/heads/master" ]; then
-    nohup /home/git/ruby-commit-hook/bin/update-ruby.sh > /dev/null 2>&1 &
+    nohup /home/git/ruby-commit-hook/bin/update-ruby.sh master > /dev/null 2>&1 &
   fi
   exit 1
 fi
