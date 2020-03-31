@@ -30,6 +30,7 @@ log "### start ###"
 
 # Sync: GitHub -> ruby_workdir -> cgit
 # By doing this way, we can make sure all git hooks are performed on sync-ed commits.
+git -C "$ruby_workdir" checkout "$ruby_branch" >> "$log_path" 2>&1
 git -C "$ruby_workdir" pull github "$ruby_branch" >> "$log_path" 2>&1
 SVN_ACCOUNT_NAME=git git -C "$ruby_workdir" push origin "$ruby_branch" >> "$log_path" 2>&1
 
