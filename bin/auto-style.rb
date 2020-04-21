@@ -133,6 +133,9 @@ IGNORED_FILES = [
   %r{\Amissing/},
   %r{\Astrftime\.c\z},
   %r{\Avsnprintf\.c\z},
+
+  # to respect the original statements of licenses
+  %r{\ALEGAL\z},
 ]
 
 repo_path, *rest = ARGV
