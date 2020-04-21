@@ -7,12 +7,15 @@ require 'tmpdir'
 ENV['LC_ALL'] = 'C'
 
 class Git
+  attr_reader :depth
+
   def initialize(oldrev, newrev, branch)
     @oldrev = oldrev
     @newrev = newrev
     @branch = branch
     with_clean_env do
       @revs = IO.popen(['git', 'log', '--format=%H', "#{@oldrev}..#{@newrev}"], &:readlines).map(&:chomp!)
+      @depth = @revs.size
     end
   end
 
@@ -142,7 +145,7 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
   vcs = Git.new(oldrev, newrev, branch)
 
   Dir.mktmpdir do |workdir|
-    depth = IO.popen(['git', 'log', '--pretty=%H', "#{oldrev}..#{newrev}"], &:read).lines.size + 1
+    depth = vcs.depth + 1
     system "git clone --depth=#{depth} --branch=#{branch} file:///#{repo_path} #{workdir}"
     Dir.chdir(workdir)
 
