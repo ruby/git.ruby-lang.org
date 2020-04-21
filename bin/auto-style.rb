@@ -14,7 +14,14 @@ class Git
     @newrev = newrev
     @branch = branch
     with_clean_env do
-      @revs = IO.popen(['git', 'log', '--format=%H', "#{@oldrev}..#{@newrev}"], &:readlines).map(&:chomp!)
+      @revs = {}
+      IO.popen(['git', 'log', '--format=%H %s', "#{@oldrev}..#{@newrev}"]) do |f|
+        f.each do |line|
+          line.chomp!
+          rev, subj = line.split(' ', 2)
+          @revs[rev] = subj
+        end
+      end
       @depth = @revs.size
     end
   end
@@ -29,7 +36,8 @@ class Git
   # [0, 1, 4, ...]
   def updated_lines(file)
     lines = []
-    revs_pattern = /\A(?:#{@revs.join('|')}) /
+    revs = @revs.filter_map {|rev, subj| rev unless subj.start_with?("Revert ")}
+    revs_pattern = /\A(?:#{revs.join('|')}) /
     with_clean_env { IO.popen(['git', 'blame', '-l', '--', file], &:readlines) }.each_with_index do |line, index|
       if revs_pattern =~ line
         lines << index
@@ -168,11 +176,20 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
 
     edited_files = files.select do |f|
       src = File.binread(f) rescue next
-      trailing = trailing0 = true if src.gsub!(/[ \t]+$/, '')
       eofnewline = eofnewline0 = true if src.sub!(/(?<!\n)\z/, "\n")
 
+      trailing0 = false
       expandtab0 = false
       updated_lines = vcs.updated_lines(f)
+      if !updated_lines.empty?
+        src.gsub!(/^.*$/).with_index do |line, lineno|
+          if updated_lines.include?(lineno)
+            trailing = trailing0 = true if line.sub!(/[ \t]+$/, '')
+          end
+          line
+        end
+      end
+
       if !updated_lines.empty? && (f.end_with?('.c') || f.end_with?('.h') || f == 'insns.def')
         # If and only if unedited lines did not have tab indentation, prevent introducing tab indentation to the file.
         expandtab_allowed = src.each_line.with_index.all? do |line, lineno|
