@@ -11,11 +11,19 @@ ADMIN_USERS = [
   "hsbt",
   "naruse",
 ]
+STABLE_BRANCH_MAINTAINERS = [
+  "usa",
+  "nagachika",
+]
 PUSHABLE_REFNAMES = [
   "refs/heads/master",
   "refs/notes/commits",
   "refs/notes/log-fix",
 ]
+
+def is_pushable_stable_branch?(refname)
+  %r{\Arefs/heads/ruby_(\d+)_(\d+)\Z} =~ refname and (($1 == "2" and $2.to_i >= 7) or ($1.to_i >= 3))
+end
 
 SVN_TO_EMAILS = YAML.safe_load(File.read(File.expand_path('../config/email.yml', __dir__)))
 LOG_FILE = "/home/git/email.log"
@@ -35,7 +43,8 @@ emails = SVN_TO_EMAILS[svn_account_name]
 ARGV.each_slice(3) do |oldrev, newrev, refname|
   # `/var/git-svn/ruby` uses `remote.cgit.url=git@git.ruby-lang.org:ruby.git`.
   # ~git/.ssh/id_rsa.pub is registered as `SVN_ACCOUNT_NAME=git` in authorized_keys.
-  if !PUSHABLE_REFNAMES.include?(refname) && svn_account_name != "git" # git-svn
+  unless PUSHABLE_REFNAMES.include?(refname) || svn_account_name == "git" || # git-svn
+         (is_pushable_stable_branch?(refname) && STABLE_BRANCH_MAINTAINERS.include?(svn_account_name)) # stable maintainer
     STDERR.puts "You pushed '#{newrev}' to '#{refname}', but you can push commits "\
       "to only '#{PUSHABLE_REFNAMES.join("', '")}'. (svn_account_name: #{svn_account_name})"
     exit 1
