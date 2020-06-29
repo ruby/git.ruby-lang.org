@@ -319,6 +319,7 @@ class << CommitEmail
     headers << x_repository(info)
     headers << x_revision(info)
     headers << x_id(info)
+    headers << 'Mime-Version: 1.0'
     headers << 'Content-Type: text/plain; charset=utf-8'
     headers << 'Content-Transfer-Encoding: quoted-printable'
     headers << "From: #{from}"
