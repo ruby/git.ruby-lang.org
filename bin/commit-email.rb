@@ -207,6 +207,10 @@ class << CommitEmail
 
   private
 
+  def b_encode(str)
+    NKF.nkf('-WwM', str)
+  end
+
   def make_body(info, viewer_uri:)
     body = ''
     body << "#{info.author}\t#{format_time(info.date)}\n"
@@ -336,19 +340,25 @@ class << CommitEmail
     subject << " (#{info.branch})"
     subject << ': '
     subject << info.log.lstrip.lines.first.to_s.strip
-    NKF.nkf('-WwMq', subject)
+    b_encode(subject)
   end
 
   # https://tools.ietf.org/html/rfc822#section-4.1
   # https://tools.ietf.org/html/rfc822#section-6.1
   # https://tools.ietf.org/html/rfc822#appendix-D
+  # https://tools.ietf.org/html/rfc2047
   def make_from(name:, email:)
-    escaped_name = name.gsub(/["\\\n]/) { |c| "\\#{c}" }
-    %Q["#{escaped_name}" <#{email}>]
+    if name.ascii_only?
+      escaped_name = name.gsub(/["\\\n]/) { |c| "\\#{c}" }
+      %Q["#{escaped_name}" <#{email}>]
+    else
+      escaped_name = "=?UTF-8?B?#{NKF.nkf('-WwMB', name)}?="
+      %Q[#{escaped_name} <#{email}>]
+    end
   end
 
   def x_author(info)
-    "X-SVN-Author: #{info.author}"
+    "X-SVN-Author: #{b_encode(info.author)}"
   end
 
   def x_repository(info)
