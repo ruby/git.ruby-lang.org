@@ -116,7 +116,8 @@ begin
 rescue GitSyncCheck::Errors => e
   attempts -= 1
   if attempts > 0
-    errors.each_key do |ref| # try fixing each ref automatically
+    errors.each do |ref, (remote_rev, local_rev)|
+      puts "Fixing inconsistency ref:#{ref.inspect} remote:#{remote_rev.inspect} local:#{local_rev.inspect}"
       unless system('/home/git/ruby-commit-hook/bin/update-ruby.sh', File.basename(ref))
         raise "Failed to execute update-ruby.sh for #{ref}"
       end
