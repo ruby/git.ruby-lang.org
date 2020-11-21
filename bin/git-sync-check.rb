@@ -116,7 +116,9 @@ begin
 rescue GitSyncCheck::Errors => e
   attempts -= 1
   if attempts > 0
-    errors.each do |ref, (remote_rev, local_rev)|
+    # Automatically fix inconsistency if it's master, but never sync random new branches.
+    if e.errors.key?('refs/heads/master')
+      remote_ref, local_rev = e.errors['refs/heads/master']
       puts "Fixing inconsistency ref:#{ref.inspect} remote:#{remote_rev.inspect} local:#{local_rev.inspect}"
       unless system('/home/git/ruby-commit-hook/bin/update-ruby.sh', File.basename(ref))
         raise "Failed to execute update-ruby.sh for #{ref}"
