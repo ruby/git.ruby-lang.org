@@ -1,4 +1,4 @@
-# Ruby commit hook [![Build Status](https://travis-ci.com/ruby/ruby-commit-hook.svg?branch=master)](https://travis-ci.com/ruby/ruby-commit-hook)
+# Ruby commit hook ![test](https://github.com/ruby/ruby-commit-hook/workflows/test/badge.svg)
 
 ## Features
 
