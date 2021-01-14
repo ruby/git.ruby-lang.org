@@ -64,6 +64,7 @@ class PushHook
   RUBY_SYNCED_REFS = %w[
     refs/heads/master
     refs/heads/ruby_2_7
+    refs/heads/ruby_3_0
   ]
 
   def initialize(logger:)
