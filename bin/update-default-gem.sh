@@ -36,7 +36,7 @@ for rev in $(git -C "$ruby_workdir" log --reverse --pretty=%H "${before}..${afte
 
   if git -C "$ruby_workdir" cherry-pick "$rev" >> "$log_path" 2>&1; then
     suffix="https://github.com/ruby/${gem_name}/commit/${rev:0:10}"
-    git filter-branch -f --msg-filter 'grep "" - | sed "1s|^|[ruby/'"$gem_name"'] |" && echo && echo '"$suffix" -- HEAD~1..HEAD >> "$log_path" 2>&1
+    git -C "$ruby_workdir" filter-branch -f --msg-filter 'grep "" - | sed "1s|^|[ruby/'"$gem_name"'] |" && echo && echo '"$suffix" -- HEAD~1..HEAD >> "$log_path" 2>&1
 
     # Pushing ruby_workdir to cgit to make sure all git hooks are performed on sync-ed commits.
     if ! SVN_ACCOUNT_NAME=git git -C "$ruby_workdir" push origin "HEAD:master" >> "$log_path" 2>&1; then
