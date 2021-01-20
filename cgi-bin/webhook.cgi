@@ -29,11 +29,15 @@ class Webhook
     payload = JSON.parse(@payload)
     repository = payload.fetch('repository').fetch('full_name')
     ref = payload.fetch('ref')
+    before = payload.fetch('before')
+    after  = payload.fetch('after')
     pusher = payload.fetch('pusher').fetch('name')
 
     PushHook.new(logger: logger).process(
       repository: repository,
       ref: ref,
+      before: before,
+      after: after,
       pusher: pusher,
     )
     return true
@@ -66,17 +70,22 @@ class PushHook
     refs/heads/ruby_2_7
     refs/heads/ruby_3_0
   ]
+  DEFAULT_GEM_REPOS = %w[
+    erb
+  ].map { |repo| "ruby/#{repo}" }
 
   def initialize(logger:)
     @logger = logger
   end
 
-  def process(repository:, ref:, pusher:)
+  def process(repository:, ref:, before:, after:, pusher:)
     case repository
     when 'ruby/ruby-commit-hook'
       on_push_ruby_commit_hook(ref)
     when 'ruby/ruby'
       on_push_ruby(ref, pusher: pusher)
+    when *DEFAULT_GEM_REPOS
+      on_push_default_gem(ref, repository: repository, before: before, after: after)
     else
       logger.info("unexpected repository: #{repository}")
     end
@@ -97,10 +106,19 @@ class PushHook
 
   def on_push_ruby(ref, pusher:)
     if RUBY_SYNCED_REFS.include?(ref) && pusher != 'matzbot' # matzbot should stop an infinite loop here.
-      # www-data user is allowed to sudo `/home/git/ruby-commit-hook/bin/update-ruby-commit-hook.sh`.
+      # www-data user is allowed to sudo `/home/git/ruby-commit-hook/bin/update-ruby.sh`.
       execute('/home/git/ruby-commit-hook/bin/update-ruby.sh', File.basename(ref), user: 'git')
     else
       logger.info("skipped ruby ref: #{ref} (pusher: #{pusher})")
+    end
+  end
+
+  def on_push_default_gem(ref, repository:, before:, after:)
+    if ref == 'refs/heads/master'
+      # www-data user is allowed to sudo `/home/git/ruby-commit-hook/bin/update-default-gem.sh`.
+      execute('/home/git/ruby-commit-hook/bin/update-default-gem.sh', File.basename(repository), before, after, user: 'git')
+    else
+      logger.info("skipped #{repository} ref: #{ref}")
     end
   end
 
