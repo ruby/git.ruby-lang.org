@@ -57,6 +57,8 @@ headius:
 hsbt:
   - hsbt@ruby-lang.org
 # iwamatsu
+jaruga:
+  - jaruga@redhat.com
 # jeg2
 jeremy:
   - code@jeremyevans.net
