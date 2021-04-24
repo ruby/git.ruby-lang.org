@@ -36,7 +36,7 @@ class Git
   # [0, 1, 4, ...]
   def updated_lines(file)
     lines = []
-    revs = @revs.filter_map {|rev, subj| rev unless subj.start_with?("Revert ")}
+    revs = @revs.map {|rev, subj| rev unless subj.start_with?("Revert ")}.compact
     revs_pattern = /\A(?:#{revs.join('|')}) /
     with_clean_env { IO.popen(['git', 'blame', '-l', '--', file], &:readlines) }.each_with_index do |line, index|
       if revs_pattern =~ line
