@@ -50,6 +50,15 @@ To apply apache2 config changes, once the webhook finishes, run:
 sudo /etc/init.d/apache2 reload
 ```
 
+## How to set up default gem sync
+
+1. Add your gem repository name to `DEFAULT_GEM_REPOS` in [cgi-bin/webhook.cgi](./cgi-bin/webhook.cgi), and push it to master.
+2. Go to `https://github.com/ruby/{repo_name}/settings/hooks`, and add a webhook
+  * Payload URL: Set the content of `~git/config/ruby-commit-hook-url` in git.ruby-lang.org
+  * Content type: application/json
+  * Secret: Set the content of `~git/config/ruby-commit-hook-secret` in git.ruby-lang.org
+  * Which events: Just the push event.
+
 ## License
 
 [Ruby License](./license.txt)
