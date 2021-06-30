@@ -73,6 +73,7 @@ class PushHook
   DEFAULT_GEM_REPOS = %w[
     erb
     irb
+    error_highlight
   ].map { |repo| "ruby/#{repo}" }
 
   def initialize(logger:)
