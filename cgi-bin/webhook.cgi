@@ -75,6 +75,8 @@ class PushHook
     error_highlight
     irb
     reline
+    rdoc
+    psych
   ].map { |repo| "ruby/#{repo}" }
 
   def initialize(logger:)
