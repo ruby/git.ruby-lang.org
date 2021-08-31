@@ -29,20 +29,19 @@ fi
 
 log "### start ###"
 
-git -C "$ruby_workdir" fetch "$gem_name" master >> "$log_path" 2>&1
+git -C "$ruby_workdir" fetch "$gem_name" "$gem_name/master" >> "$log_path" 2>&1
+git -C "$ruby_workdir" fetch origin master >> "$log_path" 2>&1
+git -C "$ruby_workdir" reset --hard origin/master >> "$log_path" 2>&1
 for rev in $(git -C "$ruby_workdir" log --reverse --pretty=%H "${before}..${after}"); do
-  git -C "$ruby_workdir" fetch origin master >> "$log_path" 2>&1
-  git -C "$ruby_workdir" reset --hard origin/master >> "$log_path" 2>&1
-
   if git -C "$ruby_workdir" cherry-pick "$rev" >> "$log_path" 2>&1; then
     suffix="https://github.com/ruby/${gem_name}/commit/${rev:0:10}"
     git -C "$ruby_workdir" filter-branch -f --msg-filter 'grep "" - | sed "1s|^|[ruby/'"$gem_name"'] |" && echo && echo '"$suffix" -- HEAD~1..HEAD >> "$log_path" 2>&1
-
-    # Pushing ruby_workdir to cgit to make sure all git hooks are performed on sync-ed commits.
-    if ! SVN_ACCOUNT_NAME=git git -C "$ruby_workdir" push origin "HEAD:master" >> "$log_path" 2>&1; then
-      log "Failed: git push"
-    fi
   fi
 done
+
+# Pushing ruby_workdir to cgit to make sure all git hooks are performed on sync-ed commits.
+if ! SVN_ACCOUNT_NAME=git git -C "$ruby_workdir" push origin "HEAD:master" >> "$log_path" 2>&1; then
+    log "Failed: git push"
+fi
 
 log "### end ###\n"
