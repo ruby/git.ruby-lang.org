@@ -71,8 +71,10 @@ class PushHook
     refs/heads/ruby_3_0
   ]
   DEFAULT_GEM_REPOS = %w[
+    cgi
     erb
     error_highlight
+    fileutils
     irb
     pathname
     psych
