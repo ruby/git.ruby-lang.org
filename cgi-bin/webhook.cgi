@@ -78,6 +78,7 @@ class PushHook
     irb
     pathname
     psych
+    racc
     rdoc
     reline
     zlib
