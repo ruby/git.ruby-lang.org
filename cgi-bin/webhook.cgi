@@ -81,6 +81,7 @@ class PushHook
     racc
     rdoc
     reline
+    rubygems
     zlib
   ].map { |repo| "ruby/#{repo}" }
 
