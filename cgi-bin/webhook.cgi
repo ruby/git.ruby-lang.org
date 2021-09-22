@@ -81,9 +81,10 @@ class PushHook
     racc
     rdoc
     reline
-    rubygems
     zlib
-  ].map { |repo| "ruby/#{repo}" }
+  ].map { |repo| "ruby/#{repo}" } + %w[
+    rubygems/rubygems
+  ]
 
   def initialize(logger:)
     @logger = logger
