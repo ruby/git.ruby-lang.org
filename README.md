@@ -59,6 +59,16 @@ sudo /etc/init.d/apache2 reload
      * Secret: Set the content of `~git/config/ruby-commit-hook-secret` in git.ruby-lang.org
      * Which events: Just the push event.
 
+## Apply recipes
+
+```bash
+# dry-run
+bin/hocho apply -n git.ruby-lang.org
+
+# apply
+bin/hocho apply git.ruby-lang.org
+```
+
 ## License
 
 [Ruby License](./license.txt)
