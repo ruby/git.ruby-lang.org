@@ -10,9 +10,10 @@ unset GIT_DIR
 # Cancel impact from LANG=C set by apache2
 export LANG=en_US.UTF-8
 
-gem_name="$1"
-before="$2"
-after="$3"
+gem_user="$1"
+gem_name="$2"
+before="$3"
+after="$4"
 ruby_repo="/var/git/ruby.git"
 ruby_workdir="/data/ruby-commit-hook/update-default-gem-${gem_name}"
 log_path="/tmp/update-default-gem-${gem_name}.log"
@@ -24,7 +25,7 @@ function log() {
 # Initialize working directory only if missing
 if [ ! -d "$ruby_workdir" ]; then
   git clone "file://${ruby_repo}" "$ruby_workdir"
-  git -C "$ruby_workdir" remote add "$gem_name" "https://github.com/ruby/${gem_name}"
+  git -C "$ruby_workdir" remote add "$gem_name" "https://github.com/${gem_user}/${gem_name}"
 fi
 
 log "### start ###"
@@ -35,7 +36,7 @@ for rev in $(git -C "$ruby_workdir" log --reverse --pretty=%H "${before}..${afte
   git -C "$ruby_workdir" reset --hard origin/master >> "$log_path" 2>&1
 
   if git -C "$ruby_workdir" cherry-pick "$rev" >> "$log_path" 2>&1; then
-    suffix="https://github.com/ruby/${gem_name}/commit/${rev:0:10}"
+    suffix="https://github.com/${gem_user}/${gem_name}/commit/${rev:0:10}"
     git -C "$ruby_workdir" filter-branch -f --msg-filter 'grep "" - | sed "1s|^|[ruby/'"$gem_name"'] |" && echo && echo '"$suffix" -- HEAD~1..HEAD >> "$log_path" 2>&1
 
     # Pushing ruby_workdir to cgit to make sure all git hooks are performed on sync-ed commits.

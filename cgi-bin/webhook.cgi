@@ -128,7 +128,7 @@ class PushHook
   def on_push_default_gem(ref, repository:, before:, after:)
     if ref == 'refs/heads/master'
       # www-data user is allowed to sudo `/home/git/ruby-commit-hook/bin/update-default-gem.sh`.
-      execute('/home/git/ruby-commit-hook/bin/update-default-gem.sh', File.basename(repository), before, after, user: 'git')
+      execute('/home/git/ruby-commit-hook/bin/update-default-gem.sh', *repository.split('/', 2), before, after, user: 'git')
     else
       logger.info("skipped #{repository} ref: #{ref}")
     end
