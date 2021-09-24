@@ -40,7 +40,7 @@ On each commit of Ruby's Git repository, following git hooks are triggered:
   * ruby-commit-hook push webhook triggers `cgi-bin/webhook.cgi`
   * It runs `sudo -u git bin/update-ruby-commit-hook.sh`
 
-### Apply recipes
+### recipes
 
 ```bash
 # dry-run
