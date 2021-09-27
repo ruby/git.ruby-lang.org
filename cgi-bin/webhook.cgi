@@ -71,6 +71,7 @@ class PushHook
     refs/heads/ruby_3_0
   ]
   DEFAULT_GEM_REPOS = %w[
+    base64
     cgi
     erb
     error_highlight
@@ -81,6 +82,7 @@ class PushHook
     racc
     rdoc
     reline
+    timeout
     zlib
   ].map { |repo| "ruby/#{repo}" } + %w[
     rubygems/rubygems
