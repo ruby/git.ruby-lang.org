@@ -10,6 +10,9 @@ module Git
   # cgit bare repository
   GIT_DIR = '/var/git/ruby.git'
 
+  # This is retried because ls-remote of GitHub sometimes fails
+  Error = Class.new(StandardError)
+
   class << self
     def show_ref
       git('show-ref')
@@ -24,7 +27,7 @@ module Git
     def git(*cmd)
       out = IO.popen({ 'GIT_DIR' => GIT_DIR }, ['git', *cmd], &:read)
       unless $?.success?
-        raise "Failed to execute: git #{cmd.join(' ')}"
+        raise Git::Error.new("Failed to execute: git #{cmd.join(' ')}")
       end
       out
     end
@@ -134,6 +137,14 @@ rescue GitSyncCheck::Errors => e
   end
   Slack.notify(message)
   puts message
+rescue Git::Error => e
+  attempts -= 1
+  if attempts > 0
+    puts "Retrying #{e.class}: #{e.message} (remaining attempts: #{attempts})"
+    sleep 5
+    retry
+  end
+  Slack.notify("#{e.class}: #{e.message}\n#{e.backtrace.join("\n")}")
 rescue => e
   Slack.notify("#{e.class}: #{e.message}\n#{e.backtrace.join("\n")}")
 end

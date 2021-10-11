@@ -71,13 +71,22 @@ class PushHook
     refs/heads/ruby_3_0
   ]
   DEFAULT_GEM_REPOS = %w[
+    base64
+    cgi
     erb
     error_highlight
+    fileutils
     irb
-    reline
-    rdoc
+    pathname
     psych
-  ].map { |repo| "ruby/#{repo}" }
+    racc
+    rdoc
+    reline
+    timeout
+    zlib
+  ].map { |repo| "ruby/#{repo}" } + %w[
+    rubygems/rubygems
+  ]
 
   def initialize(logger:)
     @logger = logger
@@ -121,7 +130,7 @@ class PushHook
   def on_push_default_gem(ref, repository:, before:, after:)
     if ref == 'refs/heads/master'
       # www-data user is allowed to sudo `/home/git/ruby-commit-hook/bin/update-default-gem.sh`.
-      execute('/home/git/ruby-commit-hook/bin/update-default-gem.sh', File.basename(repository), before, after, user: 'git')
+      execute('/home/git/ruby-commit-hook/bin/update-default-gem.sh', *repository.split('/', 2), before, after, user: 'git')
     else
       logger.info("skipped #{repository} ref: #{ref}")
     end

@@ -1,0 +1,14 @@
+#!/bin/bash
+prefix=()
+
+if [[ -z "$SUDO_PASSWORD" ]]; then
+  if which envchain > /dev/null 2>&1 && envchain --list | grep -q sudo; then
+    prefix=("envchain" "sudo")
+  else
+    echo "Environment variable \$SUDO_PASSWORD must be set."
+    echo "Retry this after installing envchain and running: envchain --set sudo SUDO_PASSWORD"
+    exit 1
+  fi
+fi
+
+exec "${prefix[@]}" bundle exec hocho "$@"

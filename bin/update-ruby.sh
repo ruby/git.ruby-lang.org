@@ -11,7 +11,7 @@ export LANG=en_US.UTF-8
 
 ruby_repo="/var/git/ruby.git"
 ruby_branch="$1"
-ruby_workdir="/home/git/update-ruby"
+ruby_workdir="/data/ruby-commit-hook/update-ruby"
 log_path="/tmp/update-ruby.log"
 
 function log() {

@@ -40,14 +40,14 @@ On each commit of Ruby's Git repository, following git hooks are triggered:
   * ruby-commit-hook push webhook triggers `cgi-bin/webhook.cgi`
   * It runs `sudo -u git bin/update-ruby-commit-hook.sh`
 
-### sites-available
-Note: `git.ruby-lang.org.conf` (in `/etc/apache2/sites-available`) is managed
-in this repository.
+### recipes
 
-To apply apache2 config changes, once the webhook finishes, run:
+```bash
+# dry-run
+bin/hocho apply -n git.ruby-lang.org
 
-```
-sudo /etc/init.d/apache2 reload
+# apply
+bin/hocho apply git.ruby-lang.org
 ```
 
 ## How to set up default gem sync
