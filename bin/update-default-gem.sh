@@ -25,7 +25,6 @@ function log() {
 # Initialize working directory only if missing
 if [ ! -d "$ruby_workdir" ]; then
   git clone "file://${ruby_repo}" "$ruby_workdir"
-  git -C "$ruby_workdir" remote add "$gem_name" "https://github.com/${gem_user}/${gem_name}"
 fi
 
 log "### start ###"
