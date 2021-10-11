@@ -30,7 +30,7 @@ fi
 
 log "### start ###"
 
-if ruby -C "$ruby_workdir" tool/sync_default_gems.rb $gemname $before..$after >> "$log_path" 2>&1; then
+if ruby -C "$ruby_workdir" tool/sync_default_gems.rb $gem_name $before..$after >> "$log_path" 2>&1; then
   # Pushing ruby_workdir to cgit to make sure all git hooks are performed on sync-ed commits.
   if ! SVN_ACCOUNT_NAME=git git -C "$ruby_workdir" push origin "HEAD:master" >> "$log_path" 2>&1; then
     log "Failed: git push"
