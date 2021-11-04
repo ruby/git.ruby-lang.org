@@ -84,6 +84,7 @@ class PushHook
     reline
     timeout
     zlib
+    net-http
   ].map { |repo| "ruby/#{repo}" } + %w[
     rubygems/rubygems
   ]
