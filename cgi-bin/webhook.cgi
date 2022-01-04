@@ -85,6 +85,7 @@ class PushHook
     timeout
     zlib
     net-http
+    optparse
   ].map { |repo| "ruby/#{repo}" } + %w[
     rubygems/rubygems
   ]
