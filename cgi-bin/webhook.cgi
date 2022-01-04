@@ -69,6 +69,7 @@ class PushHook
     refs/heads/master
     refs/heads/ruby_2_7
     refs/heads/ruby_3_0
+    refs/heads/ruby_3_1
   ]
   DEFAULT_GEM_REPOS = %w[
     base64
