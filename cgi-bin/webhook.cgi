@@ -87,6 +87,36 @@ class PushHook
     zlib
     net-http
     optparse
+    digest
+    readline
+    rinda
+    pp
+    prettyprint
+    logger
+    uri
+    open-uri
+    readline-ext
+    ipaddr
+    yaml
+    resolv
+    net-protocol
+    weakref
+    drb
+    io-wait
+    date
+    open3
+    pstore
+    stringio
+    tmpdir
+    English
+    un
+    getoptlong
+    singleton
+    nkf
+    set
+    mutex_m
+    tsort
+    abbrev
   ].map { |repo| "ruby/#{repo}" } + %w[
     rubygems/rubygems
   ]
