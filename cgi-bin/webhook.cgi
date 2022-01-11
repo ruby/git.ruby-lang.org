@@ -117,6 +117,7 @@ class PushHook
     mutex_m
     tsort
     abbrev
+    win32ole
   ].map { |repo| "ruby/#{repo}" } + %w[
     rubygems/rubygems
   ]
