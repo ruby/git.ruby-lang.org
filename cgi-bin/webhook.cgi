@@ -118,6 +118,7 @@ class PushHook
     tsort
     abbrev
     win32ole
+    find
   ].map { |repo| "ruby/#{repo}" } + %w[
     rubygems/rubygems
   ]
