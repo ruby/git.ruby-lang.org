@@ -119,6 +119,7 @@ class PushHook
     abbrev
     win32ole
     find
+    fcntl
   ].map { |repo| "ruby/#{repo}" } + %w[
     rubygems/rubygems
   ]
