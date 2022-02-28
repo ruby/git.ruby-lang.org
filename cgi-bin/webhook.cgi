@@ -120,6 +120,7 @@ class PushHook
     win32ole
     find
     fcntl
+    securerandom
   ].map { |repo| "ruby/#{repo}" } + %w[
     rubygems/rubygems
   ]
