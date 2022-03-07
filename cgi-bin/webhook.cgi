@@ -121,6 +121,7 @@ class PushHook
     find
     fcntl
     securerandom
+    ostruct
   ].map { |repo| "ruby/#{repo}" } + %w[
     rubygems/rubygems
   ]
