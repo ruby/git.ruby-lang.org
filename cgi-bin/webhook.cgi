@@ -72,57 +72,57 @@ class PushHook
     refs/heads/ruby_3_1
   ]
   DEFAULT_GEM_REPOS = %w[
+    abbrev
     base64
     cgi
+    date
+    digest
+    drb
+    English
     erb
     error_highlight
+    etc
+    fcntl
     fileutils
+    find
+    getoptlong
+    io-wait
+    ipaddr
     irb
+    logger
+    mutex_m
+    net-http
+    net-protocol
+    nkf
+    open-uri
+    open3
+    optparse
+    ostruct
     pathname
+    pp
+    prettyprint
+    pstore
     psych
     racc
     rdoc
-    reline
-    timeout
-    zlib
-    net-http
-    optparse
-    digest
     readline
-    rinda
-    pp
-    prettyprint
-    logger
-    uri
-    open-uri
     readline-ext
-    ipaddr
-    yaml
+    reline
     resolv
-    net-protocol
-    weakref
-    drb
-    io-wait
-    date
-    open3
-    pstore
-    stringio
-    tmpdir
-    English
-    un
-    getoptlong
-    singleton
-    nkf
-    set
-    mutex_m
-    tsort
-    abbrev
-    win32ole
-    find
-    fcntl
+    rinda
     securerandom
-    ostruct
-    etc
+    set
+    singleton
+    stringio
+    timeout
+    tmpdir
+    tsort
+    un
+    uri
+    weakref
+    win32ole
+    yaml
+    zlib
   ].map { |repo| "ruby/#{repo}" } + %w[
     rubygems/rubygems
   ]
