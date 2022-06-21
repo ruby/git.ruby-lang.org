@@ -74,8 +74,12 @@ class PushHook
   DEFAULT_GEM_REPOS = %w[
     abbrev
     base64
+    benchmark
+    bigdecimal
     cgi
     date
+    delegate
+    did_you_mean
     digest
     drb
     English
@@ -85,7 +89,10 @@ class PushHook
     fcntl
     fileutils
     find
+    forwardable
     getoptlong
+    io-console
+    io-nonblock
     io-wait
     ipaddr
     irb
@@ -94,6 +101,7 @@ class PushHook
     net-http
     net-protocol
     nkf
+    observer
     open-uri
     open3
     optparse
@@ -112,8 +120,12 @@ class PushHook
     rinda
     securerandom
     set
+    shellwords
     singleton
     stringio
+    syslog
+    tempfile
+    time
     timeout
     tmpdir
     tsort
