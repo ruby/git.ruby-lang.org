@@ -135,7 +135,7 @@ rescue GitSyncCheck::Errors => e
   e.errors.each do |ref, (remote_rev, local_rev)|
     message << "ref:#{ref.inspect} remote:#{remote_rev.inspect} local:#{local_rev.inspect}\n"
   end
-  Slack.notify(message)
+  # Slack.notify(message)
   puts message
 rescue Git::Error => e
   attempts -= 1
