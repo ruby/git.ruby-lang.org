@@ -134,6 +134,9 @@ IGNORED_FILES = [
   # vendoring (ccan)
   %r{\Accan/},
 
+  # vendoring (nkf)
+  %r{\Aext/nkf/nkf-utf8/},
+
   # vendoring (onigmo)
   %r{\Aenc/},
   %r{\Ainclude/ruby/onigmo\.h\z},
