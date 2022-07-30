@@ -104,6 +104,7 @@ DEFAULT_GEM_EXTS = %w[
   fiddle
   gdbm
   io/console
+  io/nonblock
   json
   openssl
   psych
@@ -134,6 +135,9 @@ IGNORED_FILES = [
 
   # vendoring (ccan)
   %r{\Accan/},
+
+  # vendoring (io/)
+  %r{\Aext/io/},
 
   # vendoring (nkf)
   %r{\Aext/nkf/nkf-utf8/},
