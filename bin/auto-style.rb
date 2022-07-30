@@ -98,6 +98,7 @@ DEFAULT_GEM_EXTS = %w[
   bigdecimal
   date
   dbm
+  digest
   etc
   fcntl
   fiddle
