@@ -1,5 +1,5 @@
 reviewers:
   defaults:
-    - team:yjit
+    - team:release-team
 options:
   ignore_draft: true
