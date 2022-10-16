@@ -7,14 +7,14 @@ on:
 
 jobs:
   build:
-    name: Test with Ruby 2.3
+    name: Test
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.3
+        ruby-version: 2.7.4
     - name: Install dependencies
       run: |
         gem install bundler --no-document
