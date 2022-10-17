@@ -11,6 +11,7 @@ remote_file '/etc/systemd/system/apache2.service.d/override.conf' do
   mode  '644'
   owner 'root'
   notifies :run, 'execute[systemctl daemon-reload]'
+  notifies :restart, 'service[apache2]'
 end
 
 service 'apache2' do
