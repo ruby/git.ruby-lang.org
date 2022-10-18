@@ -15,7 +15,7 @@ gem_name="$2"
 before="$3"
 after="$4"
 ruby_repo="/var/git/ruby.git"
-ruby_workdir="/data/ruby-commit-hook/update-default-gem-${gem_name}"
+ruby_workdir="/data/git.ruby-lang.org/update-default-gem-${gem_name}"
 log_path="/tmp/update-default-gem-${gem_name}.log"
 
 function log() {
