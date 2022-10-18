@@ -241,7 +241,7 @@ end
 webhook = Webhook.new(
   payload: STDIN.read, # must be done before CGI.new
   signature: ENV['HTTP_X_HUB_SIGNATURE'],
-  secret: File.read(File.expand_path('~git/config/ruby-commit-hook-secret')).chomp,
+  secret: File.read(File.expand_path('~git/config/git-ruby-lang-org-secret')).chomp,
 )
 print CGI.new.header
 print "#{webhook.process}\r\n"
