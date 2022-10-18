@@ -38,7 +38,7 @@ On each commit of Ruby's Git repository, following git hooks are triggered:
 ### bin, cgi-bin, hooks
 * `git push` to `ruby/git.ruby-lang.org`'s master branch automatically updates them.
   * `ruby/git.ruby-lang.org` push webhook triggers `cgi-bin/webhook.cgi`
-  * It runs `sudo -u git bin/update-ruby-commit-hook.sh`
+  * It runs `sudo -u git bin/update-git-ruby-lang-org.sh`
 
 ### recipes
 
