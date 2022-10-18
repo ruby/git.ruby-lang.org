@@ -1,4 +1,4 @@
-# Ruby commit hook ![test](https://github.com/ruby/ruby-commit-hook/workflows/test/badge.svg)
+# git.ruby-lang.org ![test](https://github.com/ruby/git.ruby-lang.org/workflows/test/badge.svg)
 
 ## Features
 
