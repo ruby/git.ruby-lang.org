@@ -1,5 +1,5 @@
 #!/bin/bash -eu
-# This is executed as `sudo -u git /home/git/ruby-commit-hook/bin/update-default-gem.sh`
+# This is executed as `sudo -u git /home/git/git.ruby-lang.org/bin/update-default-gem.sh`
 # when GitHub ruby/xxx's push webhook is delivered to `cgi-bin/webhook.cgi`.
 #
 # This supports only updating master branch for now.

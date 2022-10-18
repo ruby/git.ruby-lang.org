@@ -45,12 +45,12 @@ module Slack
     def notify(message)
       attachment = {
         title: 'bin/git-sync-check.rb',
-        title_link: 'https://github.com/ruby/ruby-commit-hook/blob/master/bin/git-sync-check.rb',
+        title_link: 'https://github.com/ruby/git.ruby-lang.org/blob/master/bin/git-sync-check.rb',
         text: message,
         color: 'danger',
       }
 
-      payload = { username: 'ruby/ruby-commit-hook', attachments: [attachment] }
+      payload = { username: 'ruby/git.ruby-lang.org', attachments: [attachment] }
       NOTIFY_CHANNELS.each do |channel|
         resp = post(WEBHOOK_URL, payload: payload.merge(channel: channel))
         puts "#{resp.code} (#{resp.body}) -- #{payload.to_json} (channel: #{channel})"
@@ -123,7 +123,7 @@ rescue GitSyncCheck::Errors => e
     if e.errors.key?('refs/heads/master')
       remote_ref, local_rev = e.errors['refs/heads/master']
       puts "Fixing inconsistency ref:#{ref.inspect} remote:#{remote_rev.inspect} local:#{local_rev.inspect}"
-      unless system('/home/git/ruby-commit-hook/bin/update-ruby.sh', File.basename(ref))
+      unless system('/home/git/git.ruby-lang.org/bin/update-ruby.sh', File.basename(ref))
         raise "Failed to execute update-ruby.sh for #{ref}"
       end
     end
