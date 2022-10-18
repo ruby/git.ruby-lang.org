@@ -1,9 +1,6 @@
 #!/usr/bin/env ruby
 # This file is deployed as CGI on `https://git.ruby-lang.org/webhook`.
 # See `sites-available/git.ruby-lang.org.conf`.
-#
-# Currently this webhook is triggered by a "push" hook of:
-# * https://github.com/ruby/ruby-commit-hook
 
 require 'cgi'
 require 'json'
@@ -145,7 +142,7 @@ class PushHook
 
   def process(repository:, ref:, before:, after:, pusher:)
     case repository
-    when 'ruby/ruby-commit-hook'
+    when 'ruby/git.ruby-lang.org'
       on_push_ruby_commit_hook(ref)
     when 'ruby/ruby'
       on_push_ruby(ref, pusher: pusher)
