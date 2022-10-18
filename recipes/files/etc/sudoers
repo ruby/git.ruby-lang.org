@@ -18,6 +18,7 @@ Defaults	secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/b
 
 # User privilege specification
 root	ALL=(ALL:ALL) ALL
+www-data ALL=(ALL:ALL) NOPASSWD: /home/git/git.ruby-lang.org/bin/update-git-ruby-lang-org.sh
 www-data ALL=(ALL:ALL) NOPASSWD: /home/git/git.ruby-lang.org/bin/update-ruby-commit-hook.sh
 www-data ALL=(ALL:ALL) NOPASSWD: /home/git/git.ruby-lang.org/bin/update-default-gem.sh
 www-data ALL=(ALL:ALL) NOPASSWD: /home/git/git.ruby-lang.org/bin/update-ruby.sh

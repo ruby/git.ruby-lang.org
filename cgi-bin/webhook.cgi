@@ -159,8 +159,8 @@ class PushHook
 
   def on_push_git_ruby_lang_org(ref)
     if ref == 'refs/heads/master'
-      # www-data user is allowed to sudo `/home/git/git.ruby-lang.org/bin/update-ruby-commit-hook.sh`.
-      execute('/home/git/git.ruby-lang.org/bin/update-ruby-commit-hook.sh', user: 'git')
+      # www-data user is allowed to sudo `/home/git/git.ruby-lang.org/bin/update-git-ruby-lang-org.sh`.
+      execute('/home/git/git.ruby-lang.org/bin/update-git-ruby-lang-org.sh', user: 'git')
     else
       logger.info("skipped git.ruby-lang.org ref: #{ref}")
     end
