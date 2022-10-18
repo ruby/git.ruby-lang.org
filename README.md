@@ -24,20 +24,20 @@ On each commit of Ruby's Git repository, following git hooks are triggered:
 ## The directory structure of `git.ruby-lang.org`
 
 * `/data/svn/repos/ruby`: SVN repository of Ruby
-  * `hooks/post-commit`: Run `/home/git/ruby-commit-hook/hooks/post-commit.sh`
+  * `hooks/post-commit`: Run `/home/git/git.ruby-lang.org/hooks/post-commit.sh`
 * `/data/git/ruby.git`: Bare Git repository of ruby
-  * `hooks/post-receive`: Run `/home/git/ruby-commit-hook/hooks/post-receive.sh`
-* `/home/git/ruby-commit-hook`: Cloned Git repository of ruby-commit-hook
+  * `hooks/post-receive`: Run `/home/git/git.ruby-lang.org/hooks/post-receive.sh`
+* `/home/git/git.ruby-lang.org`: Cloned Git repository of git.ruby-lang.org
 
 ### Notes
 
 * There's a symlink `/var/git` -> `/data/git`.
 * User `git`'s `$HOME` is NOT `/home/git` but `/var/git`.
 
-## How to deploy ruby-commit-hook
+## How to deploy `ruby/git.ruby-lang.org`
 ### bin, cgi-bin, hooks
-* `git push` to ruby-commit-hook's master branch automatically updates them.
-  * ruby-commit-hook push webhook triggers `cgi-bin/webhook.cgi`
+* `git push` to `ruby/git.ruby-lang.org`'s master branch automatically updates them.
+  * `ruby/git.ruby-lang.org` push webhook triggers `cgi-bin/webhook.cgi`
   * It runs `sudo -u git bin/update-ruby-commit-hook.sh`
 
 ### recipes
