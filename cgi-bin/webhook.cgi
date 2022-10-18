@@ -143,7 +143,7 @@ class PushHook
   def process(repository:, ref:, before:, after:, pusher:)
     case repository
     when 'ruby/git.ruby-lang.org'
-      on_push_ruby_commit_hook(ref)
+      on_push_git_ruby_lang_org(ref)
     when 'ruby/ruby'
       on_push_ruby(ref, pusher: pusher)
     when *DEFAULT_GEM_REPOS
@@ -157,19 +157,19 @@ class PushHook
 
   attr_reader :logger
 
-  def on_push_ruby_commit_hook(ref)
+  def on_push_git_ruby_lang_org(ref)
     if ref == 'refs/heads/master'
-      # www-data user is allowed to sudo `/home/git/ruby-commit-hook/bin/update-ruby-commit-hook.sh`.
-      execute('/home/git/ruby-commit-hook/bin/update-ruby-commit-hook.sh', user: 'git')
+      # www-data user is allowed to sudo `/home/git/git.ruby-lang.org/bin/update-ruby-commit-hook.sh`.
+      execute('/home/git/git.ruby-lang.org/bin/update-ruby-commit-hook.sh', user: 'git')
     else
-      logger.info("skipped ruby-commit-hook ref: #{ref}")
+      logger.info("skipped git.ruby-lang.org ref: #{ref}")
     end
   end
 
   def on_push_ruby(ref, pusher:)
     if RUBY_SYNCED_REFS.include?(ref) && pusher != 'matzbot' # matzbot should stop an infinite loop here.
-      # www-data user is allowed to sudo `/home/git/ruby-commit-hook/bin/update-ruby.sh`.
-      execute('/home/git/ruby-commit-hook/bin/update-ruby.sh', File.basename(ref), user: 'git')
+      # www-data user is allowed to sudo `/home/git/git.ruby-lang.org/bin/update-ruby.sh`.
+      execute('/home/git/git.ruby-lang.org/bin/update-ruby.sh', File.basename(ref), user: 'git')
     else
       logger.info("skipped ruby ref: #{ref} (pusher: #{pusher})")
     end
@@ -177,8 +177,8 @@ class PushHook
 
   def on_push_default_gem(ref, repository:, before:, after:)
     if ref == 'refs/heads/master'
-      # www-data user is allowed to sudo `/home/git/ruby-commit-hook/bin/update-default-gem.sh`.
-      execute('/home/git/ruby-commit-hook/bin/update-default-gem.sh', *repository.split('/', 2), before, after, user: 'git')
+      # www-data user is allowed to sudo `/home/git/git.ruby-lang.org/bin/update-default-gem.sh`.
+      execute('/home/git/git.ruby-lang.org/bin/update-default-gem.sh', *repository.split('/', 2), before, after, user: 'git')
     else
       logger.info("skipped #{repository} ref: #{ref}")
     end
