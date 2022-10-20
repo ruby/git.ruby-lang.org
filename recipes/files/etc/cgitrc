@@ -1,0 +1,17 @@
+#
+# cgit config
+# see cgitrc(5) for details
+
+css=/cgit-css/cgit.css
+logo=/cgit-css/ruby.png
+root-title=The Ruby Language git repositories
+
+cache-size=1000
+branch-sort=age
+enable-index-owner=0
+virtual-root=/
+enable-http-clone=1
+
+repo.url=ruby.git
+repo.path=/var/git/ruby.git
+repo.desc=The Ruby Programming Language

@@ -17,6 +17,7 @@ directory "/home/git" do
 end
 
 include_recipe 'apache2'
+include_recipe 'cgit'
 include_recipe 'git-sync-check'
 
 remote_file '/etc/sudoers'
