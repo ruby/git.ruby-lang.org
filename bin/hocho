@@ -1,5 +1,5 @@
 #!/bin/bash
 prefix=()
 
-
+export SUDO_PASSWORD=
 exec "${prefix[@]}" bundle exec hocho "$@"
