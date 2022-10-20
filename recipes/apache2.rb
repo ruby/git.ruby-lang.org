@@ -36,10 +36,10 @@ link '/etc/apache2/mods-enabled/ssl.load' do
   to '../mods-available/ssl.load'
 end
 
-link '/etc/apache2/sites-enabled/cgid.conf' do
+link '/etc/apache2/mods-enabled/cgid.conf' do
   to '../mods-available/cgid.conf'
 end
 
-link '/etc/apache2/modules-enabled/cgid.load' do
+link '/etc/apache2/mods-enabled/cgid.load' do
   to '../mods-available/cgid.load'
 end
