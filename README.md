@@ -50,6 +50,12 @@ bin/hocho apply -n git.ruby-lang.org
 bin/hocho apply git.ruby-lang.org
 ```
 
+### TODO for recipes for git.ruby-lang.org
+
+* How to store `ssh_host_key*` and `sshd_config` safely?
+* How to write a recipe to mount data volume for bare git repository?
+* How to write a recipe for mackerel with the host key of git.ruby-lang.org?
+
 ## How to set up default gem sync
 
 1. Add your gem repository name to `DEFAULT_GEM_REPOS` in [cgi-bin/webhook.cgi](./cgi-bin/webhook.cgi), and push it to master.
