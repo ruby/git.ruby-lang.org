@@ -27,3 +27,19 @@ end
 link '/etc/apache2/sites-enabled/git.ruby-lang.org.conf' do
   to '../sites-available/git.ruby-lang.org.conf'
 end
+
+link '/etc/apache2/mods-enabled/ssl.conf' do
+  to '../mods-available/ssl.conf'
+end
+
+link '/etc/apache2/mods-enabled/ssl.load' do
+  to '../mods-available/ssl.load'
+end
+
+link '/etc/apache2/sites-enabled/cgid.conf' do
+  to '../mods-available/cgid.conf'
+end
+
+link '/etc/apache2/modules-enabled/cgid.load' do
+  to '../mods-available/cgid.load'
+end
