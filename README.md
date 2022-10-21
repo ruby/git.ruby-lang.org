@@ -23,8 +23,6 @@ On each commit of Ruby's Git repository, following git hooks are triggered:
 
 ## The directory structure of `git.ruby-lang.org`
 
-* `/data/svn/repos/ruby`: SVN repository of Ruby
-  * `hooks/post-commit`: Run `/home/git/git.ruby-lang.org/hooks/post-commit.sh`
 * `/data/git/ruby.git`: Bare Git repository of ruby
   * `hooks/post-receive`: Run `/home/git/git.ruby-lang.org/hooks/post-receive.sh`
 * `/home/git/git.ruby-lang.org`: Cloned Git repository of git.ruby-lang.org
