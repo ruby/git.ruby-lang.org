@@ -18,38 +18,22 @@ service 'apache2' do
   action :nothing
 end
 
-remote_file '/etc/apache2/sites-available/git.ruby-lang.org.conf' do
-  mode  '644'
-  owner 'root'
-  notifies :reload, 'service[apache2]'
+%w[git svn].each do |subdomain|
+  remote_file "/etc/apache2/sites-available/#{subdomain}.ruby-lang.org.conf" do
+    mode  '644'
+    owner 'root'
+    notifies :reload, 'service[apache2]'
+  end
+
+  link "/etc/apache2/sites-enabled/#{subdomain}.ruby-lang.org.conf" do
+    to "../sites-available/#{subdomain}.ruby-lang.org.conf"
+  end
 end
 
-remote_file '/etc/apache2/sites-available/svn.ruby-lang.org.conf' do
-  mode  '644'
-  owner 'root'
-  notifies :reload, 'service[apache2]'
-end
-
-link '/etc/apache2/sites-enabled/git.ruby-lang.org.conf' do
-  to '../sites-available/git.ruby-lang.org.conf'
-end
-
-link '/etc/apache2/sites-enabled/svn.ruby-lang.org.conf' do
-  to '../sites-available/svn.ruby-lang.org.conf'
-end
-
-link '/etc/apache2/mods-enabled/ssl.conf' do
-  to '../mods-available/ssl.conf'
-end
-
-link '/etc/apache2/mods-enabled/ssl.load' do
-  to '../mods-available/ssl.load'
-end
-
-link '/etc/apache2/mods-enabled/cgid.conf' do
-  to '../mods-available/cgid.conf'
-end
-
-link '/etc/apache2/mods-enabled/cgid.load' do
-  to '../mods-available/cgid.load'
+%w[ssl cgid].each do |mod|
+  %w[conf load].each do |ext|
+    link "/etc/apache2/mods-enabled/#{mod}.#{ext}" do
+      to "../mods-available/#{mod}.#{ext}"
+    end
+  end
 end
