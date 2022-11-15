@@ -191,7 +191,7 @@ class << CommitEmail
       next if info.branch.start_with?('notes/')
       puts "#{info.branch}: #{info.revision} (#{info.author})"
 
-      from = make_from(name: info.author, email: info.author_email)
+      from = make_from(name: info.author, email: "noreply@ruby-lang.org")
       sendmail(to, from, make_mail(to, from, info, viewer_uri: options.viewer_uri))
     end
   end
