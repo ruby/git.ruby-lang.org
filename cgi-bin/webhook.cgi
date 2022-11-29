@@ -120,6 +120,7 @@ class PushHook
     shellwords
     singleton
     stringio
+    syntax_suggest
     syslog
     tempfile
     time
