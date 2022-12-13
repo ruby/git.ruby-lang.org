@@ -136,6 +136,8 @@ class PushHook
   ].map { |repo| "ruby/#{repo}" } + %w[
     rubygems/rubygems
   ]
+  # Set false to stop sync before a release
+  DEFAULT_GEM_SYNC_ENABLED = false
 
   def initialize(logger:)
     @logger = logger
@@ -177,7 +179,7 @@ class PushHook
   end
 
   def on_push_default_gem(ref, repository:, before:, after:)
-    if ref == 'refs/heads/master'
+    if ref == 'refs/heads/master' && DEFAULT_GEM_SYNC_ENABLED
       # www-data user is allowed to sudo `/home/git/git.ruby-lang.org/bin/update-default-gem.sh`.
       execute('/home/git/git.ruby-lang.org/bin/update-default-gem.sh', *repository.split('/', 2), before, after, user: 'git')
     else
