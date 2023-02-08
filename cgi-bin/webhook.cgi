@@ -62,12 +62,6 @@ class Webhook
 end
 
 class PushHook
-  RUBY_SYNCED_REFS = %w[
-    refs/heads/master
-    refs/heads/ruby_2_7
-    refs/heads/ruby_3_0
-    refs/heads/ruby_3_1
-  ]
   DEFAULT_GEM_REPOS = %w[
     abbrev
     base64
@@ -170,7 +164,8 @@ class PushHook
   end
 
   def on_push_ruby(ref, pusher:)
-    if RUBY_SYNCED_REFS.include?(ref) && pusher != 'matzbot' # matzbot should stop an infinite loop here.
+    # Allow to sync like ruby_3_0, ruby_3_1, and master branches.
+    if (ref == "refs/heads/master" || ref =~ /refs\/heads\/ruby_\d_\d/) && pusher != 'matzbot' # matzbot should stop an infinite loop here.
       # www-data user is allowed to sudo `/home/git/git.ruby-lang.org/bin/update-ruby.sh`.
       execute('/home/git/git.ruby-lang.org/bin/update-ruby.sh', File.basename(ref), user: 'git')
     else
