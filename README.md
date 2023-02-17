@@ -33,6 +33,12 @@ On each commit of Ruby's Git repository, following git hooks are triggered:
 * User `git`'s `$HOME` is NOT `/home/git` but `/var/git`.
 
 ## How to deploy `ruby/git.ruby-lang.org`
+
+### Authentication
+
+* We use only `admin` user for `git.ruby-lang.org`'s SSH access.
+  * You should contact @hsbt, @mame or @k0kubun for accessing `git.ruby-lang.org`.
+
 ### bin, cgi-bin, hooks
 * `git push` to `ruby/git.ruby-lang.org`'s master branch automatically updates them.
   * `ruby/git.ruby-lang.org` push webhook triggers `cgi-bin/webhook.cgi`
