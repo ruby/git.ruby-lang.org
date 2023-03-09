@@ -40,6 +40,9 @@ duerst:
 eban:
   - eban@os.rim.or.jp
 # emboss
+eightbitraptor:
+  - eightbitraptor@ruby-lang.org
+  - matt@eightbitraptor.com
 eregon:
   - eregontp@gmail.com
   - eregon@ruby-lang.org
