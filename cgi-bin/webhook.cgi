@@ -126,6 +126,7 @@ class PushHook
     weakref
     win32ole
     yaml
+    yarp
     zlib
   ].map { |repo| "ruby/#{repo}" } + %w[
     rubygems/rubygems
