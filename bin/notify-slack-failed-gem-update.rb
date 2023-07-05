@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'uri'
 require 'net/http'
 require 'json'
