@@ -19,7 +19,7 @@ log "args: $*"
 # git remote update; git push github
 
 # log "==> notify slack"
-# "${ruby_commit_hook}/bin/notify-slack.rb" $*
+# "${ruby_commit_hook}/bin/notify-slack-commits.rb" $*
 
 # log "==> commit-email.rb"
 # "${ruby_commit_hook}/bin/commit-email.rb" \
