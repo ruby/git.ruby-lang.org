@@ -38,7 +38,7 @@ if ruby -C "$ruby_workdir" tool/sync_default_gems.rb "$gem_name" "$before..$afte
     log "Failed: git push"
   fi
 else
-  ruby bin/slack_failed_gem_update.rb "$log_path" >> "$log_path" 2>&1
+  ruby /home/git/git.ruby-lang.org/bin/slack_failed_gem_update.rb "$log_path" >> "$log_path" 2>&1
 fi
 
 log "### end ###\n"
