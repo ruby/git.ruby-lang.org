@@ -20,4 +20,5 @@ result = http.start do
   http.request(req)
 end
 
-puts result.code
+puts "---"
+puts "#{$0}: status #{result.code}"
