@@ -14,6 +14,7 @@ gem_user="$1"
 gem_name="$2"
 before="$3"
 after="$4"
+this_repo="/home/git/git.ruby-lang.org"
 ruby_repo="/var/git/ruby.git"
 ruby_workdir="/data/git.ruby-lang.org/update-default-gem-${gem_name}"
 log_path="/tmp/update-default-gem-${gem_name}.log"
@@ -38,7 +39,7 @@ if ruby -C "$ruby_workdir" tool/sync_default_gems.rb "$gem_name" "$before..$afte
     log "Failed: git push"
   fi
 else
-  ruby /home/git/git.ruby-lang.org/bin/slack_failed_gem_update.rb "$log_path" >> "$log_path" 2>&1
+  "${this_repo}/bin/notify-slack-failed-gem-update.rb" "$log_path" >> "$log_path" 2>&1
 fi
 
 log "### end ###\n"
