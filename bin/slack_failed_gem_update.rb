@@ -1,3 +1,7 @@
+require 'uri'
+require 'net/http'
+require 'json'
+
 log_contents = File.read(ARGV[0]).split("### start ###").last
 
 payload = {
