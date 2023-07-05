@@ -2,11 +2,13 @@ require 'uri'
 require 'net/http'
 require 'json'
 
-log_contents = File.read(ARGV[0]).split("### start ###").last
+log_path = ARGV[0]
+log_contents = File.read(log_path).split("### start ###").last || ""
 
 payload = {
   attachments: [{
-    text: (log_contents || "")
+    title: File.basename(log_path),
+    text: log_contents,
   }]
 }
 
