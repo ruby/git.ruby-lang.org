@@ -25,8 +25,8 @@ branches.each do |branch|
       'TIME' => [/".+"/, '"%H:%M:%S"'],
       'CODE' => [/\d+/, '%Y%m%d'],
       'YEAR' => [/\d+/, '%Y'],
-      'MONTH' => [/\d+/, '%m'],
-      'DAY' => [/\d+/, '%d']
+      'MONTH' => [/\d+/, '%-m'],
+      'DAY' => [/\d+/, '%-d']
     }
 
     now = Time.now
@@ -43,7 +43,7 @@ branches.each do |branch|
           if /RUBY_RELEASE_(#{formats.keys.join('|')})/o =~ line
             format = formats[$1]
             line.sub!(format[0]) do
-              now.strftime(format[1]).sub(/^0/, '')
+              now.strftime(format[1])
             end
           end
           fnew.puts line.rstrip
