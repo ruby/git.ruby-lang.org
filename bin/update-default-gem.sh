@@ -37,6 +37,8 @@ if ruby -C "$ruby_workdir" tool/sync_default_gems.rb "$gem_name" "$before..$afte
   if ! SVN_ACCOUNT_NAME=git git -C "$ruby_workdir" push origin "HEAD:master" >> "$log_path" 2>&1; then
     log "Failed: git push"
   fi
+else
+  ruby bin/slack_failed_gem_update.rb "$log_path" >> "$log_path" 2>&1
 fi
 
 log "### end ###\n"
