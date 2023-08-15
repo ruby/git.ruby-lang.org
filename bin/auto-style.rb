@@ -184,7 +184,7 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
 
     edited_files = files.select do |f|
       src = File.binread(f) rescue next
-      eofnewline = eofnewline0 = true if src.sub!(/(?<!\n)\z/, "\n")
+      eofnewline = eofnewline0 = true if src.sub!(/(?<!\A|\n)\z/, "\n")
 
       trailing0 = false
       expandtab0 = false
