@@ -5,3 +5,5 @@
   default = matching
 [pull]
   rebase = true
+[merge]
+  renameLimit = 0
