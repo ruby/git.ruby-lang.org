@@ -14,3 +14,8 @@ remote_file "/var/git/.ssh/authorized_keys" do
   mode  "600"
   owner "git"
 end
+
+remote_file "/var/git/.gitconfig" do
+  mode  "644"
+  owner "git"
+end

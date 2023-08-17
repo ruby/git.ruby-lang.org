@@ -1,0 +1,7 @@
+[user]
+	name = git
+	email = svn-admin@ruby-lang.org
+[push]
+	default = matching
+[pull]
+	rebase = true
