@@ -1,7 +1,7 @@
 [user]
-	name = git
-	email = svn-admin@ruby-lang.org
+  name = git
+  email = svn-admin@ruby-lang.org
 [push]
-	default = matching
+  default = matching
 [pull]
-	rebase = true
+  rebase = true
