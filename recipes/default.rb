@@ -6,12 +6,6 @@ package "postfix"
 package "gpg"
 package "rsync"
 
-directory "/home/git" do
-  owner "git"
-  group "git"
-  mode "0755"
-end
-
 include_recipe 'apache2'
 include_recipe 'cgit'
 include_recipe 'git-user'
