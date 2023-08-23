@@ -1,10 +1,12 @@
-package "cgit"
-package "certbot"
-package "git"
-package "ruby"
-package "postfix"
-package "gpg"
-package "rsync"
+include_recipe 'bullseye-backports'
+
+package 'cgit'
+package 'certbot'
+package 'git'
+package 'ruby'
+package 'postfix'
+package 'gpg'
+package 'rsync'
 
 include_recipe 'apache2'
 include_recipe 'cgit'
