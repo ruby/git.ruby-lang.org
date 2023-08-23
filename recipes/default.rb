@@ -2,7 +2,7 @@ include_recipe 'bullseye-backports'
 
 package 'cgit'
 package 'certbot'
-package 'git'
+package 'git/bullseye-backports'
 package 'ruby'
 package 'postfix'
 package 'gpg'
