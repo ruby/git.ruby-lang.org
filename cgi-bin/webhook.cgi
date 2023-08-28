@@ -102,7 +102,6 @@ class PushHook
     prettyprint
     pstore
     psych
-    racc
     rdoc
     readline
     readline-ext
