@@ -95,6 +95,7 @@ class PushHook
     observer
     open-uri
     open3
+    openssl
     optparse
     ostruct
     pathname
