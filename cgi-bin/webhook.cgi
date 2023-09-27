@@ -101,6 +101,7 @@ class PushHook
     pathname
     pp
     prettyprint
+    prism
     pstore
     psych
     rdoc
@@ -126,7 +127,6 @@ class PushHook
     weakref
     win32ole
     yaml
-    yarp
     zlib
   ].map { |repo| "ruby/#{repo}" } + %w[
     rubygems/rubygems
