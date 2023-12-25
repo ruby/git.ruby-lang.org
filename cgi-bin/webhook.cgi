@@ -132,7 +132,7 @@ class PushHook
     rubygems/rubygems
   ]
   # Set false to stop sync before a release
-  DEFAULT_GEM_SYNC_ENABLED = false
+  DEFAULT_GEM_SYNC_ENABLED = true
 
   def initialize(logger:)
     @logger = logger
