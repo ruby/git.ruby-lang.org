@@ -15,9 +15,6 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 2.7.4
-    - name: Install dependencies
-      run: |
-        gem install bundler --no-document
-        bundle install
+    - name: bundle install
     - name: Run test
       run: bundle exec rake test
