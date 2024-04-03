@@ -185,8 +185,10 @@ class PushHook
 
   def execute(*cmd, user:)
     require 'open3'
-    stdout, stderr, status = Open3.capture3('/usr/bin/sudo', '-u', user, *cmd)
-    logger.info("+ #{cmd.join(' ')} (success: #{status.success?})")
+    cmd = ['/usr/bin/sudo', '-u', user, *cmd]
+    logger.info("+ #{cmd.join(' ')}")
+    stdout, stderr, status = Open3.capture3(*cmd)
+    logger.info("success: #{status.success?}")
     logger.info("stdout: #{stdout}")
     logger.info("stderr: #{stderr}")
   end
