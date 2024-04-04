@@ -13,3 +13,7 @@ remote_file '/etc/systemd/system/git-sync-check.timer' do
   owner 'root'
   notifies :run, 'execute[systemctl daemon-reload]'
 end
+
+service 'git-sync-check.timer' do
+  action [:start, :enable]
+end
