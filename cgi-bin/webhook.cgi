@@ -6,6 +6,7 @@ require 'cgi'
 require 'json'
 require 'logger'
 require 'openssl'
+require 'shellwords'
 
 class Webhook
   LOG_PATH = '/tmp/webhook.log'
@@ -184,13 +185,10 @@ class PushHook
   end
 
   def execute(*cmd, user:)
-    require 'open3'
     cmd = ['/usr/bin/sudo', '-u', user, *cmd]
-    logger.info("+ #{cmd.join(' ')}")
-    stdout, stderr, status = Open3.capture3(*cmd)
-    logger.info("success: #{status.success?}")
-    logger.info("stdout: #{stdout}")
-    logger.info("stderr: #{stderr}")
+    logger.info("+ #{cmd.shelljoin}")
+    system("#{cmd.shelljoin} > #{Webhook::LOG_PATH} 2>&1")
+    logger.info("done")
   end
 end
 
