@@ -187,7 +187,7 @@ class PushHook
   def execute(*cmd, user:)
     cmd = ['/home/git/git.ruby-lang.org/bin/sudo-u.sh', user, *cmd]
     logger.info("+ #{cmd.shelljoin}")
-    system("timeout 3 #{cmd.shelljoin} >> #{Webhook::LOG_PATH} 2>&1", exception: true)
+    system("#{cmd.shelljoin} >> #{Webhook::LOG_PATH} 2>&1", exception: true)
     logger.info("done")
   end
 end
