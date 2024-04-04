@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+#!/bin/sh -eux
 # This is executed as `sudo -u git /home/git/git.ruby-lang.org/bin/update-git-ruby-lang-org.sh`
 # when GitHub ruby/git.ruby-lang.org's push webhook is delivered to `cgi-bin/webhook.cgi`.
 #
