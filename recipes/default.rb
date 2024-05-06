@@ -2,7 +2,9 @@ include_recipe 'bullseye-backports'
 
 package 'cgit'
 package 'certbot'
-package 'git/bullseye-backports'
+package 'git/bullseye-backports' do
+  only_if '[[ $(git -v) != "git version 2.39.2" ]]'
+end
 package 'ruby'
 package 'postfix'
 package 'gpg'
