@@ -15,5 +15,9 @@ remote_file '/etc/systemd/system/git-sync-check.timer' do
 end
 
 service 'git-sync-check.timer' do
-  action [:start, :enable]
+  action :start
+end
+
+link '/etc/systemd/system/timers.target.wants/git-sync-check.timer' do
+  to '/etc/systemd/system/git-sync-check.timer'
 end
