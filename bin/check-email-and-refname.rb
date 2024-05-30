@@ -12,7 +12,7 @@ ADMIN_USERS = [
   "naruse",
 ]
 STABLE_BRANCH_MAINTAINERS = [
-  "usa",
+  "k0kubun",
   "nagachika",
 ]
 PUSHABLE_REFNAMES = [
