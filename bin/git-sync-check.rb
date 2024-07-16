@@ -93,6 +93,7 @@ module GitSyncCheck
 
     # Remove refs which are not to be checked here.
     remote_refs.delete('HEAD') # show-ref does not show it
+    remote_refs.delete('refs/notes/commits') # it seems too complicated to recover its inconsistency
     remote_refs.keys.each { |ref| remote_refs.delete(ref) if ref.match(%r[\Arefs/pull/\d+/\w+\z]) } # pull requests
 
     # Check consistency
