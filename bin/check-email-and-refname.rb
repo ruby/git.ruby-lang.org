@@ -9,6 +9,7 @@ require "yaml"
 ADMIN_USERS = [
   "git",
   "hsbt",
+  "k0kubun",
   "naruse",
 ]
 STABLE_BRANCH_MAINTAINERS = [
