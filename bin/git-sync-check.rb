@@ -92,13 +92,14 @@ module GitSyncCheck
     local_refs  = Hash[show_ref.lines.map  { |l| rev, ref = l.chomp.split(' ');  [ref, rev] }]
 
     # Remove refs which are not to be checked here.
-    remote_refs.delete('HEAD') # show-ref does not show it
-    remote_refs.delete('refs/notes/commits') # it seems too complicated to recover its inconsistency
-    remote_refs.keys.each { |ref| remote_refs.delete(ref) if ref.match(%r[\Arefs/pull/\d+/\w+\z]) } # pull requests
+    refs = remote_refs.keys | local_refs.keys
+    refs.delete('HEAD') # show-ref does not show it
+    refs.delete('refs/notes/commits') # it seems too complicated to recover its inconsistency
+    remote_refs.keys.each { |ref| refs.delete(ref) if ref.match(%r[\Arefs/pull/\d+/\w+\z]) } # pull requests
 
     # Check consistency
     errors = {}
-    (remote_refs.keys | local_refs.keys).each do |ref|
+    refs.each do |ref|
       remote_rev = remote_refs[ref]
       local_rev  = local_refs[ref]
 
