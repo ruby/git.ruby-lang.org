@@ -11,6 +11,7 @@ package 'gpg'
 package 'rsync'
 
 include_recipe 'apache2'
+include_recipe 'postfix'
 include_recipe 'cgit'
 include_recipe 'git-user'
 include_recipe 'git-sync-check'
