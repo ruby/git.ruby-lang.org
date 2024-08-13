@@ -23,6 +23,15 @@ function log() {
   echo -e "[$$: $(date "+%Y-%m-%d %H:%M:%S %Z")] $1" >> "$log_path"
 }
 
+# Run a given command. If it fails, notify Slack and exits abnormally.
+function run() {
+  if ! "$@"; then
+    "${this_repo}/bin/notify-slack-failed-gem-update.rb" "$log_path" >> "$log_path" 2>&1
+    log "Failed: $@"
+    exit 1
+  fi
+}
+
 # Initialize working directory only if missing
 if [ ! -d "$ruby_workdir" ]; then
   git clone "file://${ruby_repo}" "$ruby_workdir"
@@ -30,16 +39,12 @@ fi
 
 log "### start ###"
 
-git -C "$ruby_workdir" fetch origin master >> "$log_path" 2>&1
-git -C "$ruby_workdir" reset --hard origin/master >> "$log_path" 2>&1
+run git -C "$ruby_workdir" fetch origin master >> "$log_path" 2>&1
+run git -C "$ruby_workdir" reset --hard origin/master >> "$log_path" 2>&1
 
-if ruby -C "$ruby_workdir" tool/sync_default_gems.rb "$gem_name" "$before..$after" >> "$log_path" 2>&1; then
-  # Pushing ruby_workdir to cgit to make sure all git hooks are performed on sync-ed commits.
-  if ! SVN_ACCOUNT_NAME=git git -C "$ruby_workdir" push origin "HEAD:master" >> "$log_path" 2>&1; then
-    log "Failed: git push"
-  fi
-else
-  "${this_repo}/bin/notify-slack-failed-gem-update.rb" "$log_path" >> "$log_path" 2>&1
-fi
+run ruby -C "$ruby_workdir" tool/sync_default_gems.rb "$gem_name" "$before..$after" >> "$log_path" 2>&1
+
+# Pushing ruby_workdir to cgit to make sure all git hooks are performed on sync-ed commits.
+SVN_ACCOUNT_NAME=git run git -C "$ruby_workdir" push origin "HEAD:master" >> "$log_path" 2>&1
 
 log "### end ###\n"
