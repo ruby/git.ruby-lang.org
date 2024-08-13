@@ -25,7 +25,7 @@ function log() {
 
 # Run a given command. If it fails, notify Slack and exits abnormally.
 function run() {
-  echo "$ $@"
+  echo "$ $@" >> "$log_path"
   if ! "$@"; then
     "${this_repo}/bin/notify-slack-failed-gem-update.rb" "$log_path" >> "$log_path" 2>&1
     log "Failed: $@"
