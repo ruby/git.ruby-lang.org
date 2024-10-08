@@ -129,6 +129,7 @@ class PushHook
     win32ole
     yaml
     zlib
+    json
   ].map { |repo| "ruby/#{repo}" } + %w[
     rubygems/rubygems
   ]
