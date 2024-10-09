@@ -130,6 +130,7 @@ class PushHook
     yaml
     zlib
     json
+    win32-registry
   ].map { |repo| "ruby/#{repo}" } + %w[
     rubygems/rubygems
   ]
