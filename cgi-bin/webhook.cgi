@@ -64,16 +64,12 @@ end
 
 class PushHook
   DEFAULT_GEM_REPOS = %w[
-    abbrev
-    base64
     benchmark
-    bigdecimal
     cgi
     date
     delegate
     did_you_mean
     digest
-    drb
     English
     erb
     error_highlight
@@ -82,18 +78,14 @@ class PushHook
     fileutils
     find
     forwardable
-    getoptlong
     io-console
     io-nonblock
     io-wait
     ipaddr
     irb
     logger
-    mutex_m
     net-http
     net-protocol
-    nkf
-    observer
     open-uri
     open3
     openssl
@@ -110,14 +102,12 @@ class PushHook
     readline-ext
     reline
     resolv
-    rinda
     securerandom
     set
     shellwords
     singleton
     stringio
     syntax_suggest
-    syslog
     tempfile
     time
     timeout
