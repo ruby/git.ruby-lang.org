@@ -121,6 +121,7 @@ class PushHook
     zlib
     json
     win32-registry
+    mmtk
   ].map { |repo| "ruby/#{repo}" } + %w[
     rubygems/rubygems
   ]
