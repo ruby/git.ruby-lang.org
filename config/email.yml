@@ -32,13 +32,10 @@ byroot:
 # dave
 # davidflanagan
 # dblack
-drbrain:
-  - drbrain@segment7.net
-  - drbrain@ruby-lang.org
+# drbrain
 duerst:
   - duerst@it.aoyama.ac.jp
-eban:
-  - eban@os.rim.or.jp
+# eban
 # emboss
 eightbitraptor:
   - eightbitraptor@ruby-lang.org
@@ -55,9 +52,7 @@ git:
 glass:
   - glass.saga@gmail.com
 # gogotanaka
-gotoken:
-  - gotoken@gmail.com
-  - gotoken@notwork.org
+# gotoken
 # gotoyuzo
 # gsinclair
 # H_Konishi
@@ -161,8 +156,7 @@ samuel:
   - samuel.williams@oriontransfer.co.nz
 schneems:
   - richard.schneeman@gmail.com
-seki:
-  - m_seki@mva.biglobe.ne.jp
+# seki
 # ser
 # shigek
 shioimm:
@@ -182,8 +176,7 @@ soutaro:
   - matsumoto@soutaro.com
 stomar:
   - sto.mar@web.de
-suke:
-  - masaki.suketa@nifty.ne.jp
+# suke
 tadd:
   - tad.a.digger@gmail.com
   - tadd@ruby-lang.org
@@ -205,8 +198,7 @@ tompng:
 # uema2
 usa:
   - usa@ruby-lang.org
-wanabe:
-  - s.wanabe@gmail.com
+# wanabe
 watson1978:
   - watson1978@gmail.com
 # wakou
