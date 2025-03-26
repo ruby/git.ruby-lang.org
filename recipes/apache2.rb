@@ -23,6 +23,12 @@ remote_file '/var/www/git.ruby-lang.org/robots.txt' do
   owner 'root'
 end
 
+remote_file '/etc/apache2/conf-available/cgit.conf' do
+  mode  '644'
+  owner 'root'
+  notifies :reload, 'service[apache2]'
+end
+
 %w[git svn].each do |subdomain|
   remote_file "/etc/apache2/sites-available/#{subdomain}.ruby-lang.org.conf" do
     mode  '644'
