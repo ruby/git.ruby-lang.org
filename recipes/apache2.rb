@@ -18,6 +18,11 @@ service 'apache2' do
   action :nothing
 end
 
+remote_file '/var/www/git.ruby-lang.org/robots.txt' do
+  mode  '644'
+  owner 'root'
+end
+
 %w[git svn].each do |subdomain|
   remote_file "/etc/apache2/sites-available/#{subdomain}.ruby-lang.org.conf" do
     mode  '644'
