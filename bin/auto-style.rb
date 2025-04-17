@@ -27,9 +27,9 @@ class Git
   end
 
   # ["foo/bar.c", "baz.h", ...]
-  def updated_paths
+  def updated_paths(*paths)
     with_clean_env do
-      IO.popen(['git', 'diff', '--name-only', @oldrev, @newrev], &:readlines).each(&:chomp!)
+      IO.popen(['git', 'diff', '--name-only', @oldrev, @newrev, '--', *paths], &:readlines).each(&:chomp!)
     end
   end
 
@@ -168,11 +168,10 @@ rest.each_slice(3).map do |oldrev, newrev, refname|
     system "git clone --depth=#{depth} --branch=#{branch} file:///#{repo_path} #{workdir}"
     Dir.chdir(workdir)
 
-    paths = vcs.updated_paths
+    paths = vcs.updated_paths(':^/sample/', ':^*.bat')
     paths.select! {|l|
-      /^\d/ !~ l and /\.bat\z/ !~ l and
-      (/\A(?:config|[Mm]akefile|GNUmakefile|README)/ =~ File.basename(l) or
-       /\A\z|\.(?:[chsy]|\d+|e?rb|tmpl|bas[eh]|z?sh|in|ma?k|def|src|trans|rdoc|ja|en|el|sed|awk|p[ly]|scm|mspec|html|)\z/ =~ File.extname(l))
+      /\A(?:config|[Mm]akefile|GNUmakefile|README)/ =~ File.basename(l) or
+      /\A\z|\.(?:[chsy]|\d+|e?rb|tmpl|bas[eh]|z?sh|in|ma?k|def|src|trans|rdoc|ja|en|el|sed|awk|p[ly]|scm|mspec|html|)\z/ =~ File.extname(l)
     }
     files = paths.select {|n| File.file?(n) }
     files.reject! do |f|
