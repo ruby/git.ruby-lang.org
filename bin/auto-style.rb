@@ -155,6 +155,9 @@ IGNORED_FILES = [
 
   # to respect the original statements of licenses
   %r{\ALEGAL\z},
+
+  # trailing spaces could be intentional in TRICK code
+  %r{\Asample/trick[^/]*/},
 ]
 
 repo_path, *rest = ARGV
