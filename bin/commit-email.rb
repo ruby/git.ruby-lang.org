@@ -174,7 +174,7 @@ class << CommitEmail
       end
     end
 
-    return opts.parse!(args), options
+    return opts.parse(args), options
   end
 
   def main(repo_path, to, rest)
