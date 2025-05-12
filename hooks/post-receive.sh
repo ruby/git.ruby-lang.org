@@ -10,6 +10,9 @@ ruby_commit_hook="$(cd "$(dirname $0)"; cd ..; pwd)"
 # Cancel impact of SSH Agent Forwarding to git push by matzbot
 unset SSH_AUTH_SOCK
 
+# Cancel impact from LANG=C set by apache2
+export LANG=en_US.UTF-8
+
 function log() {
   echo -e "[$$: $(date "+%Y-%m-%d %H:%M:%S %Z")] $1"
 }

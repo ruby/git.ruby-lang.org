@@ -136,7 +136,6 @@ class GitInfoBuilder
   def with_gitenv
     orig = ENV.to_h.dup
     begin
-      ENV['LANG'] = 'C'
       ENV.delete('GIT_DIR')
       yield
     ensure
