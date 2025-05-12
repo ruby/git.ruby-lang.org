@@ -17,3 +17,4 @@ include_recipe 'git-user'
 include_recipe 'git-sync-check'
 
 remote_file '/etc/sudoers'
+remote_file '/etc/locale.gen'
