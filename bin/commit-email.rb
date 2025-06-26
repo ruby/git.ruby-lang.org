@@ -126,7 +126,7 @@ class GitInfoBuilder
 
   def git(*args)
     command = ['git', '-C', @repo_path, *args]
-    output = with_gitenv { IO.popen(command, &:read) }
+    output = with_gitenv { IO.popen(command, external_encoding: 'UTF-8', &:read) }
     unless $?.success?
       raise GitCommandFailure, "failed to execute '#{command.join(' ')}':\n#{output}"
     end
