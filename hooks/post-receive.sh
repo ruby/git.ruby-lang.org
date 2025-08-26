@@ -26,7 +26,7 @@ log "==> notify slack"
 
 log "==> commit-email.rb"
 "${ruby_commit_hook}/bin/commit-email.rb" \
-   "$ruby_git" ruby-cvs@ruby-lang.org $* \
+   "$ruby_git" ruby-cvs@g.ruby-lang.org $* \
    --viewer-uri "https://github.com/ruby/ruby/commit/" \
    --error-to cvs-admin@ruby-lang.org
 
