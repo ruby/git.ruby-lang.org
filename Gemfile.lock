@@ -21,6 +21,7 @@ GEM
       net-ssh (>= 2.6.5, < 8.0.0)
     net-ssh (7.3.0)
     net-telnet (0.2.0)
+    nkf (0.2.0)
     power_assert (2.0.5)
     rake (13.3.0)
     schash (0.1.2)
@@ -42,6 +43,7 @@ DEPENDENCIES
   bcrypt_pbkdf
   ed25519
   hocho
+  nkf
   rake
   test-unit
 
