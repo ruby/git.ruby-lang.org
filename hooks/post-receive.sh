@@ -36,9 +36,6 @@ curl -s "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/re
 # Make extra commits from here.
 # The above procedure will be executed for the these commits in another post-receive hook.
 
-log "==> update-version.h"
-SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/update-version.h.rb" git "$ruby_git" $*
-
 log "==> notes-github-pr"
 SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/notes-github-pr.rb" "$ruby_git" $*
 
