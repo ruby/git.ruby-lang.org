@@ -21,9 +21,6 @@ log "### start ###"
 log "SVN_ACCOUNT_NAME: ${SVN_ACCOUNT_NAME:-}"
 log "args: $*"
 
-log "==> notify slack"
-"${ruby_commit_hook}/bin/notify-slack-commits.rb" $*
-
 log "==> commit-email.rb"
 "${ruby_commit_hook}/bin/commit-email.rb" \
    "$ruby_git" ruby-cvs@g.ruby-lang.org $* \
