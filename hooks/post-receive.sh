@@ -30,10 +30,4 @@ log "==> commit-email.rb"
 log "==> redmine fetch changesets"
 curl -s "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/redmine.key`" &
 
-# Make extra commits from here.
-# The above procedure will be executed for the these commits in another post-receive hook.
-
-log "==> notes-github-pr"
-SVN_ACCOUNT_NAME=git "${ruby_commit_hook}/bin/notes-github-pr.rb" "$ruby_git" $*
-
 log "### end ###\n"
