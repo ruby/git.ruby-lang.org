@@ -9,6 +9,7 @@ include_recipe 'apache2'
 include_recipe 'postfix'
 include_recipe 'cgit'
 include_recipe 'git-user'
+include_recipe 'git-sync-user'
 include_recipe 'git-sync-check'
 
 remote_file '/etc/sudoers'
