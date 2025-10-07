@@ -63,71 +63,6 @@ class Webhook
 end
 
 class PushHook
-  DEFAULT_GEM_REPOS = %w[
-    benchmark
-    cgi
-    date
-    delegate
-    did_you_mean
-    digest
-    English
-    erb
-    error_highlight
-    etc
-    fcntl
-    fileutils
-    find
-    forwardable
-    io-console
-    io-nonblock
-    io-wait
-    ipaddr
-    irb
-    logger
-    net-http
-    net-protocol
-    open-uri
-    open3
-    openssl
-    optparse
-    ostruct
-    pathname
-    pp
-    prettyprint
-    prism
-    pstore
-    psych
-    rdoc
-    readline
-    readline-ext
-    reline
-    resolv
-    securerandom
-    set
-    shellwords
-    singleton
-    stringio
-    syntax_suggest
-    tempfile
-    time
-    timeout
-    tmpdir
-    tsort
-    un
-    uri
-    weakref
-    win32ole
-    yaml
-    zlib
-    json
-    win32-registry
-    mmtk
-  ].map { |repo| "ruby/#{repo}" } + %w[
-    rubygems/rubygems
-  ]
-  # Set false to stop sync before a release
-  DEFAULT_GEM_SYNC_ENABLED = true
-
   def initialize(logger:)
     @logger = logger
   end
@@ -138,8 +73,6 @@ class PushHook
       on_push_git_ruby_lang_org(ref)
     when 'ruby/ruby'
       on_push_ruby(ref, pusher: pusher)
-    when *DEFAULT_GEM_REPOS
-      on_push_default_gem(ref, repository: repository, before: before, after: after)
     else
       logger.info("unexpected repository: #{repository}")
     end
@@ -165,15 +98,6 @@ class PushHook
       execute('/home/git/git.ruby-lang.org/bin/update-ruby.sh', File.basename(ref), user: 'git')
     else
       logger.info("skipped ruby ref: #{ref} (pusher: #{pusher})")
-    end
-  end
-
-  def on_push_default_gem(ref, repository:, before:, after:)
-    if ['refs/heads/master', 'refs/heads/main'].include?(ref) && DEFAULT_GEM_SYNC_ENABLED
-      # www-data user is allowed to sudo `/home/git/git.ruby-lang.org/bin/update-default-gem.sh`.
-      execute('/home/git/git.ruby-lang.org/bin/update-default-gem.sh', *repository.split('/', 2), before, after, user: 'git')
-    else
-      logger.info("skipped #{repository} ref: #{ref}")
     end
   end
 
