@@ -12,7 +12,6 @@ On each commit of Ruby's Git repository, following git hooks are triggered:
 ### post-receive
 
 * Send notification to ruby-cvs@ruby-lang.org
-* Request Redmine to fetch changesets
 
 ## The directory structure of `git.ruby-lang.org`
 

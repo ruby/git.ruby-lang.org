@@ -27,7 +27,4 @@ log "==> commit-email.rb"
    --viewer-uri "https://github.com/ruby/ruby/commit/" \
    --error-to cvs-admin@ruby-lang.org
 
-log "==> redmine fetch changesets"
-curl -s "https://bugs.ruby-lang.org/sys/fetch_changesets?key=`cat ~git/config/redmine.key`" &
-
 log "### end ###\n"
