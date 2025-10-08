@@ -1,7 +1,7 @@
 #!/bin/bash -eu
 # This is executed as `sudo -u git /home/git/git.ruby-lang.org/bin/update-ruby.sh`
-# when GitHub ruby's push webhook is delivered to `cgi-bin/webhook.cgi`.
-# Also this is triggered on master branch's update hook failure.
+# by ruby/ruby/.github/workflows/post_push.yml.
+# This is also triggered on master branch's update hook failure.
 
 # Cancel impact from git hook
 unset GIT_DIR
