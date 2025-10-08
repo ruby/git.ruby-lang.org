@@ -9,10 +9,15 @@ On each commit of Ruby's Git repository, following git hooks are triggered:
 * Verify committer email from `SVN_ACCOUNT_NAME` associated to SSH key used for `git push`
 * Reject merge commits (ask @mame about why)
 
+### update
+
+* Sync ruby.git to GitHub
+
 ## The directory structure of `git.ruby-lang.org`
 
 * `/data/git/ruby.git`: Bare Git repository of ruby
-  * `hooks/post-receive`: Run `/home/git/git.ruby-lang.org/hooks/post-receive.sh`
+  * `hooks/pre-receive`: Run `/home/git/git.ruby-lang.org/hooks/pre-receive.sh`
+  * `hooks/update`: Run `/home/git/git.ruby-lang.org/hooks/update.sh`
 * `/home/git/git.ruby-lang.org`: Cloned Git repository of git.ruby-lang.org
 
 ### Notes
