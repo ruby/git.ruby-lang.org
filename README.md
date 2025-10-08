@@ -12,14 +12,7 @@ On each commit of Ruby's Git repository, following git hooks are triggered:
 ### post-receive
 
 * Send notification to ruby-cvs@ruby-lang.org
-* Commit automatic styling:
-  * remove trailing spaces
-  * append newline at EOF
-  * expand tabs
-* Update version.h if date is changed
 * Request Redmine to fetch changesets
-* Mirror cgit to GitHub
-* Notify committer's Slack
 
 ## The directory structure of `git.ruby-lang.org`
 
@@ -39,11 +32,6 @@ On each commit of Ruby's Git repository, following git hooks are triggered:
 * We use only `admin` user for `git.ruby-lang.org`'s SSH access.
   * You should contact @hsbt, @mame or @k0kubun for accessing `git.ruby-lang.org`.
 
-### bin, cgi-bin, hooks
-* `git push` to `ruby/git.ruby-lang.org`'s master branch automatically updates them.
-  * `ruby/git.ruby-lang.org` push webhook triggers `cgi-bin/webhook.cgi`
-  * It runs `sudo -u git bin/update-git-ruby-lang-org.sh`
-
 ### recipes
 
 ```bash
@@ -59,15 +47,6 @@ bin/hocho apply git.ruby-lang.org
 * How to store `ssh_host_key*` and `sshd_config` safely?
 * How to write a recipe to mount data volume for bare git repository?
 * How to write a recipe for mackerel with the host key of git.ruby-lang.org?
-
-## How to set up default gem sync
-
-1. Add your gem repository name to `DEFAULT_GEM_REPOS` in [cgi-bin/webhook.cgi](./cgi-bin/webhook.cgi), and push it to master.
-2. Go to `https://github.com/ruby/{repo_name}/settings/hooks`, and add a webhook
-     * Payload URL: Set the content of `~git/config/git-ruby-lang-org-url` in git.ruby-lang.org
-     * Content type: application/json
-     * Secret: Set the content of `~git/config/git-ruby-lang-org-secret` in git.ruby-lang.org
-     * Which events: Just the push event.
 
 ## License
 
