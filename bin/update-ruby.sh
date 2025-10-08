@@ -10,7 +10,7 @@ unset GIT_DIR
 export LANG=en_US.UTF-8
 
 ruby_repo="/var/git/ruby.git"
-ruby_branch="$1"
+ruby_branch="$(basename "$1")"
 ruby_workdir="/data/git.ruby-lang.org/update-ruby"
 log_path="/tmp/update-ruby.log"
 
