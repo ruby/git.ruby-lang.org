@@ -24,4 +24,4 @@ set -eux
 # Sync: GitHub -> ruby_workdir -> cgit
 # By doing this way, we can make sure all git hooks are performed on sync-ed commits.
 git -C "$ruby_workdir" fetch github "$ruby_branch"
-SVN_ACCOUNT_NAME=git git -C "$ruby_workdir" push origin "github/${ruby_branch}:${ruby_branch}"
+SVN_ACCOUNT_NAME=git git -C "$ruby_workdir" push origin "github/${ruby_branch}:refs/heads/${ruby_branch}"
