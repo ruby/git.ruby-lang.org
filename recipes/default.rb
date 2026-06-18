@@ -11,6 +11,7 @@ include_recipe 'cgit'
 include_recipe 'git-user'
 include_recipe 'git-sync-user'
 include_recipe 'git-sync-check'
+include_recipe 'datadog'
 
 remote_file '/etc/sudoers'
 remote_file '/etc/locale.gen'
