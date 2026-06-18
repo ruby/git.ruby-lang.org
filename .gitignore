@@ -1,3 +1,4 @@
 repos/*
 /test/wc.orig/
 /test/repos.orig/
+/tmp/
