@@ -3,6 +3,14 @@ logs:
     path: /var/log/apache2/other_vhosts_access.log
     service: git.ruby-lang.org
     source: apache
+    log_processing_rules:
+      # other_vhosts_access.log is vhost_combined, so each line starts with
+      # "vhost:port ". Strip that prefix so the line becomes standard combined
+      # and Datadog's Apache pipeline parses status/method/url/UA/client IP.
+      - type: mask_sequences
+        name: strip_vhost_prefix
+        replace_placeholder: ""
+        pattern: ^[A-Za-z0-9.-]+:[0-9]+\s
   - type: file
     path: /var/log/apache2/error.log
     service: git.ruby-lang.org
