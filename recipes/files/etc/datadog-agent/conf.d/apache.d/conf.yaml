@@ -1,0 +1,13 @@
+logs:
+  - type: file
+    path: /var/log/apache2/other_vhosts_access.log
+    service: git.ruby-lang.org
+    source: apache
+  - type: file
+    path: /var/log/apache2/error.log
+    service: git.ruby-lang.org
+    source: apache
+    log_processing_rules:
+      - type: multi_line
+        name: error_log_start_with_date
+        pattern: \[\w{3}\s\w{3}\s\d{2}
