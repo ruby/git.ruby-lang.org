@@ -36,9 +36,9 @@ remote_file '/etc/datadog-agent/conf.d/apache.d/conf.yaml' do
 end
 
 # dd-agent needs the adm group to read /var/log/apache2 (root:adm, mode 640).
-group 'adm' do
-  members ['dd-agent']
-  append true
-  action :modify
+# mitamae's group resource cannot manage members, so add it via usermod.
+execute 'add dd-agent to adm group' do
+  command 'usermod -aG adm dd-agent'
+  not_if 'id -nG dd-agent | grep -qw adm'
   notifies :restart, 'service[datadog-agent]'
 end
