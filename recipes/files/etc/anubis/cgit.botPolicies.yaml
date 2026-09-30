@@ -58,18 +58,18 @@ bots:
       userAgent.startsWith("Lightpanda") ||
       userAgent.startsWith("spider/")
 
-  # One scraper fleet, 97.6% of everything that reaches cgit since 2026-09-05.
-  # It solves the challenge with a real browser and never reuses the cookie, so
-  # raising the difficulty buys nothing. Over 09-15 and 09-16 the backend saw
-  # 120,158 requests from this exact user agent and 3 from any other Linux
-  # desktop browser, and on the 09-14 lull its 1,391 requests came from 1,379
-  # distinct addresses, so there is no population of real users behind it.
-  # Pinned to the version on purpose: real Chrome moved to 151 and 152 over the
-  # same window and this did not. Widen to X11 plus Chrome if it follows.
-  - name: deny-linux-chrome-150-fleet
+  # Scraper fleets that solve the challenge with a real browser and never reuse
+  # the cookie, so raising the difficulty buys nothing. Linux Chrome 150 alone
+  # was 97.6% of what reached cgit in early September. A week after that exact
+  # user agent was denied, the traffic came back as Linux Chrome 149 and 154,
+  # so every version is matched now. Real Linux Chrome sends this same string,
+  # but of its non-fleet requests that reached Anubis from 09-28 to 09-30 only
+  # 16 looked like browsing. The rest were vulnerability probes. Edge, Opera
+  # and Vivaldi append a token of their own and are not matched.
+  - name: deny-linux-chrome-fleet
     action: DENY
     expression: >-
-      userAgent == "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+      userAgent.matches(r"^Mozilla/5\.0 \(X11; Linux x86_64\) AppleWebKit/537\.36 \(KHTML, like Gecko\) Chrome/[0-9]+\.0\.0\.0 Safari/537\.36$")
 
   # Search engines we want to keep indexing us, verified by published IP range
   # where the operator publishes one.
